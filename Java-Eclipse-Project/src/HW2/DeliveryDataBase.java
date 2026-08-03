@@ -1,6 +1,5 @@
 package HW2;
 
-import java.awt.Checkbox;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -58,6 +57,7 @@ public class DeliveryDataBase {
 
 	}
 
+	// add Order To Customer
 	public void addOrderToCustomer(int customerCode, Order order) {
 		if(order == null || orders.contains(order)) return;
 		orders.add(order);
@@ -74,6 +74,7 @@ public class DeliveryDataBase {
 			selectedRestaurantsByCustomer.get(customerCode).add(order.getRestaurant());
 	}
 
+	// remove an order from the system
 	public void removeOrder(int code, int clientCode) {
 		Order order = tryGetOrder(code);
 		Customer customer = tryGetCustomer(clientCode);
@@ -105,6 +106,7 @@ public class DeliveryDataBase {
 		}
 	}
 
+	// get orders of rider
 	public ArrayList<Order> getRidersOrders(String id) {
 		for (Rider rider : riders) {
 			if (rider.getId().equalsIgnoreCase(id)) {
@@ -263,6 +265,21 @@ public class DeliveryDataBase {
 	// gets all the orders of the given Customer
 	public ArrayList<Order> getOrdersOfCustomer(Customer customer) {
 		return ordersByCustomer.getOrDefault(customer.getCode(), new ArrayList<>());
+	}
+	
+	// get Orders Of RestAdmin
+	public ArrayList<Order> getOrdersOfRestAdmin(int code){
+		RestAdmin restAdmin = Coded.tryGetCoded(restAdmins, code);
+		if(restAdmin == null) return  new ArrayList<Order>();
+		
+		ArrayList<Order> orders = new ArrayList<Order>();
+		
+		for(Order order : orders) {
+			if(restAdmin.tryGetRestaurant(order.getRestaurantCode()) != null) {
+				orders.add(order);
+			}
+		}
+		return orders;
 	}
 
 	// returns the restaurant info (toString) (can't find -> returns null)

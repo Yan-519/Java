@@ -3,17 +3,22 @@ package HW2;
 import java.util.Scanner;
 
 public class InputManager {
+	// DeliveryDataBase pointer
 	private static DeliveryDataBase deliveryDataBase = null;
+	// set DeliveryDataBase pointer once
 	public static void setDeliveryDataBase(DeliveryDataBase deliveryDataBase) {
 		if(deliveryDataBase == null)
 			InputManager.deliveryDataBase = deliveryDataBase;
 	}
 
-
+	// user input Scanner
 	public static final Scanner inScanner = new Scanner(System.in);
+	// stop condition for int
 	public static final int BACK_INT = -1;
+	// stop condition for String
 	public static final String BACK_STR = Integer.toString(BACK_INT);
 
+	// number input sign
 	public enum NumberSign{ALL, POSITIVE, NOT_NEGATIVE }
 
 	// returns an integer from the console with a stop condition that can be turned off
@@ -109,23 +114,33 @@ public class InputManager {
 
 	// returns a rerult of a Yes\No quastion (boolean)
 	public static Boolean inputBool(String text) {
+		return inputBool(text, true);
+	}
+
+	// returns a rerult of a Yes\No quastion buy choice (boolean)
+	public static Boolean inputBool(String text, boolean withBack) {
 		text += " (Yes/No): ";
-	    String in = inputString(text, false);
+	    String in = inputString(text, false, withBack);
 	    while (!in.equalsIgnoreCase("Yes") && !in.equalsIgnoreCase("No")  && !in.equalsIgnoreCase(BACK_STR)) {
-			in = inputString(text, false);
+			in = inputString(text, false, withBack);
 		}
 	    if(in.equalsIgnoreCase(BACK_STR))
 	    	return null;
 	    return in.equalsIgnoreCase("Yes");
 	}
 	
-
 	// retruns a String with a stop condition
 	public static String inputString(String text, boolean isName) {
+		return inputString(text, isName, true);
+	}
+	
+
+	// retruns a String with a stop condition buy choice
+	public static String inputString(String text, boolean isName, boolean isWithBack) {
 		if(isName)
 			text += " (without numbers)";
-
-		text += " (" + BACK_INT +" to go back): ";
+		if(isWithBack)
+			text += " (" + BACK_INT +" to go back): ";
 		
 		String str;
 		while (true) {
@@ -133,7 +148,7 @@ public class InputManager {
 			str = inScanner.nextLine().trim();
 			
 			if(str.isEmpty()) continue;
-			else if(str.equalsIgnoreCase(BACK_STR)) 
+			else if(str.equalsIgnoreCase(BACK_STR) && isWithBack) 
 				return str;
 			
 			else if(isName) {
@@ -282,12 +297,15 @@ public class InputManager {
 	    double fee = inputDouble("Enter base delivery fee (not negative)", NumberSign.NOT_NEGATIVE);
 	    if (fee == BACK_INT) return null;
 
+	    Boolean isOpen = inputBool("Is the restaurant open?");
+	    if(isOpen == null) return null;
+	    
 	    return new Restaurant(
 	            code,
 	            name,
 	            kitchenType,
 	            rating,
-	            inputBool("Is the restaurant open?"),
+	            isOpen,
 	            fee
 	    );
 	}
@@ -313,13 +331,16 @@ public class InputManager {
 
 	    double expressCost = inputDouble("Enter additional cost for express delivery (not negative)", NumberSign.NOT_NEGATIVE);
 	    if (expressCost == BACK_INT) return null;
+	    
+	    Boolean isOpen = inputBool("Is the restaurant open?");
+	    if(isOpen == null) return null;
 
 	    return new FastFoodRestaurant(
 	            code,
 	            name,
 	            kitchenType,
 	            rating,
-	            inputBool("Is the restaurant open?"),
+	            isOpen,
 	            fee,
 	            prepTime,
 	            expressCost
@@ -348,12 +369,15 @@ public class InputManager {
 	    double commission = inputDouble("Enter additional commission percentage per order (not negative)", NumberSign.NOT_NEGATIVE);
 	    if (commission == BACK_INT) return null;
 
+	    Boolean isOpen = inputBool("Is the restaurant open?");
+	    if(isOpen == null) return null;
+
 	    return new PremiumRestaurant(
 	            code,
 	            name,
 	            kitchenType,
 	            rating,
-	            inputBool("Is the restaurant open?"),
+	            isOpen,
 	            fee,
 	            minOrder,
 	            commission

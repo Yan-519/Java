@@ -22,6 +22,8 @@ public class Customer extends Coded {
 		this.creditBalance = creditBalance;
 	}
 	
+	
+	// spend the given double (if not go to negative as a result)
 	public boolean buy(double price) {
 		if(price <= creditBalance )
 		{
@@ -31,6 +33,7 @@ public class Customer extends Coded {
 		return false;
 	}
 	
+	// sets the balance (if not go to negative as a result)
 	public boolean setBalance(double balance) {
 		if( 0 <= balance )
 			creditBalance = balance;

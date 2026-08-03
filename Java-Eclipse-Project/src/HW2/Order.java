@@ -80,42 +80,7 @@ public class Order extends Coded {
 	public double getBasePrice() {
 		return basePrice;
 	}
-
-
-//	public void setClientCode(int clientCode) {
-//		if(0 <= clientCode)
-//		this.clientCode = clientCode;
-//	}
-
-
-//	public void setRestaurant(Restaurant restaurant) {
-//		if(restaurant.getCode() == restaurantCode)
-//			this.restaurant = restaurant;
-//	}
-//
-//
-//	public void setRestaurantCode(int restaurantCode) {
-//		if(0<= restaurantCode) {
-//			this.restaurantCode = restaurantCode;
-//			// final price calculation that determined buy restaurant type
-//			 if(restaurant instanceof PremiumRestaurant premiumRestaurant) 
-//				 finalPrice = Math.max(
-//						 basePrice * (1+premiumRestaurant.getAdditionalCommissionPercentagePerOrder()) + restaurant.getBaseDeliveryFee(), 
-//						 premiumRestaurant.getMinimumOrderCost());
-//			
-//			 else if (restaurant instanceof FastFoodRestaurant fastFoodRestaurant) 
-//				finalPrice = basePrice + restaurant.getBaseDeliveryFee() + fastFoodRestaurant.getAdditionalCostForExpressDelivery();
-//			
-//			 else finalPrice = basePrice + restaurant.getBaseDeliveryFee();
-//		}
-//	}
-//
-//
-//	public void setOrderingDate(Date orderingDate) {
-//		this.orderingDate = orderingDate;
-//	}
-
-
+	
 	public void setDeliveringDate(Date deliveringDate) {
 		if(deliveringDate.isAfter(orderingDate))
 			this.deliveringDate = deliveringDate;
@@ -139,11 +104,6 @@ public class Order extends Coded {
 		}
 	}
 
-
-//	public void setDeliveryStatus(String deliveryStatus) {
-//		this.deliveryStatus = deliveryStatus;
-//	}
-	
 	public void changeeliveryStatus() {
 		if(deliveryStatus == DeliveryStatus.Created)
 			deliveryStatus = DeliveryStatus.OnTheWay;

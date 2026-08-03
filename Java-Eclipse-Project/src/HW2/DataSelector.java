@@ -5,12 +5,15 @@ import HW2.Order.DeliveryStatus;
 
 public class DataSelector {
 	
+	// DeliveryDataBase pointer
 	private static DeliveryDataBase deliveryDataBase = null;
+	// set the DeliveryDataBase pointer once
 	public static void setDeliveryDataBase(DeliveryDataBase deliveryDataBase) {
 		if(deliveryDataBase == null)
 			DataSelector.deliveryDataBase = deliveryDataBase;
 	}
 
+	// select Open Restaurant
 	public static Restaurant selectOpenRestaurant() {
 		Restaurant restaurant = DataSelector.selectRestaurant();
 		if(restaurant == null) return null;
@@ -23,6 +26,7 @@ public class DataSelector {
 		return restaurant;
 	}
 	
+	// select Restaurant
 	public static Restaurant selectRestaurant() {
 		int code;
 		while(true) {
@@ -37,6 +41,7 @@ public class DataSelector {
 		}
 	}
 	
+	// select RestAdmin
 	public static RestAdmin selectRestAdmin() {
 		int code;
 		while(true) {
@@ -51,6 +56,7 @@ public class DataSelector {
 		}
 	}
 	
+	// select Aveilable Rider
 	public static Rider selectAveilableRider() {
 		Rider rider = DataSelector.selectRider();
 		if(rider == null) return null;
@@ -63,6 +69,7 @@ public class DataSelector {
 		return rider;
 	}
 	
+	// select Rider
 	public static Rider selectRider() {
 		String ID;
 		while(true) {
@@ -77,6 +84,7 @@ public class DataSelector {
 		}
 	}
 	
+	// select  Created Order
 	public static Order selectCreatedOrder() {
 		Order order = DataSelector.selectOrder();
 		if(order == null) return null;
@@ -88,6 +96,7 @@ public class DataSelector {
 		return order;
 	}
 	
+	// select Order
 	public static Order selectOrder() {
 		int code;
 		while(true) {
@@ -103,6 +112,7 @@ public class DataSelector {
 		}
 	}
 	
+	// select Customer
 	public static Customer selectCustomer() {
 		int code;
 		while(true) {

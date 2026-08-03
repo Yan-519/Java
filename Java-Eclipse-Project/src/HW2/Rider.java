@@ -22,16 +22,18 @@ public class Rider {
 		orders = new ArrayList<>();
 	}
 
-
+	// checks if contains order by given code
 	public boolean isContainsOrder(int code) {
 		return Coded.isContains(orders, code);
 	}
 	
+	// adds order if not in list
 	public void addOrder(Order order) {
 		if(order != null && !orders.contains(order))
 			this.orders.add(order);
 	}
 	
+	// remove order by code
 	public void removeOrder(int code) {
 		if(!isContainsOrder(code)) return;
 		orders.remove(Coded.tryGetCoded(orders, code));
@@ -75,6 +77,7 @@ public class Rider {
 		this.isAvailable = isAvailable;
 	}
 	
+	// checks if the ID is valide
 	public static boolean isValidId(String id) {
 		if(id == null || id.length() != 9) return false;
 		
