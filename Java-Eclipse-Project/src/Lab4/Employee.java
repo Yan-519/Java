@@ -1,7 +1,7 @@
 package Lab4;
 
 public abstract class Employee implements SchoolsMethods {
-	private int numberOfEmployee = 0;
+	private static int numberOfEmployee = 0;
     protected int num;
     protected String name;
 

@@ -1,7 +1,6 @@
 package Testing;
 
 import java.util.Random;
-import java.util.stream.Stream;
 
 public class Main {
 	
@@ -27,22 +26,15 @@ public class Main {
 	
 	public static void main(String[] args) {
 
-		Stream.iterate(new long[]{0, 1}, f -> new long[]{f[1], f[0] + f[1]})
-	      .map(f -> f[0])
-	      .limit(100)
-	      .forEach(System.out::println);
+		MySystem system = new MySystem("Production");
 
-		
-//		HashSet<String> set = new HashSet<String>();
-//
-//		for (int i = 0; set.size() == i && i < 100; i++) {
-//			set.add(genWinKey());
-//		}
-//		
-//		System.out.println(set.size());
-//		for (String string : set) {
-//			System.out.println(string);
-//		}
+        // Call the grouped functions exactly as requested
+        system.console.write("System initialized.");
+        system.console.write("Loading database...");
+        
+        // A second system instance maintains separate values
+        MySystem backupSystem = new MySystem("Backup");
+        backupSystem.console.write("Standing by.");
 	}
 
 }

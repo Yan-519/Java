@@ -10,13 +10,13 @@ public class Rider {
 	private Order[] orders;
 	
 	
-	public Rider(String id, String name, String lastName, String phoneNumber, String vehicle) {
+	public Rider(String id, String name, String lastName, String phoneNumber, String vehicle, boolean isAvailable) {
 		this.id = id;
 		this.name = name;
 		this.lastName = lastName;
 		this.phoneNumber = phoneNumber;
 		this.vehicle = vehicle;
-		this.isAvailable = true;
+		this.isAvailable = isAvailable;
 		this.orders = new Order[0];
 	}
 	

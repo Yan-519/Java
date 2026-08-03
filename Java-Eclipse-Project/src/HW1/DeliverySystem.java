@@ -16,6 +16,16 @@ public class DeliverySystem {
 			restaurantsCount = 0,
 			ridersCount = 0,
 			ordersCount = 0;
+	
+	// checks if the restaurant of the given code open 
+	public boolean isRestaurantOpen(int code) {
+		for (int i = 0; i < restaurantsCount; i++) {
+			if(restaurants[i].getCode() == code) {
+				return restaurants[i].isOpen();
+			}
+		}
+		return false;
+	}
 
 	// returns the Admin by user name and password (if cant find -> return null)
 	public Admin tryGetAdmin(String userName, int password) {
@@ -188,12 +198,17 @@ public class DeliverySystem {
 	}
 
 	// adds an Order to a Rider
-	public boolean addOrderToRider(String riderId, int orderCode) {
+	public boolean addOrderToRider(String riderId, int orderCode, Admin admin) {
 		Order order = null;
 
 		for (int i = 0; i < ordersCount; i++) {
 			if (orders[i].getOrderCode() == orderCode) {
 				order = orders[i];
+				
+				if(admin instanceof RestAdmin restAdmin) 
+					if(restAdmin.tryGetRestaurant(order.getRestaurantCode()) == null)
+						return false;
+				
 				break;
 			}
 		}
@@ -214,7 +229,7 @@ public class DeliverySystem {
 	}
 
 	// returns the Restaurant of a restAdmin by codes (if fail returns null)
-	public Restaurant getRestAdminRestaurant(int adminCode, int restCode) {
+	public Restaurant tryGetRestAdminRestaurant(int adminCode, int restCode) {
 		for (int i = 0; i < adminsCount; i++) {
 			if(admins[i].getCode() == adminCode && admins[i] instanceof RestAdmin restAdmin) {
 				return restAdmin.tryGetRestaurant(restCode);

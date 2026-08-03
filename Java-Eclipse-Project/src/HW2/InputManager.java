@@ -1,12 +1,19 @@
-package HW1;
+package HW2;
 
 import java.util.Scanner;
 
 public class InputManager {
+	private static DeliveryDataBase deliveryDataBase = null;
+	public static void setDeliveryDataBase(DeliveryDataBase deliveryDataBase) {
+		if(deliveryDataBase == null)
+			InputManager.deliveryDataBase = deliveryDataBase;
+	}
+
 
 	public static final Scanner inScanner = new Scanner(System.in);
-	public static final int BACK = Main.BACK;
-	
+	public static final int BACK_INT = -1;
+	public static final String BACK_STR = Integer.toString(BACK_INT);
+
 	public enum NumberSign{ALL, POSITIVE, NOT_NEGATIVE }
 
 	// returns an integer from the console with a stop condition that can be turned off
@@ -25,7 +32,7 @@ public class InputManager {
 	// returns an integer from the console with a spasific sign (inputSign) with a stop condition that can be turned off
 	public static int inputInt(String text, NumberSign inputSign, boolean withBack){
 		int out;
-		if(withBack) text += " (" + BACK +" to go back): ";
+		if(withBack) text += " (" + BACK_INT +" to go back): ";
 		
 		while(true) {
 			System.out.print(text);
@@ -35,7 +42,7 @@ public class InputManager {
 			}
 			out = inScanner.nextInt();
 			inScanner.nextLine();
-			if(out == BACK && withBack) return BACK;
+			if(out == BACK_INT && withBack) return BACK_INT;
 			
 			switch (inputSign) {
 			case ALL: return out;
@@ -63,13 +70,13 @@ public class InputManager {
 	// returns an double from the console with a spasific sign (inputSign) that is under the given maximum
 	public static double inputDouble(String text, NumberSign inputSign, double max) {
 		double out;
-		while (max < (out = inputDouble(text, inputSign)) && max != BACK);
+		while (max < (out = inputDouble(text, inputSign)) && max != BACK_INT);
 		return out;
 	}
 	// returns an double from the console with a spasific sign (inputSign)
 	public static double inputDouble(String text, NumberSign inputSign) {
 		double out;
-		text += " (" + BACK +" to go back): ";
+		text += " (" + BACK_INT +" to go back): ";
 		
 		while(true) {
 			System.out.print(text);
@@ -79,7 +86,7 @@ public class InputManager {
 			}
 			out = inScanner.nextDouble();
 			inScanner.nextLine();
-			if(out == BACK) return BACK;
+			if(out == BACK_INT) return BACK_INT;
 			
 			switch (inputSign) {
 			case ALL: return out;
@@ -104,10 +111,10 @@ public class InputManager {
 	public static Boolean inputBool(String text) {
 		text += " (Yes/No): ";
 	    String in = inputString(text, false);
-	    while (!in.equalsIgnoreCase("Yes") && !in.equalsIgnoreCase("No")  && !in.equalsIgnoreCase(Integer.toString(BACK))) {
+	    while (!in.equalsIgnoreCase("Yes") && !in.equalsIgnoreCase("No")  && !in.equalsIgnoreCase(BACK_STR)) {
 			in = inputString(text, false);
 		}
-	    if(in.equalsIgnoreCase(Integer.toString(BACK)))
+	    if(in.equalsIgnoreCase(BACK_STR))
 	    	return null;
 	    return in.equalsIgnoreCase("Yes");
 	}
@@ -118,7 +125,7 @@ public class InputManager {
 		if(isName)
 			text += " (without numbers)";
 
-		text += " (" + BACK +" to go back): ";
+		text += " (" + BACK_INT +" to go back): ";
 		
 		String str;
 		while (true) {
@@ -126,7 +133,7 @@ public class InputManager {
 			str = inScanner.nextLine().trim();
 			
 			if(str.isEmpty()) continue;
-			else if(str.equalsIgnoreCase(Integer.toString(BACK))) 
+			else if(str.equalsIgnoreCase(BACK_STR)) 
 				return str;
 			
 			else if(isName) {
@@ -150,32 +157,33 @@ public class InputManager {
 	    System.out.println("create Rider");
 
 	    String id;
-	    while(!(id = inputString("Enter ID (positive 9 digits)", false)).equalsIgnoreCase(Integer.toString(BACK))) {
-	    	if(id.length() != 9) continue;
-	    	boolean isGood = true;
-	    	for(char chr : id.toCharArray())
-	    		if(!Character.isDigit(chr))
-	    			isGood = false;
-	    	if(isGood) break;
+	    while(!(id = inputString("Enter ID (positive 9 digits)", false)).equalsIgnoreCase(BACK_STR)) {
+	    	if(Rider.isValidId(id)) {
+	    		if(deliveryDataBase.isContainsRider(id)) {
+	    			System.out.println("Rider with ID " + id + " already exists. Please enter a different ID.");
+	    		} else {
+	    			break;
+	    		}
+	    	}
 	    }
-	    if (id.equalsIgnoreCase(Integer.toString(BACK))) return null;
+	    if (id.equalsIgnoreCase(BACK_STR)) return null;
 
 	    String phone;
-	    while (!Customer.isValidePhoneNumber(phone = inputString("Enter phone number (IL)", false)) &&
-	            !phone.equals(Integer.toString(BACK)));
-	    if (phone.equals(Integer.toString(BACK))) return null;
+	    while (!Customer.isValidPhoneNumber(phone = inputString("Enter phone number (IL)", false)) &&
+	            !phone.equalsIgnoreCase(BACK_STR));
+	    if (phone.equalsIgnoreCase(BACK_STR)) return null;
 
 	    String firstName = inputString("Enter first name", true);
 	    while( firstName.indexOf(' ') != -1 && firstName.substring(0, firstName.indexOf(' ')).isEmpty() &&
-	    		!firstName.equals(Integer.toString(BACK)) )
+	    		!firstName.equalsIgnoreCase(BACK_STR) )
 	    	firstName = inputString("Enter first name", true);
-	    if (firstName.equals(Integer.toString(BACK))) return null;
+	    if (firstName.equalsIgnoreCase(BACK_STR)) return null;
 
 	    String lastName = inputString("Enter last name", true);
-	    if (lastName.equals(Integer.toString(BACK))) return null;
+	    if (lastName.equalsIgnoreCase(BACK_STR)) return null;
 
 	    String vehicle = inputString("Enter vehicle", false);
-	    if (vehicle.equals(Integer.toString(BACK))) return null;
+	    if (vehicle.equalsIgnoreCase(BACK_STR)) return null;
 	    
 	    Boolean isAveilable = inputBool("Is aveilable");
 	    if(isAveilable == null) return null;
@@ -195,34 +203,34 @@ public class InputManager {
 	    System.out.println("create Customer");
 
 	    String phone;
-	    while (!Customer.isValidePhoneNumber(phone = inputString("Enter the new phone number (IL)", false)) &&
-	            !phone.equals(Integer.toString(BACK)));
-	    if (phone.equals(Integer.toString(BACK))) return null;
+	    while (!Customer.isValidPhoneNumber(phone = inputString("Enter the new phone number (IL)", false)) &&
+	            !phone.equalsIgnoreCase(BACK_STR));
+	    if (phone.equalsIgnoreCase(BACK_STR)) return null;
 
 	    String firstName = inputString("Enter first name", true);
 	    while( firstName.indexOf(' ') != -1 && firstName.substring(0, firstName.indexOf(' ')).isEmpty() &&
-	    		!firstName.equals(Integer.toString(BACK)) )
+	    		!firstName.equalsIgnoreCase(BACK_STR) )
 	    	firstName = inputString("Enter first name", true);
-	    if (firstName.equals(Integer.toString(BACK))) return null;
+	    if (firstName.equalsIgnoreCase(BACK_STR)) return null;
 
 	    String lastName = inputString("Enter last name", true);
-	    if (lastName.equals(Integer.toString(BACK))) return null;
+	    if (lastName.equalsIgnoreCase(BACK_STR)) return null;
 
 	    String street = inputString("Enter street", false);
-	    if (street.equals(Integer.toString(BACK))) return null;
+	    if (street.equalsIgnoreCase(BACK_STR)) return null;
 
 	    String town = inputString("Enter town", true);
-	    if (town.equals(Integer.toString(BACK))) return null;
+	    if (town.equalsIgnoreCase(BACK_STR)) return null;
 
 	    int zip = inputInt("Enter new ZIP code (positive)", NumberSign.POSITIVE);
-	    if (zip == BACK) return null;
+	    if (zip == BACK_INT) return null;
 
 	    String email;
-	    while(!Customer.isValideEmail( email = inputString("Enter email", false)) && !email.equals(Integer.toString(BACK)));
-	    if (email.equals(Integer.toString(BACK))) return null;
+	    while(!Customer.isValidEmail( email = inputString("Enter email", false)) && !email.equalsIgnoreCase(BACK_STR));
+	    if (email.equalsIgnoreCase(BACK_STR)) return null;
 
-	    double balance = inputDouble("Enter the balance (not negative)", NumberSign.NOT_NEGATIVE);
-	    if (balance == BACK) return null;
+	    double balance = inputDouble("Enter the balance ");
+	    if (balance == BACK_INT) return null;
 
 	    return new Customer(
 	            code,
@@ -238,21 +246,21 @@ public class InputManager {
 	}
 
 	// returns a new RestAdmin
-	public static Admin createRestAdmin(int code) {
+	public static RestAdmin createRestAdmin(int code) {
 	    System.out.println("create RestAdmin");
 
 	    String name = inputString("Enter name", true);
-        if (name.equals(Integer.toString(BACK))) return null;
+        if (name.equalsIgnoreCase(BACK_STR)) return null;
 
 	    String username = inputString("Enter username", false);
-	    if (username.equals(Integer.toString(BACK))) return null;
+	    if (username.equalsIgnoreCase(BACK_STR)) return null;
 
 	    int password = inputInt("Enter password");
-	    if (password == BACK) return null;
+	    if (password == BACK_INT) return null;
 
 	    return new RestAdmin(
+	    		code,
 	            name,
-	            code,
 	            username,
 	            password
 	    );
@@ -263,16 +271,16 @@ public class InputManager {
 	    System.out.println("create Restaurant");
 
 	    String name = inputString("Enter restaurant name", true);
-	    if (name.equals(Integer.toString(BACK))) return null;
+	    if (name.equalsIgnoreCase(BACK_STR)) return null;
 
 	    String kitchenType = inputString("Enter kitchen type", false);
-	    if (kitchenType.equals(Integer.toString(BACK))) return null;
+	    if (kitchenType.equalsIgnoreCase(BACK_STR)) return null;
 
 	    double rating = inputDouble("Enter rating (0 to 5)", NumberSign.NOT_NEGATIVE, 5);
-	    if (rating == BACK) return null;
+	    if (rating == BACK_INT) return null;
 
 	    double fee = inputDouble("Enter base delivery fee (not negative)", NumberSign.NOT_NEGATIVE);
-	    if (fee == BACK) return null;
+	    if (fee == BACK_INT) return null;
 
 	    return new Restaurant(
 	            code,
@@ -289,22 +297,22 @@ public class InputManager {
 	    System.out.println("create FastFoodRestaurant");
 
 	    String name = inputString("Enter restaurant name", true);
-	    if (name.equals(Integer.toString(BACK))) return null;
+	    if (name.equalsIgnoreCase(BACK_STR)) return null;
 
 	    String kitchenType = inputString("Enter kitchen type", false);
-	    if (kitchenType.equals(Integer.toString(BACK))) return null;
+	    if (kitchenType.equalsIgnoreCase(BACK_STR)) return null;
 
 	    double rating = inputDouble("Enter rating (0 to 5)", NumberSign.NOT_NEGATIVE, 5);
-	    if (rating == BACK) return null;
+	    if (rating == BACK_INT) return null;
 
 	    double fee = inputDouble("Enter base delivery fee (not negative)", NumberSign.NOT_NEGATIVE);
-	    if (fee == BACK) return null;
+	    if (fee == BACK_INT) return null;
 
 	    int prepTime = inputInt("Enter average preparing time (not negative)", NumberSign.NOT_NEGATIVE);
-	    if (prepTime == BACK) return null;
+	    if (prepTime == BACK_INT) return null;
 
 	    double expressCost = inputDouble("Enter additional cost for express delivery (not negative)", NumberSign.NOT_NEGATIVE);
-	    if (expressCost == BACK) return null;
+	    if (expressCost == BACK_INT) return null;
 
 	    return new FastFoodRestaurant(
 	            code,
@@ -323,22 +331,22 @@ public class InputManager {
 	    System.out.println("create PremiumRestaurant");
 
 	    String name = inputString("Enter restaurant name", true);
-	    if (name.equals(Integer.toString(BACK))) return null;
+	    if (name.equalsIgnoreCase(BACK_STR)) return null;
 
 	    String kitchenType = inputString("Enter kitchen type", false);
-	    if (kitchenType.equals(Integer.toString(BACK))) return null;
+	    if (kitchenType.equalsIgnoreCase(BACK_STR)) return null;
 
 	    double rating = inputDouble("Enter rating (0 to 5)", NumberSign.NOT_NEGATIVE, 5);
-	    if (rating == BACK) return null;
+	    if (rating == BACK_INT) return null;
 
 	    double fee = inputDouble("Enter base delivery fee (not negative)", NumberSign.NOT_NEGATIVE);
-	    if (fee == BACK) return null;
+	    if (fee == BACK_INT) return null;
 
 	    double minOrder = inputDouble("Enter minimum order cost (not negative)", NumberSign.NOT_NEGATIVE);
-	    if (minOrder == BACK) return null;
+	    if (minOrder == BACK_INT) return null;
 
 	    double commission = inputDouble("Enter additional commission percentage per order (not negative)", NumberSign.NOT_NEGATIVE);
-	    if (commission == BACK) return null;
+	    if (commission == BACK_INT) return null;
 
 	    return new PremiumRestaurant(
 	            code,
@@ -359,19 +367,19 @@ public class InputManager {
 	    int day;
 	    do {
 	        day = inputInt("Enter day (1-31)");
-	        if (day == BACK) return null;
+	        if (day == BACK_INT) return null;
 	    } while (day < 1 || day > 31);
 
 	    int month;
 	    do {
 	        month = inputInt("Enter month (1-12)");
-	        if (month == BACK) return null;
+	        if (month == BACK_INT) return null;
 	    } while (month < 1 || month > 12);
 
 	    int year;
 	    do {
 	        year = inputInt("Enter year (2000-2026)");
-	        if (year == BACK) return null;
+	        if (year == BACK_INT) return null;
 	    } while (year < 2000 || month > 2026);
 
 	    return new Date(day, month, year);

@@ -4,5 +4,5 @@
 /**
  * 
  */
-module Lab1_218131035 {
+module javaEclipseProject {
 }

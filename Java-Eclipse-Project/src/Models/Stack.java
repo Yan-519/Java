@@ -8,7 +8,7 @@ public class Stack<T> {
 	}
 
 	public void push(T data) {
-		first = new Node(data, first);
+		first = new Node<T>(data, first);
 	}
 
 	public void push(Node<T> node) {

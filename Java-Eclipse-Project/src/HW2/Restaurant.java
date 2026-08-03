@@ -1,7 +1,6 @@
-package HW1;
+package HW2;
 
-public class Restaurant {
-    protected int code;
+public class Restaurant extends Coded {
     protected String name;
     protected String kitchenType;
     protected double rating;
@@ -10,7 +9,7 @@ public class Restaurant {
     
     
 	public Restaurant(int code, String name, String kitchenType, double rating, boolean isOpen, double baseDeliveryFee) {
-		this.code = code;
+		super(code);
 		this.name = name;
 		this.kitchenType = kitchenType;
 		this.rating = rating;
@@ -23,11 +22,6 @@ public class Restaurant {
 	public String toString() {
 		return "Restaurant [code=" + code + ", name=" + name + ", kitchenType=" + kitchenType + ", rating=" + rating
 				+ ", isOpen=" + isOpen + ", baseDeliveryFee=" + baseDeliveryFee + "]";
-	}
-	
-
-	public int getCode() {
-		return code;
 	}
 	
 	public String getName() {
@@ -49,28 +43,8 @@ public class Restaurant {
 	public double getBaseDeliveryFee() {
 		return baseDeliveryFee;
 	}
-
-	public void setCode(int code) {
-		this.code = code;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 	
-	public void setKitchenType(String kitchenType) {
-		this.kitchenType = kitchenType;
-	}
-
-	public void setRating(double rating) {
-		this.rating = rating;
-	}
-
 	public void setOpen(boolean isOpen) {
 		this.isOpen = isOpen;
-	}
-
-	public void setBaseDeliveryFee(double baseDeliveryFee) {
-		this.baseDeliveryFee = baseDeliveryFee;
 	}
 }

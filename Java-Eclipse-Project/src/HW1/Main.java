@@ -2,21 +2,64 @@ package HW1;
 
 import java.util.Locale;
 
+import HW1.InputManager.NumberSign;
+
 public class Main {
 
 	private static final DeliverySystem deliverySystem = new DeliverySystem();
 
 	public static final int BACK = -1;
+	
+	// show all RestAdmins
+	public static void showRestAdmins() {
+		System.out.println("RestAdmins code:");
+		for(Admin admin : deliverySystem.getAdmins())
+			if(admin instanceof RestAdmin restAdmin)
+				System.out.println(restAdmin.getUserName() +": "+ restAdmin.getCode());
+	}
+
+	// show all Restaurants
+	public static void showRestaurants() {
+		System.out.println("Restaurants code:");
+		for(Restaurant restaurant: deliverySystem.getRestaurants())
+			if(restaurant != null)
+				System.out.println(restaurant.getName() +": "+ restaurant.getCode());
+	}
+
+	// show all Riders
+	public static void showRiders() {
+		System.out.println("Riders Id:");
+		for(Rider rider: deliverySystem.getRiders())
+			if(rider != null)
+				System.out.println(rider.getName() + " " + rider.getLastName() + ": " + rider.getId());
+	}
+
+	// show all Orders
+	public static void showOrders() {
+		System.out.println("Orders code:");
+		for(Order order : deliverySystem.getOrders())
+			if(order != null && order.getDeliveryStatus().equalsIgnoreCase(Order.Created))
+				System.out.println(order.getOrderCode());
+	}
+
+	// show all Customers
+	public static void showCustomers() {
+		System.out.println("Customers code:");
+		for(Customer customer: deliverySystem.getCustomers())
+			if(customer != null)
+				System.out.println(customer.getName() +" "+ customer.getLastName() +": " + customer.getCode());
+	}
 
 	// the admin menu
 	public static void adminMenu() {
 		System.out.println("Admin menu");
-
+		
+		Admin admin; 
 		String userName = InputManager.inputString("Enter name", true);
 		if(userName.equalsIgnoreCase(Integer.toString(BACK))) return;
 		int password = InputManager.inputInt("Enter the password");
 		if(password == BACK) return;
-		while(deliverySystem.tryGetAdmin(userName, password) == null) {
+		while((admin = deliverySystem.tryGetAdmin(userName, password)) == null) {
 			System.out.println("No matching admin found");
 			userName = InputManager.inputString("Enter name", true);
 			if(userName.equalsIgnoreCase(Integer.toString(BACK))) return;
@@ -48,13 +91,16 @@ public class Main {
 				break;
 
 			case 3:
-				int adminCode = InputManager.inputInt("Enter admin code");
+				showRestAdmins();
+				showRestaurants();
+				
+				int adminCode = InputManager.inputInt("Enter restaurant admin code");
 				if(adminCode == BACK) break;
 				int restCode = InputManager.inputInt("Enter restaurant code");
 				if(restCode == BACK) break;
 				while(!deliverySystem.addRestToAdmin(adminCode, restCode)) {
 					System.out.println("Ether the admin or the restaurant doesn't exist");
-					adminCode = InputManager.inputInt("Enter admin code");
+					adminCode = InputManager.inputInt("Enter restaurant admin code");
 					if(adminCode == BACK) break;
 					restCode = InputManager.inputInt("Enter restaurant code");
 					if(restCode == BACK) break;
@@ -95,12 +141,20 @@ public class Main {
 				break;
 
 			case 6:
+				if(deliverySystem.getOrdersCount() == 0) {
+					System.out.println("No orders in the system");
+					break;
+				}
+				
+				showRiders();
+				showOrders();
+				
 				Rider rider;
 				String riderId = InputManager.inputString("Enter rider id", false);
 				if(riderId.equalsIgnoreCase(Integer.toString(BACK))) break;
 				int orderCode = InputManager.inputInt("Enter order code");
 				if(orderCode ==  BACK) break;
-				while(!deliverySystem.addOrderToRider(riderId, orderCode)) {
+				while(!deliverySystem.addOrderToRider(riderId, orderCode, admin)) {
 					if((rider = deliverySystem.tryGetRider(riderId)) != null && rider.isAvailable())
 						System.out.println("Ether the rider doesn't exist or the order doesn't exist");
 					else System.out.println("Rider isnt aveilable");
@@ -148,12 +202,32 @@ public class Main {
 				break;
 
 			case 2:
+				if(restAdmin.getCount() == 0) {
+					System.out.println("The curreny RestAdmin has no restaurants");
+					break;
+				}
+				
+				System.out.println("Aveilable restaurants:");
+				for(Restaurant restaurant : restAdmin.getRestaurants())
+					if(restaurant != null)
+						System.out.println(restaurant.getName() +": "+ restaurant.getCode());
+				
+				Restaurant restaurant;
 				int restCode = InputManager.inputInt("Enter restaurant code");
-				while(deliverySystem.getRestAdminRestaurant(restAdminCode, restCode) == null && restCode != BACK) {
-					System.out.println("Can't get the restaurant");
+				while(restCode != BACK &&
+					       ((restaurant = deliverySystem.tryGetRestAdminRestaurant(restAdminCode, restCode)) == null
+					        || !restaurant.isOpen())) {
+					if(restaurant != null && !restaurant.isOpen()) 
+						System.out.println("The selected restaurannt is close");
+					else if(deliverySystem.isContainsRestaurant(restCode))
+						System.out.println("The current restaurant admin isnt the manager of the selected restaurant");
+					else 
+						System.out.println("Can't get the restaurant");
 					restCode = InputManager.inputInt("Enter restaurant code");
 				}
 				if(restCode == BACK) break;
+				
+				showCustomers();
 
 				int clientCode = InputManager.inputInt("Enter client code");
 				Customer customer;
@@ -163,7 +237,7 @@ public class Main {
 				}
 				if(clientCode == BACK) break;
 
-				int basePrice = InputManager.inputInt("Enter base price (not negative)",InputManager.NOT_NEGATIVE);
+				int basePrice = InputManager.inputInt("Enter base price (not negative)",NumberSign.NOT_NEGATIVE);
 				if(basePrice == BACK) break;
 
 				int orderCode = deliverySystem.addOrder(restCode, customer, basePrice, InputManager.createDate());
@@ -177,21 +251,52 @@ public class Main {
 				break;
 
 			case 4:
-				if(deliverySystem.getOrdersCount() == 0)
-				{
-					System.out.println("No orders in the system");
+				boolean ifFound = false;
+				for(Order order : deliverySystem.getOrders()) {
+					if(order != null && order.getDeliveryStatus().equalsIgnoreCase(Order.Created) && 
+					restAdmin.tryGetRestaurant(order.getRestaurantCode()) != null) {
+						ifFound = true;
+						break;
+					}
+				}
+				if(!ifFound) {
+					System.out.println("No orders found");
 					break;
 				}
+				
+				
+				showRiders();
+				System.out.println("Orders code:");
+				for(Order order : deliverySystem.getOrders()) 
+					if(order != null && order.getDeliveryStatus().equalsIgnoreCase(Order.Created) && 
+						restAdmin.tryGetRestaurant(order.getRestaurantCode()) != null) 
+						System.out.println(order.getOrderCode());
+
 				
 				Rider rider;
 				String riderId = InputManager.inputString("Enter rider id", false);
 				if(riderId.equalsIgnoreCase(Integer.toString(BACK))) break;
 				int ordCode = InputManager.inputInt("Enter order code");
 				if(ordCode == BACK) break;
-				while(!deliverySystem.addOrderToRider(riderId, ordCode)) {					
-					if((rider = deliverySystem.tryGetRider(riderId)) != null && rider.isAvailable())
-						System.out.println("Ether the rider doesn't exist or the order doesn't exist");
-					else System.out.println("Rider isnt aveilable");
+				while(!deliverySystem.addOrderToRider(riderId, ordCode, restAdmin)) {
+					boolean isFound = false;
+					for (int i = 0; i < deliverySystem.getOrdersCount(); i++) {
+						if(deliverySystem.getOrders()[i].getOrderCode() == ordCode && 
+								restAdmin.tryGetRestaurant(deliverySystem.getOrders()[i].getRestaurantCode()) == null) {
+								isFound = true;
+								break;
+						}
+					}
+					
+					if(isFound)
+						System.out.println("Ether the restaurant doesn't exist of the RestAdmin has no control on it");
+					else if((rider = deliverySystem.tryGetRider(riderId)) != null) {
+						if(rider.isAvailable())
+							System.out.println("The order doesn't exist");
+						else 
+							System.out.println("Rider isnt aveilable");
+					}
+					else System.out.println("Can't make operation");
 
 					riderId = InputManager.inputString("Enter rider id", false);
 					if(riderId.equalsIgnoreCase(Integer.toString(BACK))) break;
@@ -228,27 +333,44 @@ public class Main {
 					System.out.println("No order found");
 					break;
 				}
+				
+				System.out.println("Orders code:");
+				for(Order order : rider.getOrders())
+					if(order != null && !order.getDeliveryStatus().equalsIgnoreCase(Order.Delivered))
+						System.out.println(order.getOrderCode());
 
-				Order order;
+
+				Order order = null;
 				int code = InputManager.inputInt("Enter order code");
-				while ((order = rider.getOrder(code)) == null && code != BACK) {
-					System.out.println("No matching order found");
-					code = InputManager.inputInt("Enter order code");
+				while (code != BACK &&
+				       ((order = rider.getOrder(code)) == null ||
+				        order.getDeliveryStatus().equalsIgnoreCase(Order.Delivered))) {
+
+				    if (order != null)
+				        System.out.println("The order is already delivered");
+				    else
+				        System.out.println("No matching order found");
+
+				    code = InputManager.inputInt("Enter order code");
 				}
-				if(code == BACK) break;
-				int act;
-				if((act = InputManager.inputInt("Enter command \n"
-						+ "1-update status to on the way, \n"
-						+ "else-update status to deliverd, \n"
-						)) == 1) {
+
+				if (code == BACK)
+				    break;
+				
+				Boolean isUpdate = InputManager.inputBool("Do you want to update the status of the order?(created->on the way->delivered)");
+				if(isUpdate == null || !isUpdate) break;
+				
+				if(order.getDeliveryStatus().equalsIgnoreCase(Order.Created)) {
 					order.setDeliveryStatus(Order.OnTheWay);
 					rider.setAvailable(false);
 				}
-				else if(act != BACK) {
+				else if(order.getDeliveryStatus().equalsIgnoreCase(Order.OnTheWay)) {					
 					Date aftreDate = InputManager.createDateAfterDate(order.getOrderingDate());
 					if(aftreDate == null) break;
+					
 					order.setDeliveryStatus(Order.Delivered);
 					order.setDeliveringDate(aftreDate);
+					
 					boolean isFree = true;
 					for(Order ord : rider.getOrders()) {
 						if(ord.getDeliveryStatus() == Order.OnTheWay) {
@@ -259,8 +381,6 @@ public class Main {
 					if(isFree)
 						rider.setAvailable(true);
 				}
-
-
 				break;
 
 			case 2:
@@ -303,17 +423,22 @@ public class Main {
 					System.out.println("You cant buy anything");
 					break;
 				}
+				showRestaurants();
+				
 				int tmp = InputManager.inputInt("Enter restaurant code");
-				while(!deliverySystem.isContainsRestaurant(tmp) && tmp != BACK) {
-					System.out.println("Can't get the restaurant");
+				while(!deliverySystem.isRestaurantOpen(tmp) && tmp != BACK ) {
+					if(deliverySystem.isContainsRestaurant(tmp) && !deliverySystem.isRestaurantOpen(tmp))
+						System.out.println("The selected restaurannt is close");
+					else
+						System.out.println("Can't get the restaurant");
 					tmp = InputManager.inputInt("Enter restaurant code");
 				}
 				if(tmp == BACK) break;
 
-				double basePrice = InputManager.inputDouble("Enter the base fee (not negative)", InputManager.NOT_NEGATIVE);
+				double basePrice = InputManager.inputDouble("Enter the base fee (not negative)", NumberSign.NOT_NEGATIVE);
 				if(basePrice == BACK) break;
 
-				int orderCode = deliverySystem.addOrder(code, customer, basePrice, InputManager.createDate());
+				int orderCode = deliverySystem.addOrder(tmp, customer, basePrice, InputManager.createDate());
 				if(orderCode != -1) 
 					System.out.println("The order code is " + orderCode);
 				else System.out.println("You cant afford the order");
@@ -344,7 +469,7 @@ public class Main {
 					}
 
 					if(InputManager.inputBool("Do you want to chage the ZIP code?")) {
-						int zip = InputManager.inputInt("Enter new ZIP code (positive)", InputManager.POSITIVE);
+						int zip = InputManager.inputInt("Enter new ZIP code (positive)", NumberSign.POSITIVE);
 						if(zip != BACK)
 						customer.setZipCode(zip);
 					}
@@ -359,6 +484,7 @@ public class Main {
 				break;
 
 			case 4:
+				showRestaurants();
 
 				int restCode = InputManager.inputInt("Enter restaurant code");
 				String info;
@@ -421,11 +547,13 @@ public class Main {
 
 		// Riders
 		Rider[] riders = {
-		    new Rider("123456789", "John", "Smith", "0511234567", "Motorcycle"),
-		    new Rider("212345678", "David", "Brown", "0521234567", "Scooter"),
-		    new Rider("312345678", "Michael", "Johnson", "0531234567", "Car"),
-		    new Rider("412345678", "Daniel", "Wilson", "0541234567", "Bicycle"),
-		    new Rider("512345678", "James", "Taylor", "0551234567", "Motorcycle")
+				// aveilable Riders
+		    new Rider("123456789", "John", "Smith", "0511234567", "Motorcycle", true),
+		    new Rider("212345678", "David", "Brown", "0521234567", "Scooter", true),
+		    new Rider("312345678", "Michael", "Johnson", "0531234567", "Car", true),
+		    	// not aveilable Riders
+		    new Rider("412345678", "Daniel", "Wilson", "0541234567", "Bicycle", false),
+		    new Rider("512345678", "James", "Taylor", "0551234567", "Motorcycle", false)
 		};
 
 		// Customers
@@ -487,7 +615,7 @@ public class Main {
 				    "admin",
 				    0,
 				    "admin",
-				    1234
+				    12345
 				)
 		};
 		
