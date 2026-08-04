@@ -1,4 +1,4 @@
-package HW2;
+package HW2.DataObjects;
 
 import java.util.ArrayList;
 
@@ -76,16 +76,4 @@ public class Rider {
 	public void setAvailable(boolean isAvailable) {
 		this.isAvailable = isAvailable;
 	}
-	
-	// checks if the ID is valide
-	public static boolean isValidId(String id) {
-		if(id == null || id.length() != 9) return false;
-		
-		for(char chr : id.toCharArray())
-			if(!Character.isDigit(chr))
-				return false;
-		
-		return true;
-	}
-
 }

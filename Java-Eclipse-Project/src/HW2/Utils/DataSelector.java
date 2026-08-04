@@ -1,7 +1,13 @@
-package HW2;
+package HW2.Utils;
 
+import HW2.DeliveryDataBase;
+import HW2.DataObjects.Customer;
+import HW2.DataObjects.Order;
+import HW2.DataObjects.RestAdmin;
+import HW2.DataObjects.Restaurant;
+import HW2.DataObjects.Rider;
+import HW2.DataObjects.Order.DeliveryStatus;
 import HW2.DeliveryDataBase.CodedType;
-import HW2.Order.DeliveryStatus;
 
 public class DataSelector {
 	
@@ -9,8 +15,7 @@ public class DataSelector {
 	private static DeliveryDataBase deliveryDataBase = null;
 	// set the DeliveryDataBase pointer once
 	public static void setDeliveryDataBase(DeliveryDataBase deliveryDataBase) {
-		if(deliveryDataBase == null)
-			DataSelector.deliveryDataBase = deliveryDataBase;
+		DataSelector.deliveryDataBase = deliveryDataBase;
 	}
 
 	// select Open Restaurant
@@ -56,7 +61,7 @@ public class DataSelector {
 		}
 	}
 	
-	// select Aveilable Rider
+	// select Available Rider
 	public static Rider selectAveilableRider() {
 		Rider rider = DataSelector.selectRider();
 		if(rider == null) return null;

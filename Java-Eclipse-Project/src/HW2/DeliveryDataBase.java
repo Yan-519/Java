@@ -4,7 +4,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import HW2.Order.DeliveryStatus;
+import HW2.DataObjects.Admin;
+import HW2.DataObjects.Coded;
+import HW2.DataObjects.Customer;
+import HW2.DataObjects.Date;
+import HW2.DataObjects.Order;
+import HW2.DataObjects.PremiumRestaurant;
+import HW2.DataObjects.RestAdmin;
+import HW2.DataObjects.Restaurant;
+import HW2.DataObjects.Rider;
+import HW2.DataObjects.Order.DeliveryStatus;
 
 public class DeliveryDataBase {
 	
@@ -78,24 +87,26 @@ public class DeliveryDataBase {
 	public void removeOrder(int code, int clientCode) {
 		Order order = tryGetOrder(code);
 		Customer customer = tryGetCustomer(clientCode);
-		if (order == null || customer == null || order.getDeliveryStatus() == DeliveryStatus.Delivered)
+		if (order == null || customer == null || order.getClientCode() != clientCode || order.getDeliveryStatus() == DeliveryStatus.Delivered)
 			return;
 
-		Rider rider = tryGetRider(order.getRiderId());
+		
 		Restaurant restaurant = tryGetRestaurant(order.getRestaurantCode());
-		if (restaurant == null || rider == null)
+		if (restaurant == null || !orders.contains(order) || !ordersByCustomer.get(clientCode).contains(order))
 			return;
 		
-		if(!orders.contains(order) || !ordersByCustomer.get(clientCode).contains(order))
-			return;
+		Rider rider = tryGetRider(order.getRiderId());
+		if(rider != null) {
+			rider.removeOrder(code);
+		}
 		
-		rider.removeOrder(code);
-
+		double backMoney = order.getFinalPrice() * (order.getDeliveryStatus() == DeliveryStatus.Created ? 1 : 0.5 );
+		totalSpentByCustomer.put(clientCode, totalSpentByCustomer.get(clientCode) + backMoney);
+		customer.setBalance(customer.getCreditBalance() + backMoney);
+		
+		
 		orders.remove(order);
 		ordersByCustomer.get(clientCode).remove(order);
-		totalSpentByCustomer.put(clientCode, totalSpentByCustomer.get(clientCode) +
-				order.getFinalPrice() * (order.getDeliveryStatus() == DeliveryStatus.Created ? 1 : 0.5 ));
-
 		selectedRestaurantsByCustomer.get(clientCode).remove(restaurant);
 
 		for (Order o : getOrdersOfCustomer(customer)) {
@@ -152,7 +163,7 @@ public class DeliveryDataBase {
 		return customerWithMostOrders;
 	}
 
-	// get Rider With Most Deliverd Orders
+	// get Rider With Most Delivered Orders
 	public Rider getRiderWithMostDeliverdOrders() {
 		Rider riderWithMostOrders = null;
 		int maxOrders = 0;
@@ -185,7 +196,7 @@ public class DeliveryDataBase {
 		return openRestaurants;
 	}
 
-	// returns the restaurants thet selected by a customer (the given custome code)
+	// returns the restaurants thet selected by a customer (the given customer code)
 	public ArrayList<Restaurant> getRestaurantasBuyCustomer(int code) {
 		if (!selectedRestaurantsByCustomer.containsKey(code)) {
 			return new ArrayList<>();
@@ -193,9 +204,36 @@ public class DeliveryDataBase {
 		return selectedRestaurantsByCustomer.get(code);
 	}
 	
+	// returns all the orders of the given restaurant (by restaurant code)
+	public ArrayList<Order> getOrdersByuRestaurant(int code){
+		ArrayList<Order> ords = new ArrayList<Order>();
+		for(Order order: orders)
+			if(order.getRestaurantCode() == code)
+				ords.add(order);
+		return ords;
+	}
+	
+	// filter Orders Buy given Status
+	public ArrayList<Order> filterOrdersBuyStatus(ArrayList<Order> ords, DeliveryStatus status){
+		ArrayList<Order> res = new ArrayList<Order>();
+		for (Order order : ords)
+			if(order.getDeliveryStatus() == status)
+				res.add(order);
+		return res;
+	}
+
+	// filter Orders Buy not given Status
+	public ArrayList<Order> filterOrdersBuyNotStatus(ArrayList<Order> ords, DeliveryStatus status){
+		ArrayList<Order> res = new ArrayList<Order>();
+		for (Order order : ords)
+			if(order.getDeliveryStatus() != status)
+				res.add(order);
+		return res;
+	}
+	
 	// checks if the data matches to the systemAdministrator data
 	public boolean logIntoAdmin(String userName, int password) {
-		return systemAdministrator.getName().equalsIgnoreCase(userName) && systemAdministrator.getPassword() == password;
+		return systemAdministrator.getUserName().equalsIgnoreCase(userName) && systemAdministrator.getPassword() == password;
 	}
 
 	// checks if the restaurant of the given code open
@@ -214,7 +252,7 @@ public class DeliveryDataBase {
 				&& order.getDeliveryStatus() == DeliveryStatus.Created;
 	}
 
-	// returns the RestAdmin by user name and password (if cant find -> return null)
+	// returns the RestAdmin by user name and password (if can't find -> return null)
 	public RestAdmin tryGetRestAdmin(String userName, int password) {
 		for (RestAdmin restAdmin : restAdmins) {
 			if (restAdmin.getUserName().equalsIgnoreCase(userName) && restAdmin.getPassword() == password) {
@@ -224,7 +262,7 @@ public class DeliveryDataBase {
 		return null;
 	}
 
-	// returns the RestAdmin by code (if cant find -> return null)
+	// returns the RestAdmin by code (if can't find -> return null)
 	public RestAdmin tryGetRestAdmin(int code) {
 		return Coded.tryGetCoded(restAdmins, code);
 	}
@@ -271,15 +309,12 @@ public class DeliveryDataBase {
 	public ArrayList<Order> getOrdersOfRestAdmin(int code){
 		RestAdmin restAdmin = Coded.tryGetCoded(restAdmins, code);
 		if(restAdmin == null) return  new ArrayList<Order>();
-		
-		ArrayList<Order> orders = new ArrayList<Order>();
-		
-		for(Order order : orders) {
-			if(restAdmin.tryGetRestaurant(order.getRestaurantCode()) != null) {
-				orders.add(order);
-			}
-		}
-		return orders;
+
+		ArrayList<Order> ords = new ArrayList<Order>();
+		for(Restaurant restaurant : restAdmin.getRestaurants())
+			ords.addAll(getOrdersByuRestaurant(restaurant.getCode()));
+
+		return ords;
 	}
 
 	// returns the restaurant info (toString) (can't find -> returns null)
@@ -329,7 +364,7 @@ public class DeliveryDataBase {
 		addOrderToCustomer(order.getClientCode(), order);
 	}
 
-	// adds a Order by the needet parameters to do so (if exists -> does nothing)
+	// adds a Order by the needed parameters to do so (if exists -> does nothing)
 	public int addOrder(int restaurantCode, int customerCode, double basePrice, Date date) {
 		if (date == null)
 			return -1;
@@ -403,7 +438,7 @@ public class DeliveryDataBase {
 		rider.addOrder(order);
 	}
 
-	// cheacks if contains the object with the given code and type
+	// Checks if contains the object with the given code and type
 	public boolean isContains(int code, CodedType type) {
 		switch (type) {
 			case RestAdmin:
@@ -422,7 +457,7 @@ public class DeliveryDataBase {
 		}
 	}
 	
-	// cheacks if contains Rider with the given id
+	// Checks if contains Rider with the given id
 	public boolean isContainsRider(String id) {
 		return tryGetRider(id) != null;
 	}

@@ -1,4 +1,4 @@
-package HW2;
+package HW2.DataObjects;
 
 public class Restaurant extends Coded {
     protected String name;

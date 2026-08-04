@@ -2,9 +2,12 @@ package HW2;
 
 import java.util.ArrayList;
 
+import HW2.DataObjects.*;
+import HW2.Utils.*;
+
+import HW2.DataObjects.Order.DeliveryStatus;
 import HW2.DeliveryDataBase.CodedType;
-import HW2.InputManager.NumberSign;
-import HW2.Order.DeliveryStatus;
+import HW2.Utils.InputManager.NumberSign;
 
 public class MenuManager {
 	// deliveryDataBase
@@ -23,65 +26,18 @@ public class MenuManager {
 	public DeliveryDataBase getDeliveryDataBase() {
 		return deliveryDataBase;
 	}
-
-	// show Coded objects
-	private <T extends Coded> void showCoded(ArrayList<T> codeds) {
-		if (codeds.isEmpty())
-	        return;
-
-	    System.out.println(codeds.getFirst().getClass().getSimpleName() + " info:");
-
-	    for (Coded coded : codeds) {
-	        if (coded instanceof RestAdmin restAdmin) {
-	            System.out.println(restAdmin.getUserName() + ": " + restAdmin.getCode());
-
-	        } else if (coded instanceof Restaurant restaurant) {
-	            System.out.println(restaurant.getName() + ": " + restaurant.getCode());
-	            
-	        } else if (coded instanceof Customer customer) {
-	            System.out.println(customer.getName() + " " + customer.getLastName() + ": " + customer.getCode());
-
-	        } else if (coded instanceof Order order) {
-	            if (order.getDeliveryStatus() == DeliveryStatus.Created)
-	                System.out.println(order.getCode());
-	        }
-	        
-	    }	
-	}
-	
-	// show all Riders
-//	private void showRiders() {
-//		System.out.println("Riders Id:");
-//		for(Rider rider: deliveryDataBase.getRiders())
-//				System.out.println(rider.getName() + " " + rider.getLastName() + ": " + rider.getId());
-//	}
-	
-	// show all aveilable Riders
-	private void showAveilableRiders() {
-		for(Rider rider_: deliveryDataBase.getRiders()) {
-			if(rider_.isAvailable()) {
-				System.out.println("Riders Id:");
-				for(Rider rider: deliveryDataBase.getRiders())
-					if(rider.isAvailable())
-						System.out.println(rider.getName() + " " + rider.getLastName() + ": " + rider.getId());
-				return;
-			}
-		}
-	}
-
-
 	
 	// the admin menu
 	private void adminMenu() {
 		System.out.println("Admin menu");
 		
-		String userName = InputManager.inputString("Enter name", true);
+		String userName = InputManager.inputString("Enter user name", true);
 		if(userName.equalsIgnoreCase(BACK_STR)) return;
 		int password = InputManager.inputInt("Enter the password");
 		if(password == BACK_INT) return;
 		while(!deliveryDataBase.logIntoAdmin(userName, password)) {
 			System.out.println("No matching admin found");
-			userName = InputManager.inputString("Enter name", true);
+			userName = InputManager.inputString("Enter user name", true);
 			if(userName.equalsIgnoreCase(BACK_STR)) return;
 			password = InputManager.inputInt("Enter the password");
 			if(password == BACK_INT) return;
@@ -146,22 +102,22 @@ public class MenuManager {
 				break;
 
 			case 5:
-				showCoded(deliveryDataBase.getRestAdmins());
+				DataOutput.showCoded(deliveryDataBase.getRestAdmins());
 				RestAdmin restAdmin = DataSelector.selectRestAdmin();
 				if(restAdmin == null) break;
 
-				showCoded(deliveryDataBase.getRestaurants());
+				DataOutput.showCoded(deliveryDataBase.getRestaurants());
 				Restaurant restaurant = DataSelector.selectRestaurant();
 				if(restaurant == null) break; 
 				deliveryDataBase.addRestToAdmin(restAdmin.getCode(), restaurant.getCode());
 				break;
 
 			case 6:
-				showAveilableRiders();
+				DataOutput.showAveilableRiders(deliveryDataBase.getRiders());
 				Rider rider = DataSelector.selectAveilableRider();
 				if(rider == null) break;
 				
-				showCoded(deliveryDataBase.getOrders());
+				DataOutput.showCoded(deliveryDataBase.getOrders());
 				Order order = DataSelector.selectCreatedOrder();
 				if(order == null) break;
 
@@ -169,8 +125,8 @@ public class MenuManager {
 				break;
 				
 			case 7:
-				for(Order o : deliveryDataBase.getOrders())
-					System.out.println(o);
+				if(!DataOutput.showCoded(deliveryDataBase.getOrders()))
+					System.out.println("No orders found");
 				break;
 				
 			case 8:
@@ -193,7 +149,7 @@ public class MenuManager {
 				break;
 				
 			case 10:
-				showCoded(deliveryDataBase.getRestaurants());
+				DataOutput.showCoded(deliveryDataBase.getRestaurants());
 				Restaurant restaurant2 = DataSelector.selectRestaurant();
 				
 				if(restaurant2 != null) {
@@ -218,15 +174,15 @@ public class MenuManager {
 		System.out.println("ResAdmin menu");
 		
 		RestAdmin restAdmin;
-		String userName =InputManager.inputString("Enter name", true);
+		String userName =InputManager.inputString("Enter user name", true);
 		if(userName.equalsIgnoreCase(BACK_STR)) return;
 		int password = InputManager.inputInt("Enter the password");
 		if(password== BACK_INT) return;
 		while ((restAdmin = deliveryDataBase.tryGetRestAdmin(userName, password)) == null) {
-			userName =InputManager.inputString("Enter name", true);
+			userName =InputManager.inputString("Enter user name", true);
 			if(userName.equalsIgnoreCase(BACK_STR)) return;
 			password = InputManager.inputInt("Enter the password");
-			if(password== BACK_INT) return;
+			if(password == BACK_INT) return;
 		}
 		
 		while (true) {
@@ -252,7 +208,7 @@ public class MenuManager {
 					break;
 				}
 				
-				showCoded(restAdmin.getRestaurants());
+				DataOutput.showCoded(restAdmin.getRestaurants());
 				
 				Restaurant restaurant = DataSelector.selectOpenRestaurant();
 				if(restaurant == null) break;
@@ -263,7 +219,7 @@ public class MenuManager {
 				}
 				if(restaurant == null) break;
 				
-				showCoded(deliveryDataBase.getCustomers());
+				DataOutput.showCoded(deliveryDataBase.getCustomers());
 				Customer customer = DataSelector.selectCustomer();
 				if(customer == null) break;
 
@@ -281,29 +237,18 @@ public class MenuManager {
 				break;
 
 			case 4:
-				ArrayList<Order> orders = deliveryDataBase.getOrdersOfRestAdmin(restAdmin.getCode());
+				ArrayList<Order> orders = deliveryDataBase.filterOrdersBuyStatus(deliveryDataBase.getOrdersOfRestAdmin(restAdmin.getCode()), DeliveryStatus.Created);
 				
-				boolean ifFound = false;
-				for(Order order : orders) {
-					if(order.getDeliveryStatus() == DeliveryStatus.Created) {
-						ifFound = true;
-						break;
-					}
-				}
-				if(!ifFound) {
+				if(orders.size() == 0) {
 					System.out.println("No orders found");
 					break;
 				}
 
-				showAveilableRiders();
+				DataOutput.showAveilableRiders(deliveryDataBase.getRiders());
 				Rider rider = DataSelector.selectAveilableRider();
 				if(rider == null) break;
 				
-				System.out.println("Orders code:");
-				for(Order order : orders) 
-					if(order.getDeliveryStatus() == DeliveryStatus.Created) 
-						System.out.println(order.getCode());
-				
+				DataOutput.showCoded(orders);
 				Order order = DataSelector.selectCreatedOrder();
 				if(order == null) break;
 				while(restAdmin.tryGetRestaurant(order.getRestaurantCode()) == null) {
@@ -322,9 +267,7 @@ public class MenuManager {
 					break;
 				}
 				
-				System.out.println("Aveilable restaurants:");
-				for(Restaurant r : restAdmin.getRestaurants())
-						System.out.println(r.getName() +": "+ r.getCode());
+				DataOutput.showCoded(restAdmin.getRestaurants());
 				
 				Restaurant rest = DataSelector.selectRestaurant();
 				if(rest == null) break;
@@ -335,9 +278,7 @@ public class MenuManager {
 				}
 				if(rest == null) break;
 				
-				for(Order o : deliveryDataBase.getOrders())
-					if(o.getRestaurantCode() == rest.getCode())
-						System.out.println(o.getCode());
+				DataOutput.showCoded(deliveryDataBase.getOrdersByuRestaurant(rest.getCode()));
 
 				break;
 			case 6:
@@ -348,8 +289,7 @@ public class MenuManager {
 				if (restaurants.size() == 0)
 					System.out.println("No matching restaurants found");
 				else
-					for(Restaurant restaurant2 : restaurants)
-						System.out.println(restaurant2.getName() +": "+ restaurant2.getCode());
+					DataOutput.showCoded(restaurants);
 				
 				break;
 
@@ -373,36 +313,25 @@ public class MenuManager {
 					+ "else-exit \n"
 					+ ": ", false)) {
 			case 1:
-				boolean isFound = false;
-				for(Order order : rider.getOrders()) {
-					if(order.getDeliveryStatus() != DeliveryStatus.Delivered) {
-						isFound = true;
-						break;
-					}
-				}
-				if(!isFound) {
+				if(!DataOutput.showCoded(deliveryDataBase.filterOrdersBuyNotStatus(rider.getOrders(), DeliveryStatus.Delivered))) {
 					System.out.println("No order found");
 					break;
 				}
-				
-				System.out.println("Orders code:");
-				for(Order order : rider.getOrders())
-					if(order.getDeliveryStatus() != DeliveryStatus.Delivered)
-						System.out.println(order.getCode());
-				
+
 				Order order = DataSelector.selectOrder();
 				if(order == null) break;
-				while(!rider.isContainsOrder(order.getCode()) || order.getDeliveryStatus() == DeliveryStatus.Delivered){
-					if(!rider.isContainsOrder(order.getCode()))
-						System.out.println("The selected order isnt under the current rider control");
-					else System.out.println("The order is already delivered");
+				while(order.getDeliveryStatus() == DeliveryStatus.Delivered || order.getRiderId() == null || !order.getRiderId().equalsIgnoreCase(rider.getId())){
+					if(order.getDeliveryStatus() == DeliveryStatus.Delivered)
+						System.out.println("The order is already delivered");
+					else 
+						System.out.println("The current rider not in charge of the order");
 					order = DataSelector.selectOrder();
 					if(order == null) break;
 				}
 				if(order == null) break;
 				
-				Boolean isUpdate = InputManager.inputBool("Do you want to update the status of the order?(created->on the way->delivered)");
-				if(isUpdate == null || !isUpdate) break;
+				boolean isUpdate = InputManager.inputBool("Do you want to update the status of the order?(created->on the way->delivered)", false);
+				if(!isUpdate) break;
 				
 				if(order.getDeliveryStatus() == DeliveryStatus.Created) {
 					order.changeeliveryStatus();
@@ -419,22 +348,13 @@ public class MenuManager {
 				break;
 
 			case 2:
-				boolean isHave = false;
-				for(Order ord: rider.getOrders()) {
-					if(ord.getDeliveryStatus() != DeliveryStatus.Delivered) {
-						System.out.println(ord);
-						isHave = true;
-					}
-				}
-				if(!isHave)
+				if(!DataOutput.showCoded(deliveryDataBase.filterOrdersBuyNotStatus(rider.getOrders(), DeliveryStatus.Delivered)))
 					System.out.println("No order found");
-				
 				break;
 				
 			case 3:
-				if(rider.getOrders().size() == 0) 
+				if(!DataOutput.showCoded(rider.getOrders())) 
 					System.out.println("No order found");
-				else showCoded(rider.getOrders());
 				break;
 
 			default: return;
@@ -469,7 +389,7 @@ public class MenuManager {
 					System.out.println("You cant buy anything");
 					break;
 				}
-				showCoded(deliveryDataBase.getRestaurants());
+				DataOutput.showCoded(deliveryDataBase.getRestaurants());
 				
 				Restaurant restaurant = DataSelector.selectOpenRestaurant();
 				if(restaurant == null) break;
@@ -485,7 +405,7 @@ public class MenuManager {
 
 			case 2:
 				ArrayList<Order> orders = deliveryDataBase.getOrdersOfCustomer(customer);
-				showCoded(orders);
+				DataOutput.showCoded(orders);
 				if(orders.size() == 0)
 					System.out.println("No orders found");
 
@@ -513,7 +433,7 @@ public class MenuManager {
 				}
 				if(InputManager.inputBool("Do you want to chage your phone number?", false)) {
 					String phone;
-					while(!Customer.isValidPhoneNumber((phone = InputManager.inputString("Enter the new phone number (IL)", false))) &&
+					while(!DataChecker.isValidPhoneNumber((phone = InputManager.inputString("Enter the new phone number (IL)", false))) &&
 							!phone.equalsIgnoreCase(BACK_STR));
 					if(!phone.equalsIgnoreCase(BACK_STR))
 						customer.setPhoneNumber(phone);
@@ -522,7 +442,7 @@ public class MenuManager {
 				
 			case 4:
 				ArrayList<Restaurant> restaurants = deliveryDataBase.getRestaurantasBuyCustomer(customer.getCode());
-				showCoded(restaurants);
+				DataOutput.showCoded(restaurants);
 				if (restaurants.size() == 0)
 					System.out.println("No orders found");
 				
@@ -530,7 +450,7 @@ public class MenuManager {
 				
 			case 5:
 				ArrayList<PremiumRestaurant> premiumRestaurants = deliveryDataBase.getPremiumRestaurantsByCustomer(customer);
-				showCoded(premiumRestaurants);
+				DataOutput.showCoded(premiumRestaurants);
 				if (premiumRestaurants.size() == 0)
 					System.out.println("No orders found");
 				
@@ -555,17 +475,17 @@ public class MenuManager {
 				break;
 				
 			case 9:
-				ArrayList<Order> orders2 = deliveryDataBase.getOrdersOfCustomer(customer);
-				showCoded(orders2);
-				if(orders2.size() == 0) {
+				if(!DataOutput.showCoded(deliveryDataBase.getOrdersOfCustomer(customer))) {
 					System.out.println("No orders found");
 					break;
 				}
 				
 				Order order = DataSelector.selectOrder();
 				if(order == null) break;
-				while( !orders2.contains(order) || order.getDeliveryStatus() == DeliveryStatus.Delivered) {
-					if(order.getDeliveryStatus() == DeliveryStatus.Delivered)
+				while(order.getClientCode() != customer.getCode() || order.getDeliveryStatus() == DeliveryStatus.Delivered) {
+					if(order.getClientCode() != customer.getCode())
+							System.out.println("The selected order must me your");
+					else if(order.getDeliveryStatus() == DeliveryStatus.Delivered)
 						System.out.println("You can't cencel an order that has beed deliverd");
 					order = DataSelector.selectOrder();
 					if(order == null) break;

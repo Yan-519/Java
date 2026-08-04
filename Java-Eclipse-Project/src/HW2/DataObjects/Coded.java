@@ -1,4 +1,4 @@
-package HW2;
+package HW2.DataObjects;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -16,7 +16,7 @@ public abstract class Coded {
 		return code;
 	}
 	
-	// generate a random positive code that isnt in the given list
+	// generate a random positive code that isn't in the given list
 	public static <T extends Coded> int generateCode(ArrayList<T> list) {
 		int code;
 		while (isContains(list, code = Math.abs(random.nextInt() - 2) + 1));

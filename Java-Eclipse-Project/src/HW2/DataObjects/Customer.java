@@ -1,4 +1,6 @@
-package HW2;
+package HW2.DataObjects;
+
+import HW2.Utils.DataChecker;
 
 public class Customer extends Coded {
 	
@@ -86,46 +88,8 @@ public class Customer extends Coded {
 	}
 
 	public void setPhoneNumber(String phoneNumber) {
-		if(isValidPhoneNumber(phoneNumber))
+		if(DataChecker.isValidPhoneNumber(phoneNumber))
 		this.phoneNumber = phoneNumber;
 	}
 
-	// Checks if the phone number is valid (Exactly 10 digits, starts with 05)
-	public static boolean isValidPhoneNumber(String phoneNumber) {
-	    if (phoneNumber == null || (phoneNumber.length() != 10 && phoneNumber.length() != 11))
-	        return false;
-
-	    if (phoneNumber.charAt(0) != '0' || phoneNumber.charAt(1) != '5' ||
-	    		!Character.isDigit(phoneNumber.charAt(2)))
-	        return false;
-	    
-	    if(phoneNumber.length() == 11 && phoneNumber.charAt(3) != '-')
-	    	return false;
-
-	    int i = 3;
-	    if(phoneNumber.length() == 11)
-	    	i = 4;
-	    
-	    for (; i < phoneNumber.length(); i++) {
-	        char c = phoneNumber.charAt(i);
-	        if (c < '0' || c > '9')
-	            return false;
-	    }
-
-	    return true;
-	}
-
-	// Checks if the email is valid
-	public static boolean isValidEmail(String email) {
-	    if (email == null || email.trim().length() < 5)
-	        return false;
-
-	    if (email.startsWith("@") || email.indexOf('@') != email.lastIndexOf('@') || email.endsWith("@"))
-	        return false;
-
-	    if (email.lastIndexOf('.') <=  email.indexOf('@'))
-	        return false;
-
-	    return true;
-	}
 }

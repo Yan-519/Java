@@ -1,6 +1,15 @@
-package HW2;
+package HW2.Utils;
 
 import java.util.Scanner;
+
+import HW2.DeliveryDataBase;
+import HW2.DataObjects.Customer;
+import HW2.DataObjects.Date;
+import HW2.DataObjects.FastFoodRestaurant;
+import HW2.DataObjects.PremiumRestaurant;
+import HW2.DataObjects.RestAdmin;
+import HW2.DataObjects.Restaurant;
+import HW2.DataObjects.Rider;
 
 public class InputManager {
 	// DeliveryDataBase pointer
@@ -23,12 +32,25 @@ public class InputManager {
 
 	// returns an integer from the console with a stop condition that can be turned off
 	public static int inputInt(String text, boolean withBack) {
-		return inputInt(text, NumberSign.ALL, withBack);
+		int out;
+		if(withBack) 
+			text += " (" + BACK_INT +" to go back): ";
+		
+		System.out.print(text);
+		while(!inScanner.hasNextInt()) {
+			inScanner.next();
+			System.out.print(text);
+		}
+		out = inScanner.nextInt();
+		inScanner.nextLine();
+		return out;
 	}
+	
 	// returns an integer from the console
 	public static int inputInt(String text) {
 		return inputInt(text, NumberSign.ALL, true);
 	}
+	
 	// returns an integer from the console with a spasific sign (inputSign)
 	public static int inputInt(String text, NumberSign inputSign) {
 		return inputInt(text, inputSign, true);
@@ -37,105 +59,79 @@ public class InputManager {
 	// returns an integer from the console with a spasific sign (inputSign) with a stop condition that can be turned off
 	public static int inputInt(String text, NumberSign inputSign, boolean withBack){
 		int out;
-		if(withBack) text += " (" + BACK_INT +" to go back): ";
-		
 		while(true) {
-			System.out.print(text);
-			while(!inScanner.hasNextInt()) {
-				inScanner.next();
-				System.out.print(text);
-			}
-			out = inScanner.nextInt();
-			inScanner.nextLine();
-			if(out == BACK_INT && withBack) return BACK_INT;
+			out = inputInt(text, withBack);
+			if(out == BACK_INT && withBack || inputSign == NumberSign.ALL) 
+				return out;
 			
-			switch (inputSign) {
-			case ALL: return out;
-			case POSITIVE:
-				if( 0 < out) {
-					return out;
-				}
-				break;
-			case NOT_NEGATIVE:
-				if( 0 <= out) {
-					return out;
-				}
-				break;
-			default:
-				break;
-			}
-
+			if(inputSign == NumberSign.POSITIVE && 0 < out)
+				return out;
+			
+			if(inputSign == NumberSign.NOT_NEGATIVE && 0 <= out)
+				return out;
 		}
 	}
 
 	// returns an double from the console
 	public static double inputDouble(String text) {
-		return inputDouble(text, NumberSign.ALL);
+		text += " (" + BACK_INT +" to go back): ";
+		System.out.print(text);
+		while(!inScanner.hasNextDouble()) {
+			inScanner.next();
+			System.out.print(text);
+		}
+		double out = inScanner.nextDouble();
+		inScanner.nextLine();
+		return out;
 	}
-	// returns an double from the console with a spasific sign (inputSign) that is under the given maximum
+	// returns an double from the console with a specific sign (inputSign) that is under the given maximum
 	public static double inputDouble(String text, NumberSign inputSign, double max) {
 		double out;
 		while (max < (out = inputDouble(text, inputSign)) && max != BACK_INT);
 		return out;
 	}
-	// returns an double from the console with a spasific sign (inputSign)
+	
+	// returns an double from the console with a specific sign (inputSign)
 	public static double inputDouble(String text, NumberSign inputSign) {
 		double out;
-		text += " (" + BACK_INT +" to go back): ";
 		
 		while(true) {
-			System.out.print(text);
-			while(!inScanner.hasNextDouble()) {
-				inScanner.next();
-				System.out.print(text);
-			}
-			out = inScanner.nextDouble();
-			inScanner.nextLine();
-			if(out == BACK_INT) return BACK_INT;
+			out = inputDouble(text);
+			if(out == BACK_INT || inputSign == NumberSign.ALL) 
+				return out;
 			
-			switch (inputSign) {
-			case ALL: return out;
-			case POSITIVE:
-				if( 0 < out) {
-					return out;
-				}
-				break;
-			case NOT_NEGATIVE:
-				if( 0 <= out) {
-					return out;
-				}
-				break;
-			default:
-				break;
-			}
-
+			if(inputSign == NumberSign.POSITIVE && 0 < out)
+				return out;
+			
+			if(inputSign == NumberSign.NOT_NEGATIVE && 0 <= out)
+				return out;
 		}
 	}
 
-	// returns a rerult of a Yes\No quastion (boolean)
+	// returns a result of a Yes\No question with stop condition (boolean)
 	public static Boolean inputBool(String text) {
 		return inputBool(text, true);
 	}
 
-	// returns a rerult of a Yes\No quastion buy choice (boolean)
+	// returns a result of a Yes\No question with stop condition buy choice (boolean)
 	public static Boolean inputBool(String text, boolean withBack) {
 		text += " (Yes/No): ";
 	    String in = inputString(text, false, withBack);
-	    while (!in.equalsIgnoreCase("Yes") && !in.equalsIgnoreCase("No")  && !in.equalsIgnoreCase(BACK_STR)) {
+	    while (!in.equalsIgnoreCase("Yes") && !in.equalsIgnoreCase("No")  && (!in.equalsIgnoreCase(BACK_STR) || !withBack)) {
 			in = inputString(text, false, withBack);
 		}
-	    if(in.equalsIgnoreCase(BACK_STR))
+	    if(in.equalsIgnoreCase(BACK_STR) && withBack)
 	    	return null;
 	    return in.equalsIgnoreCase("Yes");
 	}
 	
-	// retruns a String with a stop condition
+	// Returns a String with a stop condition
 	public static String inputString(String text, boolean isName) {
 		return inputString(text, isName, true);
 	}
 	
 
-	// retruns a String with a stop condition buy choice
+	// Returns a String with a stop condition buy choice
 	public static String inputString(String text, boolean isName, boolean isWithBack) {
 		if(isName)
 			text += " (without numbers)";
@@ -152,14 +148,7 @@ public class InputManager {
 				return str;
 			
 			else if(isName) {
-				boolean isGood = true;
-				for(char chr : str.toCharArray()) {
-					if(!Character.isLetter(chr) && chr != ' ') {
-						isGood = false;
-						break;
-					}
-				}
-				if(isGood)
+				if(DataChecker.isValidName(str))
 					break;
 			}
 			else break;
@@ -173,7 +162,7 @@ public class InputManager {
 
 	    String id;
 	    while(!(id = inputString("Enter ID (positive 9 digits)", false)).equalsIgnoreCase(BACK_STR)) {
-	    	if(Rider.isValidId(id)) {
+	    	if(DataChecker.isValidId(id)) {
 	    		if(deliveryDataBase.isContainsRider(id)) {
 	    			System.out.println("Rider with ID " + id + " already exists. Please enter a different ID.");
 	    		} else {
@@ -184,7 +173,7 @@ public class InputManager {
 	    if (id.equalsIgnoreCase(BACK_STR)) return null;
 
 	    String phone;
-	    while (!Customer.isValidPhoneNumber(phone = inputString("Enter phone number (IL)", false)) &&
+	    while (!DataChecker.isValidPhoneNumber(phone = inputString("Enter phone number (IL)", false)) &&
 	            !phone.equalsIgnoreCase(BACK_STR));
 	    if (phone.equalsIgnoreCase(BACK_STR)) return null;
 
@@ -218,7 +207,7 @@ public class InputManager {
 	    System.out.println("create Customer");
 
 	    String phone;
-	    while (!Customer.isValidPhoneNumber(phone = inputString("Enter the new phone number (IL)", false)) &&
+	    while (!DataChecker.isValidPhoneNumber(phone = inputString("Enter the new phone number (IL)", false)) &&
 	            !phone.equalsIgnoreCase(BACK_STR));
 	    if (phone.equalsIgnoreCase(BACK_STR)) return null;
 
@@ -241,7 +230,7 @@ public class InputManager {
 	    if (zip == BACK_INT) return null;
 
 	    String email;
-	    while(!Customer.isValidEmail( email = inputString("Enter email", false)) && !email.equalsIgnoreCase(BACK_STR));
+	    while(!DataChecker.isValidEmail( email = inputString("Enter email", false)) && !email.equalsIgnoreCase(BACK_STR));
 	    if (email.equalsIgnoreCase(BACK_STR)) return null;
 
 	    double balance = inputDouble("Enter the balance ");
@@ -409,7 +398,7 @@ public class InputManager {
 	    return new Date(day, month, year);
 	}
 	
-	// retruns a new Date that is later than the given one
+	// Returns a new Date that is later than the given one
 	public static Date createDateAfterDate(Date before) {
 		Date date;
 		while((date = createDate()) != null && !date.isAfter(before)) {

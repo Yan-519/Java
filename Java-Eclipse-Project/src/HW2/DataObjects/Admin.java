@@ -1,4 +1,4 @@
-package HW2;
+package HW2.DataObjects;
 
 public class Admin {
 

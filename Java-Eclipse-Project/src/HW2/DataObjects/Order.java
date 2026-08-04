@@ -1,4 +1,6 @@
-package HW2;
+package HW2.DataObjects;
+
+import HW2.Utils.DataChecker;
 
 public class Order extends Coded {
 	public enum DeliveryStatus{ Created, OnTheWay, Delivered }
@@ -14,8 +16,7 @@ public class Order extends Coded {
 	private DeliveryStatus deliveryStatus; 
 	
 	
-	public Order(int code, int clientCode, Restaurant restaurant,
-			Date orderingDate, double basePrice) {
+	public Order(int code, int clientCode, Restaurant restaurant, Date orderingDate, double basePrice) {
 		super(code);
 		this.clientCode = clientCode;
 		this.restaurant = restaurant;
@@ -29,6 +30,26 @@ public class Order extends Coded {
 		this.riderId = null;
 		this.deliveringDate = new Date();
 	}
+	
+	public Order(int code, int clientCode, Restaurant restaurant, String riderId, Date orderingDate, double basePrice) {
+		super(code);
+		this.clientCode = clientCode;
+		this.restaurant = restaurant;
+		this.restaurantCode = restaurant.getCode();
+		this.riderId = riderId;
+		this.orderingDate = orderingDate;
+		this.basePrice = basePrice;
+		
+
+		setBasePrice(basePrice);
+		
+		this.deliveryStatus = DeliveryStatus.Created;
+
+		this.riderId = null;
+		this.deliveringDate = new Date();
+	}
+
+
 
 
 
@@ -39,7 +60,7 @@ public class Order extends Coded {
 
 
 	public void setRiderId(String riderId) {
-		if(Rider.isValidId(riderId))
+		if(DataChecker.isValidId(riderId))
 			this.riderId = riderId;
 	}
 
@@ -116,12 +137,13 @@ public class Order extends Coded {
 	}
 
 
+
 	@Override
 	public String toString() {
-		return "Order [orderCode=" + code + ", clientCode=" + clientCode + ", restaurantCode=" + restaurantCode
-				+ ", deliverCode=" + riderId + ", orderingDate=" + orderingDate + ", deliveringDate="
-				+ deliveringDate + ", basePrice=" + basePrice + ", finalPrice=" + finalPrice + ", deliveryStatus="
-				+ deliveryStatus + "]";
+		return "Order [clientCode=" + clientCode + ", restaurantCode=" + restaurantCode
+				+ ", riderId=" + riderId + ", orderingDate=" + orderingDate + ", deliveringDate=" + deliveringDate
+				+ ", basePrice=" + basePrice + ", finalPrice=" + finalPrice + ", deliveryStatus=" + deliveryStatus
+				+ ", code=" + code + "]";
 	}
 	
 }
