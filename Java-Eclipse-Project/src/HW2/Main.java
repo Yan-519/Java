@@ -12,16 +12,16 @@ public class Main {
 
 		// Customers
 		Customer[] customers = {
-		    new Customer(1, "Alice", "Green", "Oak St", "New York", 10001, "111111111", "alice@mail.com", 100),
-		    new Customer(2, "Bob", "White", "Maple St", "Chicago", 10002, "222222222", "bob@mail.com", 50),
-		    new Customer(3, "Charlie", "Black", "Pine St", "Boston", 10003, "333333333", "charlie@mail.com", 80),
-		    new Customer(4, "Diana", "Gray", "Hill St", "Dallas", 10004, "444444444", "diana@mail.com", 120),
-		    new Customer(5, "Ethan", "Stone", "Lake St", "Miami", 10005, "555555555", "ethan@mail.com", 30),
-		    new Customer(6, "Fiona", "King", "River St", "Seattle", 10006, "666666666", "fiona@mail.com", 200),
-		    new Customer(7, "George", "Hall", "Elm St", "Denver", 10007, "777777777", "george@mail.com", 90),
-		    new Customer(8, "Helen", "Young", "Sun St", "Austin", 10008, "888888888", "helen@mail.com", 70),
-		    new Customer(9, "Ian", "Scott", "Main St", "Phoenix", 10009, "999999999", "ian@mail.com", 150),
-		    new Customer(10, "Julia", "Lee", "King St", "Atlanta", 10010, "101010101", "julia@mail.com", 40)
+		    new Customer(1, "Alice", "Green", "Oak St", "New York", "10001", "051111111", "alice@mail.com", 100),
+		    new Customer(2, "Bob", "White", "Maple St", "Chicago", "10002", "052222222", "bob@mail.com", 50),
+		    new Customer(3, "Charlie", "Black", "Pine St", "Boston", "10003", "053333333", "charlie@mail.com", 80),
+		    new Customer(4, "Diana", "Gray", "Hill St", "Dallas", "10004", "054444444", "diana@mail.com", 120),
+		    new Customer(5, "Ethan", "Stone", "Lake St", "Miami", "10005", "055555555", "ethan@mail.com", 30),
+		    new Customer(6, "Fiona", "King", "River St", "Seattle", "10006", "056666666", "fiona@mail.com", 200),
+		    new Customer(7, "George", "Hall", "Elm St", "Denver", "10007", "057777777", "george@mail.com", 90),
+		    new Customer(8, "Helen", "Young", "Sun St", "Austin", "10008", "058888888", "helen@mail.com", 70),
+		    new Customer(9, "Ian", "Scott", "Main St", "Phoenix", "10009", "059999999", "ian@mail.com", 150),
+		    new Customer(10, "Julia", "Lee", "King St", "Atlanta", "10010", "051010101", "julia@mail.com", 40)
 		};
 
 		// Restaurants

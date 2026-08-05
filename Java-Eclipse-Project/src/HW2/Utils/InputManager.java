@@ -172,10 +172,9 @@ public class InputManager {
 	    if (phone.equalsIgnoreCase(BACK_STR)) return null;
 
 	    String firstName = inputString("Enter first name", true);
-	    while( firstName.indexOf(' ') != -1 && firstName.substring(0, firstName.indexOf(' ')).isEmpty() &&
-	    		!firstName.equalsIgnoreCase(BACK_STR) )
-	    	firstName = inputString("Enter first name", true);
 	    if (firstName.equalsIgnoreCase(BACK_STR)) return null;
+	    if(firstName.indexOf(' ') != -1)
+	    	firstName = firstName.substring(0, firstName.indexOf(' '));
 
 	    String lastName = inputString("Enter last name", true);
 	    if (lastName.equalsIgnoreCase(BACK_STR)) return null;
@@ -202,14 +201,14 @@ public class InputManager {
 
 	    String phone;
 	    while (!DataChecker.isValidPhoneNumber(phone = inputString("Enter the new phone number (IL)", false)) &&
-	            !phone.equalsIgnoreCase(BACK_STR));
+	            !phone.equalsIgnoreCase(BACK_STR))
+	    	System.out.println("Not valid phone number");
 	    if (phone.equalsIgnoreCase(BACK_STR)) return null;
 
 	    String firstName = inputString("Enter first name", true);
-	    while( firstName.indexOf(' ') != -1 && firstName.substring(0, firstName.indexOf(' ')).isEmpty() &&
-	    		!firstName.equalsIgnoreCase(BACK_STR) )
-	    	firstName = inputString("Enter first name", true);
 	    if (firstName.equalsIgnoreCase(BACK_STR)) return null;
+	    if(firstName.indexOf(' ') != -1)
+	    	firstName = firstName.substring(0, firstName.indexOf(' '));
 
 	    String lastName = inputString("Enter last name", true);
 	    if (lastName.equalsIgnoreCase(BACK_STR)) return null;
@@ -219,12 +218,15 @@ public class InputManager {
 
 	    String town = inputString("Enter town", true);
 	    if (town.equalsIgnoreCase(BACK_STR)) return null;
-
-	    int zip = inputInt("Enter new ZIP code (positive)", NumberSign.POSITIVE);
-	    if (zip == BACK_INT) return null;
+	    
+	    String zip;
+	    while(!DataChecker.isValidZipCode(zip = inputString("Enter new ZIP code", false)) && !zip.equalsIgnoreCase(BACK_STR))
+	    	System.out.println("Zip code must be not newgative 5-7 digits");
+	    if(zip.equalsIgnoreCase(BACK_STR)) return null;
 
 	    String email;
-	    while(!DataChecker.isValidEmail( email = inputString("Enter email", false)) && !email.equalsIgnoreCase(BACK_STR));
+	    while(!DataChecker.isValidEmail( email = inputString("Enter email", false)) && !email.equalsIgnoreCase(BACK_STR))
+	    	System.out.println("Not valid email");
 	    if (email.equalsIgnoreCase(BACK_STR)) return null;
 
 	    double balance = inputDouble("Enter the balance ");
@@ -371,23 +373,25 @@ public class InputManager {
 	public static Date createDate() {
 	    System.out.println("create Date");
 
-	    int day;
+	    int year;
 	    do {
-	        day = inputInt("Enter day (1-31)");
-	        if (day == BACK_INT) return null;
-	    } while (day < 1 || day > 31);
+	        year = inputInt("Enter year (2000-2026)");
+	        if (year == BACK_INT) return null;
+	    } while (year < 2000 || year > 2026);
 
 	    int month;
 	    do {
 	        month = inputInt("Enter month (1-12)");
 	        if (month == BACK_INT) return null;
 	    } while (month < 1 || month > 12);
-
-	    int year;
+	    
+	    int maxDay = DataChecker.getDaysInMonth(year, month);
+	    int day;
 	    do {
-	        year = inputInt("Enter year (2000-2026)");
-	        if (year == BACK_INT) return null;
-	    } while (year < 2000 || month > 2026);
+	        day = inputInt("Enter day (1-"+ maxDay +")");
+	        if (day == BACK_INT) return null;
+	    } while (day < 1 || day > maxDay);
+
 
 	    return new Date(day, month, year);
 	}

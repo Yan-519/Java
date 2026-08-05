@@ -426,15 +426,18 @@ public class MenuManager {
 					}
 
 					if(InputManager.inputBool("Do you want to chage the ZIP code?", false)) {
-						int zip = InputManager.inputInt("Enter new ZIP code (positive)", NumberSign.POSITIVE);
-						if(zip != BACK_INT)
-						customer.setZipCode(zip);
+						String zip;
+					    while(!DataChecker.isValidZipCode(zip = InputManager.inputString("Enter new ZIP code", false)) && !zip.equalsIgnoreCase(BACK_STR))
+					    	System.out.println("Zip code must be not newgative 5-7 digits");
+					    if(!zip.equalsIgnoreCase(BACK_STR))
+					    	customer.setZipCode(zip);
 					}
 				}
 				if(InputManager.inputBool("Do you want to chage your phone number?", false)) {
 					String phone;
 					while(!DataChecker.isValidPhoneNumber((phone = InputManager.inputString("Enter the new phone number (IL)", false))) &&
-							!phone.equalsIgnoreCase(BACK_STR));
+							!phone.equalsIgnoreCase(BACK_STR))
+						System.out.println("Not valid phone number");
 					if(!phone.equalsIgnoreCase(BACK_STR))
 						customer.setPhoneNumber(phone);
 				}

@@ -19,7 +19,7 @@ public abstract class Coded {
 	// generate a random positive code that isn't in the given list
 	public static <T extends Coded> int generateCode(ArrayList<T> list) {
 		int code;
-		while (isContains(list, code = Math.abs(random.nextInt() - 2) + 1));
+		while (isContains(list, code = random.nextInt() & Integer.MAX_VALUE));
 		return code;
 	}
 	
@@ -39,7 +39,7 @@ public abstract class Coded {
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		if(obj instanceof Coded coded) {
 			return coded.getCode() == this.code;
 		}
@@ -47,7 +47,7 @@ public abstract class Coded {
 	}
 	
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		return code;
 	}
 }

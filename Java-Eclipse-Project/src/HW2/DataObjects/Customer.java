@@ -4,14 +4,13 @@ import HW2.Utils.DataChecker;
 
 public class Customer extends Coded {
 	
-	private String name, lastName, street, town;
-	private int zipCode;
-	private String phoneNumber;
-	private String emain;
+	private String name, lastName;
+	private String street, town, zipCode;
+	private String phoneNumber, emain;
 	private double creditBalance;
 
 	
-	public Customer(int code, String name, String lastName, String street, String town, int zipCode, String phoneNum,
+	public Customer(int code, String name, String lastName, String street, String town, String zipCode, String phoneNum,
 			String emain, double creditBalance) {	
 		super(code);
 		this.name = name;
@@ -58,7 +57,7 @@ public class Customer extends Coded {
 		return town;
 	}
 	
-	public int getZipCode() {
+	public String getZipCode() {
 		return zipCode;
 	}
 	
@@ -82,14 +81,13 @@ public class Customer extends Coded {
 		this.town = town;
 	}
 
-	public void setZipCode(int zipCode) {
-		if( 0 < zipCode)
-		this.zipCode = zipCode;
+	public void setZipCode(String zipCode) {
+		if(DataChecker.isValidZipCode(zipCode))
+			this.zipCode = zipCode;
 	}
 
 	public void setPhoneNumber(String phoneNumber) {
 		if(DataChecker.isValidPhoneNumber(phoneNumber))
 		this.phoneNumber = phoneNumber;
 	}
-
 }
