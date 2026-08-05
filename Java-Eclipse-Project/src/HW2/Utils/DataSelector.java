@@ -8,7 +8,7 @@ import HW2.DeliveryDataBase.CodedType;
 public class DataSelector {
 	
 	// DeliveryDataBase pointer
-	private static DeliveryDataBase deliveryDataBase = null;
+	private static DeliveryDataBase deliveryDataBase;
 	// set the DeliveryDataBase pointer once
 	public static void setDeliveryDataBase(DeliveryDataBase deliveryDataBase) {
 		DataSelector.deliveryDataBase = deliveryDataBase;

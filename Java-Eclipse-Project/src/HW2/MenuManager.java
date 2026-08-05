@@ -21,6 +21,7 @@ public class MenuManager {
 	public MenuManager(DeliveryDataBase deliveryDataBase) {
 		this.deliveryDataBase = deliveryDataBase;
 		DataSelector.setDeliveryDataBase(deliveryDataBase);
+		InputManager.setDeliveryDataBase(deliveryDataBase);
 	}
 
 	public DeliveryDataBase getDeliveryDataBase() {

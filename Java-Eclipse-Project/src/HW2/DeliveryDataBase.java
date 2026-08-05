@@ -240,22 +240,6 @@ public class DeliveryDataBase {
 		return systemAdministrator.getUserName().equalsIgnoreCase(userName) && systemAdministrator.getPassword() == password;
 	}
 
-	// checks if the restaurant of the given code open
-	public boolean isRestaurantOpen(int code) {
-		return Coded.tryGetCoded(restaurants, code) instanceof Restaurant restaurant && restaurant.isOpen();
-	}
-
-	// checks if the given rider id exist and aveilable
-	public boolean isRiderAveilable(String id) {
-		return tryGetRider(id) instanceof Rider rider && rider.isAvailable();
-	}
-
-	// checks if the given order code exist and status is Created
-	public boolean isOrderOnlyCreated(int code) {
-		return Coded.tryGetCoded(orders, code) instanceof Order order
-				&& order.getDeliveryStatus() == DeliveryStatus.Created;
-	}
-
 	// returns the RestAdmin by user name and password (if can't find -> return null)
 	public RestAdmin tryGetRestAdmin(String userName, int password) {
 		for (RestAdmin restAdmin : restAdmins) {
@@ -319,14 +303,6 @@ public class DeliveryDataBase {
 			ords.addAll(getOrdersByuRestaurant(restaurant.getCode()));
 
 		return ords;
-	}
-
-	// returns the restaurant info (toString) (can't find -> returns null)
-	public String tryGetRestaurantInfo(int code) {
-		Restaurant restaurant = Coded.tryGetCoded(restaurants, code);
-		if (restaurant != null)
-			return restaurant.toString();
-		return null;
 	}
 
 	// adds a Customer (if exists -> does nothing)

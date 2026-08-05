@@ -7,11 +7,10 @@ import HW2.DataObjects.*;
 
 public class InputManager {
 	// DeliveryDataBase pointer
-	private static DeliveryDataBase deliveryDataBase = null;
+	private static DeliveryDataBase deliveryDataBase;
 	// set DeliveryDataBase pointer once
 	public static void setDeliveryDataBase(DeliveryDataBase deliveryDataBase) {
-		if(deliveryDataBase == null)
-			InputManager.deliveryDataBase = deliveryDataBase;
+		InputManager.deliveryDataBase = deliveryDataBase;
 	}
 
 	// user input Scanner
