@@ -1,18 +1,8 @@
 package HW2;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Locale;
 
-import HW2.DataObjects.Admin;
-import HW2.DataObjects.Customer;
-import HW2.DataObjects.Date;
-import HW2.DataObjects.FastFoodRestaurant;
-import HW2.DataObjects.Order;
-import HW2.DataObjects.PremiumRestaurant;
-import HW2.DataObjects.RestAdmin;
-import HW2.DataObjects.Restaurant;
-import HW2.DataObjects.Rider;
+import HW2.DataObjects.*;
 import HW2.Utils.InputManager;
 
 public class Main {
@@ -112,7 +102,7 @@ public class Main {
 
 		// Admins
 		RestAdmin[] admins = {
-		    new RestAdmin(1, "Tom", "tom", 1111,  new ArrayList<>(Arrays.asList( new Restaurant[] { restaurants[0]} ))),
+		    new RestAdmin(1, "Tom", "tom", 1111),
 		    new RestAdmin(2, "Sarah", "sarah", 2222),
 		    new RestAdmin(3, "Mike", "mike", 3333)
 		};

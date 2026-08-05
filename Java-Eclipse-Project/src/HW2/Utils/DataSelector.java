@@ -1,11 +1,7 @@
 package HW2.Utils;
 
 import HW2.DeliveryDataBase;
-import HW2.DataObjects.Customer;
-import HW2.DataObjects.Order;
-import HW2.DataObjects.RestAdmin;
-import HW2.DataObjects.Restaurant;
-import HW2.DataObjects.Rider;
+import HW2.DataObjects.*;
 import HW2.DataObjects.Order.DeliveryStatus;
 import HW2.DeliveryDataBase.CodedType;
 

@@ -3,13 +3,7 @@ package HW2.Utils;
 import java.util.Scanner;
 
 import HW2.DeliveryDataBase;
-import HW2.DataObjects.Customer;
-import HW2.DataObjects.Date;
-import HW2.DataObjects.FastFoodRestaurant;
-import HW2.DataObjects.PremiumRestaurant;
-import HW2.DataObjects.RestAdmin;
-import HW2.DataObjects.Restaurant;
-import HW2.DataObjects.Rider;
+import HW2.DataObjects.*;
 
 public class InputManager {
 	// DeliveryDataBase pointer

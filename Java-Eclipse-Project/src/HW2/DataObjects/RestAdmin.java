@@ -17,15 +17,6 @@ public class RestAdmin extends Coded {
 		this.password = password;
 		this.restaurants = new ArrayList<>();
 	}
-	
-	
-	
-	public RestAdmin(int code, String name, String userName, int password, ArrayList<Restaurant> restaurants) {
-		this(code, name, userName, password);
-		this.restaurants = restaurants;
-	}
-
-
 
 	public void addRestaurant(Restaurant restaurant) {
 		if(restaurant != null && !restaurants.contains(restaurant))

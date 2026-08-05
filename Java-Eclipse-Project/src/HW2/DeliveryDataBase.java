@@ -1,18 +1,10 @@
 package HW2;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Hashtable;
 
-import HW2.DataObjects.Admin;
-import HW2.DataObjects.Coded;
-import HW2.DataObjects.Customer;
-import HW2.DataObjects.Date;
-import HW2.DataObjects.Order;
-import HW2.DataObjects.PremiumRestaurant;
-import HW2.DataObjects.RestAdmin;
-import HW2.DataObjects.Restaurant;
-import HW2.DataObjects.Rider;
+import HW2.DataObjects.*;
 import HW2.DataObjects.Order.DeliveryStatus;
 
 public class DeliveryDataBase {
@@ -55,11 +47,18 @@ public class DeliveryDataBase {
 		this();
 
 		this.systemAdministrator = systemAdministrator;
+		
+		for (Customer customer : customers)
+			this.customers.add(customer);
 
-		this.customers = new ArrayList<>(Arrays.asList(customers));
-		this.restaurants = new ArrayList<>(Arrays.asList(restaurants));
-		this.riders = new ArrayList<>(Arrays.asList(riders));
-		this.restAdmins = new ArrayList<>(Arrays.asList(restAdmins));
+		for (Restaurant restaurant : restaurants)
+			this.restaurants.add(restaurant);
+
+		for (Rider rider : riders)
+			this.riders.add(rider);
+
+		for (RestAdmin restAdmin : restAdmins)
+			this.restAdmins.add(restAdmin);
 
 		for (Order order : orders) 
 			addOrderToCustomer(order.getClientCode(), order);
@@ -169,12 +168,7 @@ public class DeliveryDataBase {
 		int maxOrders = 0;
 
 		for (Rider rider : riders) {
-			int orderCount = 0;
-			for (Order order : rider.getOrders()) {
-				if (order.getDeliveryStatus() == DeliveryStatus.Delivered) {
-					orderCount++;
-				}
-			}
+			int orderCount = filterOrdersBuyStatus(rider.getOrders(), DeliveryStatus.Delivered).size();
 
 			if (orderCount >= maxOrders) {
 				maxOrders = orderCount;
@@ -213,21 +207,31 @@ public class DeliveryDataBase {
 		return ords;
 	}
 	
-	// filter Orders Buy given Status
-	public ArrayList<Order> filterOrdersBuyStatus(ArrayList<Order> ords, DeliveryStatus status){
-		ArrayList<Order> res = new ArrayList<Order>();
-		for (Order order : ords)
-			if(order.getDeliveryStatus() == status)
-				res.add(order);
+	public Hashtable<DeliveryStatus, ArrayList<Order>> splitOrdersBuyTaype(ArrayList<Order> orders){
+		Hashtable<DeliveryStatus, ArrayList<Order>> res = new Hashtable<Order.DeliveryStatus, ArrayList<Order>>(3);
+		res.put(DeliveryStatus.Created, new ArrayList<Order>());
+		res.put(DeliveryStatus.OnTheWay, new ArrayList<Order>());
+		res.put(DeliveryStatus.Delivered, new ArrayList<Order>());
+		
+		for(Order order : orders)
+			res.get(order.getDeliveryStatus()).add(order);
 		return res;
+	}
+	
+	// filter Orders Buy given Status
+	public ArrayList<Order> filterOrdersBuyStatus(ArrayList<Order> orders, DeliveryStatus status){
+		return splitOrdersBuyTaype(orders).get(status);
 	}
 
 	// filter Orders Buy not given Status
-	public ArrayList<Order> filterOrdersBuyNotStatus(ArrayList<Order> ords, DeliveryStatus status){
+	public ArrayList<Order> filterOrdersBuyNotStatus(ArrayList<Order> orders, DeliveryStatus status){
 		ArrayList<Order> res = new ArrayList<Order>();
-		for (Order order : ords)
-			if(order.getDeliveryStatus() != status)
-				res.add(order);
+		
+		Hashtable<DeliveryStatus, ArrayList<Order>> ordersHashtable = splitOrdersBuyTaype(orders);
+		ordersHashtable.remove(status);
+		
+		for(ArrayList<Order> ords : ordersHashtable.values())
+			res.addAll(ords);
 		return res;
 	}
 	
