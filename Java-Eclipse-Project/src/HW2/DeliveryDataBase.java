@@ -120,15 +120,6 @@ public class DeliveryDataBase {
 		}
 	}
 
-	// get orders of rider
-	public ArrayList<Order> getRidersOrders(String id) {
-		for (Rider rider : riders) {
-			if (rider.getId().equalsIgnoreCase(id)) {
-				return rider.getOrders();
-			}
-		}
-		return new ArrayList<>();
-	}
  
 	// get Premium Restaurants By Customer
 	public ArrayList<PremiumRestaurant> getPremiumRestaurantsByCustomer(Customer customer) {
@@ -385,7 +376,11 @@ public class DeliveryDataBase {
 			return;
 
 		if (order.getRiderId() != null) {
-			getRidersOrders(riderId).remove(order);
+			Rider oldRider = tryGetRider(riderId);
+			if(oldRider != null) {
+				oldRider.getOrders().remove(order);
+				oldRider.setAvailable(true);
+			}
 		}
 
 		order.setRiderId(rider.getId());

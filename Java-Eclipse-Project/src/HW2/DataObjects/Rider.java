@@ -29,7 +29,7 @@ public class Rider {
 	
 	// adds order if not in list
 	public void addOrder(Order order) {
-		if(order != null && !orders.contains(order))
+		if(order != null && !orders.contains(order) && isAvailable)
 			this.orders.add(order);
 	}
 	
