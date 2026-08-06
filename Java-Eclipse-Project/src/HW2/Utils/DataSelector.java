@@ -2,7 +2,7 @@ package HW2.Utils;
 
 import HW2.DeliveryDataBase;
 import HW2.DataObjects.*;
-import HW2.DataObjects.Order.DeliveryStatus;
+import HW2.DataObjects.Order.OrderStatus;
 import HW2.DeliveryDataBase.CodedType;
 
 public class DataSelector {
@@ -89,7 +89,7 @@ public class DataSelector {
 	public static Order selectCreatedOrder() {
 		Order order = DataSelector.selectOrder();
 		if(order == null) return null;
-		while(order.getDeliveryStatus() != DeliveryStatus.Created) {
+		while(order.getDeliveryStatus() != OrderStatus.Created) {
 			System.out.println("The order is already " + order.getDeliveryStatus());
 			order = DataSelector.selectOrder();
 			if(order == null) return null;

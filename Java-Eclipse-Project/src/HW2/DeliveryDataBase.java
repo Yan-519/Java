@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 import HW2.DataObjects.*;
-import HW2.DataObjects.Order.DeliveryStatus;
+import HW2.DataObjects.Order.OrderStatus;
 
 public class DeliveryDataBase {
 	
@@ -90,7 +90,7 @@ public class DeliveryDataBase {
 	public void removeOrder(int code, int clientCode) {
 		Order order = tryGetOrder(code);
 		Customer customer = tryGetCustomer(clientCode);
-		if (order == null || customer == null || order.getClientCode() != clientCode || order.getDeliveryStatus() == DeliveryStatus.Delivered)
+		if (order == null || customer == null || order.getClientCode() != clientCode || order.getDeliveryStatus() == OrderStatus.Delivered)
 			return;
 
 		
@@ -103,7 +103,7 @@ public class DeliveryDataBase {
 			rider.removeOrder(code);
 		}
 		
-		double backMoney = order.getFinalPrice() * (order.getDeliveryStatus() == DeliveryStatus.Created ? 1 : 0.5 );
+		double backMoney = order.getFinalPrice() * (order.getDeliveryStatus() == OrderStatus.Created ? 1 : 0.5 );
 		totalSpentByCustomer.put(clientCode, totalSpentByCustomer.get(clientCode) + backMoney);
 		customer.setBalance(customer.getCreditBalance() + backMoney);
 		
@@ -164,7 +164,7 @@ public class DeliveryDataBase {
 		int maxOrders = 0;
 
 		for (Rider rider : riders) {
-			int orderCount = filterOrdersBuyStatus(rider.getOrders(), DeliveryStatus.Delivered).size();
+			int orderCount = filterOrdersBuyStatus(rider.getOrders(), OrderStatus.Delivered).size();
 
 			if (orderCount >= maxOrders) {
 				maxOrders = orderCount;
@@ -203,11 +203,11 @@ public class DeliveryDataBase {
 		return ords;
 	}
 	
-	public Hashtable<DeliveryStatus, ArrayList<Order>> splitOrdersBuyTaype(ArrayList<Order> orders){
-		Hashtable<DeliveryStatus, ArrayList<Order>> res = new Hashtable<Order.DeliveryStatus, ArrayList<Order>>(3);
-		res.put(DeliveryStatus.Created, new ArrayList<>());
-		res.put(DeliveryStatus.OnTheWay, new ArrayList<>());
-		res.put(DeliveryStatus.Delivered, new ArrayList<>());
+	public Hashtable<OrderStatus, ArrayList<Order>> splitOrdersBuyTaype(ArrayList<Order> orders){
+		Hashtable<OrderStatus, ArrayList<Order>> res = new Hashtable<Order.OrderStatus, ArrayList<Order>>(3);
+		res.put(OrderStatus.Created, new ArrayList<>());
+		res.put(OrderStatus.OnTheWay, new ArrayList<>());
+		res.put(OrderStatus.Delivered, new ArrayList<>());
 		
 		for(Order order : orders)
 			res.get(order.getDeliveryStatus()).add(order);
@@ -215,15 +215,15 @@ public class DeliveryDataBase {
 	}
 	
 	// filter Orders Buy given Status
-	public ArrayList<Order> filterOrdersBuyStatus(ArrayList<Order> orders, DeliveryStatus status){
+	public ArrayList<Order> filterOrdersBuyStatus(ArrayList<Order> orders, OrderStatus status){
 		return splitOrdersBuyTaype(orders).get(status);
 	}
 
 	// filter Orders Buy not given Status
-	public ArrayList<Order> filterOrdersBuyNotStatus(ArrayList<Order> orders, DeliveryStatus status){
+	public ArrayList<Order> filterOrdersBuyNotStatus(ArrayList<Order> orders, OrderStatus status){
 		ArrayList<Order> res = new ArrayList<Order>();
 		
-		Hashtable<DeliveryStatus, ArrayList<Order>> ordersHashtable = splitOrdersBuyTaype(orders);
+		Hashtable<OrderStatus, ArrayList<Order>> ordersHashtable = splitOrdersBuyTaype(orders);
 		ordersHashtable.remove(status);
 		
 		for(ArrayList<Order> ords : ordersHashtable.values())
@@ -275,14 +275,6 @@ public class DeliveryDataBase {
 	public Restaurant tryGetRestaurant(int code) {
 		return Coded.tryGetCoded(restaurants, code);
 	}
-
-//	// returns the Restaurant of a restAdmin by codes (if fail returns null)
-//	public Restaurant tryGetRestAdminRestaurant(int adminCode, int restCode) {
-//		RestAdmin restAdmin = Coded.tryGetCoded(restAdmins, adminCode);
-//		if (restAdmin != null)
-//			return restAdmin.tryGetRestaurant(restCode);
-//		return null;
-//	}
 
 	// gets all the orders of the given Customer
 	public ArrayList<Order> getOrdersOfCustomer(Customer customer) {
@@ -368,7 +360,7 @@ public class DeliveryDataBase {
 	// adds an Order to a Rider (RestAdmin)
 	public void addOrderToRider(String riderId, int orderCode) {
 		Order order = Coded.tryGetCoded(orders, orderCode);
-		if (order == null || order.getDeliveryStatus() != DeliveryStatus.Created)
+		if (order == null || order.getDeliveryStatus() != OrderStatus.Created)
 			return;
 
 		Rider rider = tryGetRider(riderId);
@@ -448,6 +440,7 @@ public class DeliveryDataBase {
 		return customer.setBalance(balance);
 	}
 	
+	// get all open restaurants
 	public ArrayList<Restaurant> getOpenRestaurants(){
 		ArrayList<Restaurant> res = new ArrayList<Restaurant>();
 		for(Restaurant restaurant: restaurants)

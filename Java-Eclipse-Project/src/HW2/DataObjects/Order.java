@@ -3,7 +3,7 @@ package HW2.DataObjects;
 import HW2.Utils.DataChecker;
 
 public class Order extends Coded {
-	public enum DeliveryStatus{ Created, OnTheWay, Delivered }
+	public enum OrderStatus{ Created, OnTheWay, Delivered }
 	
 	
 	private int clientCode;
@@ -13,7 +13,7 @@ public class Order extends Coded {
 	private Date orderingDate, deliveringDate;
 	private double basePrice, finalPrice;
 	
-	private DeliveryStatus deliveryStatus; 
+	private OrderStatus deliveryStatus; 
 	
 	
 	public Order(int code, int clientCode, Restaurant restaurant, Date orderingDate, double basePrice) {
@@ -25,7 +25,7 @@ public class Order extends Coded {
 		this.basePrice = basePrice;
 		setBasePrice(basePrice);
 		
-		this.deliveryStatus = DeliveryStatus.Created;
+		this.deliveryStatus = OrderStatus.Created;
 
 		this.riderId = null;
 		this.deliveringDate = new Date();
@@ -43,7 +43,7 @@ public class Order extends Coded {
 
 		setBasePrice(basePrice);
 		
-		this.deliveryStatus = DeliveryStatus.Created;
+		this.deliveryStatus = OrderStatus.Created;
 
 		this.riderId = null;
 		this.deliveringDate = new Date();
@@ -125,14 +125,15 @@ public class Order extends Coded {
 		}
 	}
 
+	// moving the delivery status forward toward delivering it
 	public void changeeliveryStatus() {
-		if(deliveryStatus == DeliveryStatus.Created)
-			deliveryStatus = DeliveryStatus.OnTheWay;
-		else if (deliveryStatus == DeliveryStatus.OnTheWay)
-			deliveryStatus = DeliveryStatus.Delivered;
+		if(deliveryStatus == OrderStatus.Created)
+			deliveryStatus = OrderStatus.OnTheWay;
+		else if (deliveryStatus == OrderStatus.OnTheWay)
+			deliveryStatus = OrderStatus.Delivered;
 	}
 	
-	public DeliveryStatus getDeliveryStatus() {
+	public OrderStatus getDeliveryStatus() {
 		return deliveryStatus;
 	}
 
@@ -155,7 +156,7 @@ public class Order extends Coded {
 		this.orderingDate = orderingDate;
 	}
 
-	public void setDeliveryStatus(DeliveryStatus deliveryStatus) {
+	public void setDeliveryStatus(OrderStatus deliveryStatus) {
 		this.deliveryStatus = deliveryStatus;
 	}
 

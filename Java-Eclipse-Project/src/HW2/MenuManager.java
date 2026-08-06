@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import HW2.DataObjects.*;
 import HW2.Utils.*;
 
-import HW2.DataObjects.Order.DeliveryStatus;
+import HW2.DataObjects.Order.OrderStatus;
 import HW2.DeliveryDataBase.CodedType;
 import HW2.Utils.InputManager.NumberSign;
 
@@ -229,7 +229,7 @@ public class MenuManager {
 				break;
 
 			case 4:
-				ArrayList<Order> orders = deliveryDataBase.filterOrdersBuyStatus(deliveryDataBase.getOrdersOfRestAdmin(restAdmin.getCode()), DeliveryStatus.Created);
+				ArrayList<Order> orders = deliveryDataBase.filterOrdersBuyStatus(deliveryDataBase.getOrdersOfRestAdmin(restAdmin.getCode()), OrderStatus.Created);
 				
 				if(orders.isEmpty()) {
 					System.out.println("No orders found");
@@ -311,15 +311,15 @@ public class MenuManager {
 					+ "else-exit \n"
 					+ ": ", false)) {
 			case 1:
-				if(!DataOutput.showCoded(deliveryDataBase.filterOrdersBuyNotStatus(rider.getOrders(), DeliveryStatus.Delivered))) {
+				if(!DataOutput.showCoded(deliveryDataBase.filterOrdersBuyNotStatus(rider.getOrders(), OrderStatus.Delivered))) {
 					System.out.println("No order found");
 					break;
 				}
 
 				Order order = DataSelector.selectOrder();
 				if(order == null) break;
-				while(order.getDeliveryStatus() == DeliveryStatus.Delivered || order.getRiderId() == null || !order.getRiderId().equalsIgnoreCase(rider.getId())){
-					if(order.getDeliveryStatus() == DeliveryStatus.Delivered)
+				while(order.getDeliveryStatus() == OrderStatus.Delivered || order.getRiderId() == null || !order.getRiderId().equalsIgnoreCase(rider.getId())){
+					if(order.getDeliveryStatus() == OrderStatus.Delivered)
 						System.out.println("The order is already delivered");
 					else 
 						System.out.println("The current rider not in charge of the order");
@@ -331,11 +331,11 @@ public class MenuManager {
 				boolean isUpdate = InputManager.inputBool("Do you want to update the status of the order?(created->on the way->delivered)", false);
 				if(!isUpdate) break;
 				
-				if(order.getDeliveryStatus() == DeliveryStatus.Created) {
+				if(order.getDeliveryStatus() == OrderStatus.Created) {
 					order.changeeliveryStatus();
 					rider.setAvailable(false);
 				}
-				else if(order.getDeliveryStatus() == DeliveryStatus.OnTheWay) {					
+				else if(order.getDeliveryStatus() == OrderStatus.OnTheWay) {					
 					Date aftreDate = InputManager.createDateAfterDate(order.getOrderingDate());
 					if(aftreDate == null) break;
 
@@ -346,7 +346,7 @@ public class MenuManager {
 				break;
 
 			case 2:
-				if(!DataOutput.showCoded(deliveryDataBase.filterOrdersBuyNotStatus(rider.getOrders(), DeliveryStatus.Delivered)))
+				if(!DataOutput.showCoded(deliveryDataBase.filterOrdersBuyNotStatus(rider.getOrders(), OrderStatus.Delivered)))
 					System.out.println("No order found");
 				break;
 				
@@ -477,10 +477,10 @@ public class MenuManager {
 				
 				Order order = DataSelector.selectOrder();
 				if(order == null) break;
-				while(order.getClientCode() != customer.getCode() || order.getDeliveryStatus() == DeliveryStatus.Delivered) {
+				while(order.getClientCode() != customer.getCode() || order.getDeliveryStatus() == OrderStatus.Delivered) {
 					if(order.getClientCode() != customer.getCode())
 							System.out.println("The selected order must me your");
-					else if(order.getDeliveryStatus() == DeliveryStatus.Delivered)
+					else if(order.getDeliveryStatus() == OrderStatus.Delivered)
 						System.out.println("You can't cencel an order that has beed deliverd");
 					order = DataSelector.selectOrder();
 					if(order == null) break;

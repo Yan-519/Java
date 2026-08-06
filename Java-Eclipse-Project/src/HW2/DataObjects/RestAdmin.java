@@ -18,15 +18,13 @@ public class RestAdmin extends Coded {
 		this.restaurants = new ArrayList<>();
 	}
 
+	// add new restaurant
 	public void addRestaurant(Restaurant restaurant) {
 		if(restaurant != null && !restaurants.contains(restaurant))
 			this.restaurants.add(restaurant);
 	}
 	
-	public Restaurant tryGetRestaurant(int code) {
-		return Coded.tryGetCoded(restaurants, code);
-	}
-	
+	// is contains the restaurant code
 	public boolean containsRestaurant(int code) {
 		return Coded.isContains(restaurants, code);
 	}
@@ -35,6 +33,7 @@ public class RestAdmin extends Coded {
 		return restaurants;
 	}
 	
+	// get all open restaurants
 	public ArrayList<Restaurant> getOpenRestaurants(){
 		ArrayList<Restaurant> res = new ArrayList<>();
 		for(Restaurant restaurant: restaurants)
