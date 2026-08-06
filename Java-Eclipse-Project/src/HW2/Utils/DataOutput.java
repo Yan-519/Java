@@ -11,7 +11,7 @@ public class DataOutput {
             System.out.println(restAdmin.getUserName() + ": " + restAdmin.getCode());
 
         } else if (coded instanceof Restaurant restaurant) {
-            System.out.println(restaurant.getName() + ": " + restaurant.getCode());
+            System.out.println(restaurant.getName() + ": " + restaurant.getCode() + " ("+ (restaurant.isOpen() ? "Open" : "Close") +")");
             
         } else if (coded instanceof Customer customer) {
             System.out.println(customer.getName() + " " + customer.getLastName() + ": " + customer.getCode());

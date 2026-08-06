@@ -16,37 +16,41 @@ public class DeliveryDataBase {
 		Order
 	}
 
-	private Admin systemAdministrator;
+	private final Admin systemAdministrator;
 
-	private ArrayList<RestAdmin> restAdmins;
-	private ArrayList<Restaurant> restaurants;
-	private ArrayList<Customer> customers;
-	private ArrayList<Rider> riders;
-	private ArrayList<Order> orders;
+	private final ArrayList<RestAdmin> restAdmins;
+	private final ArrayList<Restaurant> restaurants;
+	private final ArrayList<Customer> customers;
+	private final ArrayList<Rider> riders;
+	private final ArrayList<Order> orders;
 
-	private HashMap<Integer, ArrayList<Order>> ordersByCustomer;
-	private HashMap<Integer, ArrayList<Restaurant>> selectedRestaurantsByCustomer;
-	private HashMap<Integer, Double> totalSpentByCustomer;
+	private final HashMap<Integer, ArrayList<Order>> ordersByCustomer;
+	private final HashMap<Integer, ArrayList<Restaurant>> selectedRestaurantsByCustomer;
+	private final HashMap<Integer, Double> totalSpentByCustomer;
 
-	public DeliveryDataBase() {
-		systemAdministrator = new Admin("admin", "admin", 12345);
-
-		restAdmins = new ArrayList<>();
-		restaurants = new ArrayList<>();
-		customers = new ArrayList<>();
-		riders = new ArrayList<>();
-		orders = new ArrayList<>();
+	
+	public DeliveryDataBase(Admin systemAdministrator) {
+		this.restAdmins = new ArrayList<>();
+		this.restaurants = new ArrayList<>();
+		this.customers = new ArrayList<>();
+		this.riders = new ArrayList<>();
+		this.orders = new ArrayList<>();
 
 		ordersByCustomer = new HashMap<>();
 		selectedRestaurantsByCustomer = new HashMap<>();
 		totalSpentByCustomer = new HashMap<>();
+
+		this.systemAdministrator = systemAdministrator;
+	}
+
+	public DeliveryDataBase() {
+		this(new Admin("admin", "admin", 12345));
 	}
 
 	public DeliveryDataBase(Admin systemAdministrator, Customer[] customers, Restaurant[] restaurants, Rider[] riders,
 			Order[] orders, RestAdmin[] restAdmins) {
-		this();
 
-		this.systemAdministrator = systemAdministrator;
+		this(systemAdministrator);
 		
 		for (Customer customer : customers)
 			this.customers.add(customer);
@@ -128,6 +132,7 @@ public class DeliveryDataBase {
  
 	// get Premium Restaurants By Customer
 	public ArrayList<PremiumRestaurant> getPremiumRestaurantsByCustomer(Customer customer) {
+		if(customer == null) return new ArrayList<>();
 		ArrayList<PremiumRestaurant> premiumRestaurants = new ArrayList<>();
 		if (selectedRestaurantsByCustomer.containsKey(customer.getCode())) {
 			for (Restaurant restaurant : selectedRestaurantsByCustomer.get(customer.getCode())) {
@@ -200,7 +205,7 @@ public class DeliveryDataBase {
 	
 	// returns all the orders of the given restaurant (by restaurant code)
 	public ArrayList<Order> getOrdersByuRestaurant(int code){
-		ArrayList<Order> ords = new ArrayList<Order>();
+		ArrayList<Order> ords = new ArrayList<>();
 		for(Order order: orders)
 			if(order.getRestaurantCode() == code)
 				ords.add(order);
@@ -209,9 +214,9 @@ public class DeliveryDataBase {
 	
 	public Hashtable<DeliveryStatus, ArrayList<Order>> splitOrdersBuyTaype(ArrayList<Order> orders){
 		Hashtable<DeliveryStatus, ArrayList<Order>> res = new Hashtable<Order.DeliveryStatus, ArrayList<Order>>(3);
-		res.put(DeliveryStatus.Created, new ArrayList<Order>());
-		res.put(DeliveryStatus.OnTheWay, new ArrayList<Order>());
-		res.put(DeliveryStatus.Delivered, new ArrayList<Order>());
+		res.put(DeliveryStatus.Created, new ArrayList<>());
+		res.put(DeliveryStatus.OnTheWay, new ArrayList<>());
+		res.put(DeliveryStatus.Delivered, new ArrayList<>());
 		
 		for(Order order : orders)
 			res.get(order.getDeliveryStatus()).add(order);
@@ -280,13 +285,13 @@ public class DeliveryDataBase {
 		return Coded.tryGetCoded(restaurants, code);
 	}
 
-	// returns the Restaurant of a restAdmin by codes (if fail returns null)
-	public Restaurant tryGetRestAdminRestaurant(int adminCode, int restCode) {
-		RestAdmin restAdmin = Coded.tryGetCoded(restAdmins, adminCode);
-		if (restAdmin != null)
-			return restAdmin.tryGetRestaurant(restCode);
-		return null;
-	}
+//	// returns the Restaurant of a restAdmin by codes (if fail returns null)
+//	public Restaurant tryGetRestAdminRestaurant(int adminCode, int restCode) {
+//		RestAdmin restAdmin = Coded.tryGetCoded(restAdmins, adminCode);
+//		if (restAdmin != null)
+//			return restAdmin.tryGetRestaurant(restCode);
+//		return null;
+//	}
 
 	// gets all the orders of the given Customer
 	public ArrayList<Order> getOrdersOfCustomer(Customer customer) {
@@ -296,9 +301,9 @@ public class DeliveryDataBase {
 	// get Orders Of RestAdmin
 	public ArrayList<Order> getOrdersOfRestAdmin(int code){
 		RestAdmin restAdmin = Coded.tryGetCoded(restAdmins, code);
-		if(restAdmin == null) return  new ArrayList<Order>();
+		if(restAdmin == null) return  new ArrayList<>();
 
-		ArrayList<Order> ords = new ArrayList<Order>();
+		ArrayList<Order> ords = new ArrayList<>();
 		for(Restaurant restaurant : restAdmin.getRestaurants())
 			ords.addAll(getOrdersByuRestaurant(restaurant.getCode()));
 
@@ -336,14 +341,6 @@ public class DeliveryDataBase {
 		riders.add(rider);
 	}
 
-	// adds a Order (if exists -> does nothing)
-	private void addOrder(Order order) {
-		if (order == null || orders.contains(order))
-			return;
-
-		addOrderToCustomer(order.getClientCode(), order);
-	}
-
 	// adds a Order by the needed parameters to do so (if exists -> does nothing)
 	public int addOrder(int restaurantCode, int customerCode, double basePrice, Date date) {
 		if (date == null)
@@ -356,10 +353,11 @@ public class DeliveryDataBase {
 
 		int code = generateCode(CodedType.Order);
 		Order order = new Order(code, customerCode, restaurant, date, basePrice);
-
-		if ((customer.getCreditBalance() < order.getFinalPrice()) || !customer.buy(order.getFinalPrice()))
+		
+		if (!customer.buy(order.getFinalPrice()))
 			return -1;
-		addOrder(order);
+		
+		addOrderToCustomer(order.getClientCode(), order);
 		return code;
 	}
 
@@ -398,24 +396,11 @@ public class DeliveryDataBase {
 	// adds an Order to a Rider (RestAdmin)
 	public void addOrderToRider(String riderId, int orderCode, int restAdminCode) {
 		Order order = Coded.tryGetCoded(orders, orderCode);
-		if (order == null || order.getDeliveryStatus() != DeliveryStatus.Created)
-			return;
-
 		RestAdmin restAdmin = Coded.tryGetCoded(restAdmins, restAdminCode);
-		if (restAdmin == null || restAdmin.tryGetRestaurant(order.getRestaurantCode()) == null)
+		if (restAdmin == null || order == null || !restAdmin.containsRestaurant(order.getRestaurantCode()))
 			return;
-
-		Rider rider = tryGetRider(riderId);
-		if (rider == null || !rider.isAvailable())
-			return;
-
-		if (order.getRiderId() != null) {
-			getRidersOrders(riderId).remove(order);
-		}
-
-		order.setRiderId(rider.getId());
-		rider.setAvailable(false);
-		rider.addOrder(order);
+		
+		addOrderToRider(riderId, orderCode);
 	}
 
 	// Checks if contains the object with the given code and type
@@ -467,6 +452,14 @@ public class DeliveryDataBase {
 		if(customer == null) return false;
 		return customer.setBalance(balance);
 	}
+	
+	public ArrayList<Restaurant> getOpenRestaurants(){
+		ArrayList<Restaurant> res = new ArrayList<Restaurant>();
+		for(Restaurant restaurant: restaurants)
+			if(restaurant.isOpen())
+				res.add(restaurant);
+		return res;
+	}
 
 	public ArrayList<RestAdmin> getRestAdmins() {
 		return restAdmins;
@@ -486,6 +479,30 @@ public class DeliveryDataBase {
 
 	public ArrayList<Order> getOrders() {
 		return orders;
+	}
+
+	public Admin getSystemAdministrator() {
+		return systemAdministrator;
+	}
+
+	public HashMap<Integer, ArrayList<Order>> getOrdersByCustomer() {
+		return ordersByCustomer;
+	}
+
+	public HashMap<Integer, ArrayList<Restaurant>> getSelectedRestaurantsByCustomer() {
+		return selectedRestaurantsByCustomer;
+	}
+
+	public HashMap<Integer, Double> getTotalSpentByCustomer() {
+		return totalSpentByCustomer;
+	}
+
+	@Override
+	public String toString() {
+		return "DeliveryDataBase [systemAdministrator=" + systemAdministrator + ", restAdmins=" + restAdmins
+				+ ", restaurants=" + restaurants + ", customers=" + customers + ", riders=" + riders + ", orders="
+				+ orders + ", ordersByCustomer=" + ordersByCustomer + ", selectedRestaurantsByCustomer="
+				+ selectedRestaurantsByCustomer + ", totalSpentByCustomer=" + totalSpentByCustomer + "]";
 	}
 
 	

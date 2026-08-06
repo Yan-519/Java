@@ -50,4 +50,11 @@ public abstract class Coded {
 	public final int hashCode() {
 		return code;
 	}
+
+	@Override
+	public String toString() {
+		return "Coded [code=" + code + "]";
+	}
+	
+	
 }

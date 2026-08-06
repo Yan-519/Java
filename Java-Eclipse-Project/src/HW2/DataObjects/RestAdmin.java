@@ -27,8 +27,20 @@ public class RestAdmin extends Coded {
 		return Coded.tryGetCoded(restaurants, code);
 	}
 	
+	public boolean containsRestaurant(int code) {
+		return Coded.isContains(restaurants, code);
+	}
+	
 	public ArrayList<Restaurant> getRestaurants() {
 		return restaurants;
+	}
+	
+	public ArrayList<Restaurant> getOpenRestaurants(){
+		ArrayList<Restaurant> res = new ArrayList<>();
+		for(Restaurant restaurant: restaurants)
+			if(restaurant.isOpen())
+				res.add(restaurant);
+		return res;
 	}
 
 
@@ -43,5 +55,29 @@ public class RestAdmin extends Coded {
 	public int getPassword() {
 		return password;
 	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public void setPassword(int password) {
+		this.password = password;
+	}
+
+	public void setRestaurants(ArrayList<Restaurant> restaurants) {
+		this.restaurants = restaurants;
+	}
+
+	@Override
+	public String toString() {
+		return "RestAdmin [name=" + name + ", userName=" + userName + ", password=" + password + ", restaurants="
+				+ restaurants + ", code=" + code + "]";
+	}
+	
+	
 
 }

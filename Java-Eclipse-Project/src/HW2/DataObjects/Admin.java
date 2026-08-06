@@ -41,6 +41,11 @@ public class Admin {
 	public void setPassword(int password) {
 		this.password = password;
 	}
+
+	@Override
+	public String toString() {
+		return "Admin [name=" + name + ", userName=" + userName + ", password=" + password + "]";
+	}
 	
 	
 }

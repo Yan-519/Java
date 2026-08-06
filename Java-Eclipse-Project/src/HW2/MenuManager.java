@@ -24,10 +24,6 @@ public class MenuManager {
 		InputManager.setDeliveryDataBase(deliveryDataBase);
 	}
 
-	public DeliveryDataBase getDeliveryDataBase() {
-		return deliveryDataBase;
-	}
-	
 	// the admin menu
 	private void adminMenu() {
 		System.out.println("Admin menu");
@@ -154,14 +150,11 @@ public class MenuManager {
 				Restaurant restaurant2 = DataSelector.selectRestaurant();
 				
 				if(restaurant2 != null) {
-					Boolean status = InputManager.inputBool("The restaurant is currently " +
-							(restaurant2.isOpen() ? "open" : "closed") + ". Do you want to change its status?", false);
-					if(status == null) {
-						System.out.println("No changes made to the restaurant status.");
-						break;
+					if (InputManager.inputBool("The restaurant is currently " +
+							(restaurant2.isOpen() ? "open" : "closed") + ". Do you want to change its status?", false)) {
+						restaurant2.setOpen(!restaurant2.isOpen());
+						System.out.println("Restaurant " + restaurant2.getName() + " is now " + (restaurant2.isOpen() ? "open" : "closed"));
 					}
-					restaurant2.setOpen(!restaurant2.isOpen());
-					System.out.println("Restaurant " + restaurant2.getName() + " is now " + (restaurant2.isOpen() ? "open" : "closed"));
 				}
 				break;
 
@@ -204,16 +197,14 @@ public class MenuManager {
 				break;
 
 			case 2:
-				if(restAdmin.getRestaurants().size() == 0) {
-					System.out.println("The current RestAdmin has no restaurants");
+				if(!DataOutput.showCoded(restAdmin.getOpenRestaurants())) {
+					System.out.println("The current RestAdmin has no open restaurants");
 					break;
 				}
 				
-				DataOutput.showCoded(restAdmin.getRestaurants());
-				
 				Restaurant restaurant = DataSelector.selectOpenRestaurant();
 				if(restaurant == null) break;
-				while(deliveryDataBase.tryGetRestAdminRestaurant(restAdmin.getCode(), restaurant.getCode()) == null) {
+				while(!restAdmin.containsRestaurant(restaurant.getCode())) {
 					System.out.println("The current restaurant admin isnt the manager of the selected restaurant");
 					restaurant = DataSelector.selectOpenRestaurant();
 					if(restaurant == null) break;
@@ -240,7 +231,7 @@ public class MenuManager {
 			case 4:
 				ArrayList<Order> orders = deliveryDataBase.filterOrdersBuyStatus(deliveryDataBase.getOrdersOfRestAdmin(restAdmin.getCode()), DeliveryStatus.Created);
 				
-				if(orders.size() == 0) {
+				if(orders.isEmpty()) {
 					System.out.println("No orders found");
 					break;
 				}
@@ -252,7 +243,7 @@ public class MenuManager {
 				DataOutput.showCoded(orders);
 				Order order = DataSelector.selectCreatedOrder();
 				if(order == null) break;
-				while(restAdmin.tryGetRestaurant(order.getRestaurantCode()) == null) {
+				while(!restAdmin.containsRestaurant(order.getRestaurantCode())) {
 					System.out.println("The selected order isnt from a restorant that controlled by the current manager");
 					order = DataSelector.selectCreatedOrder();
 					if(order == null) break;
@@ -263,16 +254,14 @@ public class MenuManager {
 				break;
 				
 			case 5:
-				if(restAdmin.getRestaurants().size() == 0) {
+				if(!DataOutput.showCoded(restAdmin.getRestaurants())) {
 					System.out.println("The current RestAdmin has no restaurants");
 					break;
 				}
 				
-				DataOutput.showCoded(restAdmin.getRestaurants());
-				
 				Restaurant rest = DataSelector.selectRestaurant();
 				if(rest == null) break;
-				while(deliveryDataBase.tryGetRestAdminRestaurant(restAdmin.getCode(), rest.getCode()) == null) {
+				while(!restAdmin.containsRestaurant(rest.getCode())) {
 					System.out.println("The current restaurant admin isnt the manager of the selected restaurant");
 					rest = DataSelector.selectRestaurant();
 					if(rest == null) break;
@@ -283,14 +272,22 @@ public class MenuManager {
 
 				break;
 			case 6:
+				if(!DataOutput.showCoded(restAdmin.getRestaurants())) {
+					System.out.println("The current RestAdmin has no restaurants");
+					break;
+				}
 				String kitchenType = InputManager.inputString("Enter kitchen type", false);
 			    if (kitchenType.equalsIgnoreCase(BACK_STR)) break;
 				
-				ArrayList<Restaurant> restaurants = deliveryDataBase.getOpenRestaurants(kitchenType);
-				if (restaurants.size() == 0)
+			    ArrayList<Restaurant> restaurants = deliveryDataBase.getOpenRestaurants(kitchenType);
+			    ArrayList<Restaurant> filtered = new ArrayList<>();
+			    for (Restaurant r : restaurants) 
+			        if (restAdmin.containsRestaurant(r.getCode())) 
+			        	filtered.add(r);
+			    
+				
+				if (!DataOutput.showCoded(filtered))
 					System.out.println("No matching restaurants found");
-				else
-					DataOutput.showCoded(restaurants);
 				
 				break;
 
@@ -390,7 +387,7 @@ public class MenuManager {
 					System.out.println("You cant buy anything");
 					break;
 				}
-				DataOutput.showCoded(deliveryDataBase.getRestaurants());
+				DataOutput.showCoded(deliveryDataBase.getOpenRestaurants());
 				
 				Restaurant restaurant = DataSelector.selectOpenRestaurant();
 				if(restaurant == null) break;
@@ -405,9 +402,7 @@ public class MenuManager {
 				break;
 
 			case 2:
-				ArrayList<Order> orders = deliveryDataBase.getOrdersOfCustomer(customer);
-				DataOutput.showCoded(orders);
-				if(orders.size() == 0)
+				if(!DataOutput.showCoded(deliveryDataBase.getOrdersOfCustomer(customer)))
 					System.out.println("No orders found");
 
 				break;
@@ -445,17 +440,13 @@ public class MenuManager {
 				break;
 				
 			case 4:
-				ArrayList<Restaurant> restaurants = deliveryDataBase.getRestaurantasBuyCustomer(customer.getCode());
-				DataOutput.showCoded(restaurants);
-				if (restaurants.size() == 0)
+				if (!DataOutput.showCoded(deliveryDataBase.getRestaurantasBuyCustomer(customer.getCode())))
 					System.out.println("No orders found");
 				
 				break;
 				
 			case 5:
-				ArrayList<PremiumRestaurant> premiumRestaurants = deliveryDataBase.getPremiumRestaurantsByCustomer(customer);
-				DataOutput.showCoded(premiumRestaurants);
-				if (premiumRestaurants.size() == 0)
+				if (!DataOutput.showCoded(deliveryDataBase.getPremiumRestaurantsByCustomer(customer)))
 					System.out.println("No orders found");
 				
 				break;

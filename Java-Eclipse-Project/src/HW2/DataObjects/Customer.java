@@ -90,4 +90,34 @@ public class Customer extends Coded {
 		if(DataChecker.isValidPhoneNumber(phoneNumber))
 		this.phoneNumber = phoneNumber;
 	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+
+	public void setEmain(String emain) {
+		this.emain = emain;
+	}
+
+
+	public void setCreditBalance(double creditBalance) {
+		this.creditBalance = creditBalance;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Customer [name=" + name + ", lastName=" + lastName + ", street=" + street + ", town=" + town
+				+ ", zipCode=" + zipCode + ", phoneNumber=" + phoneNumber + ", emain=" + emain + ", creditBalance="
+				+ creditBalance + ", code=" + code + "]";
+	}
+	
+	
 }

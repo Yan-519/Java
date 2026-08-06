@@ -20,8 +20,8 @@ public class Restaurant extends Coded {
 	
 	@Override
 	public String toString() {
-		return "Restaurant [code=" + code + ", name=" + name + ", kitchenType=" + kitchenType + ", rating=" + rating
-				+ ", isOpen=" + isOpen + ", baseDeliveryFee=" + baseDeliveryFee + "]";
+		return "Restaurant [name=" + name + ", kitchenType=" + kitchenType + ", rating=" + rating + ", isOpen=" + isOpen
+				+ ", baseDeliveryFee=" + baseDeliveryFee + ", code=" + code + "]";
 	}
 	
 	public String getName() {
@@ -47,4 +47,26 @@ public class Restaurant extends Coded {
 	public void setOpen(boolean isOpen) {
 		this.isOpen = isOpen;
 	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public void setKitchenType(String kitchenType) {
+		this.kitchenType = kitchenType;
+	}
+
+
+	public void setRating(double rating) {
+		this.rating = rating;
+	}
+
+
+	public void setBaseDeliveryFee(double baseDeliveryFee) {
+		this.baseDeliveryFee = baseDeliveryFee;
+	}
+	
+	
 }

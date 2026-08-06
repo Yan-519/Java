@@ -137,6 +137,27 @@ public class Order extends Coded {
 	}
 
 
+	
+
+	public void setClientCode(int clientCode) {
+		this.clientCode = clientCode;
+	}
+
+	public void setRestaurant(Restaurant restaurant) {
+		this.restaurant = restaurant;
+	}
+
+	public void setRestaurantCode(int restaurantCode) {
+		this.restaurantCode = restaurantCode;
+	}
+
+	public void setOrderingDate(Date orderingDate) {
+		this.orderingDate = orderingDate;
+	}
+
+	public void setDeliveryStatus(DeliveryStatus deliveryStatus) {
+		this.deliveryStatus = deliveryStatus;
+	}
 
 	@Override
 	public String toString() {
