@@ -11,14 +11,14 @@ public class Rider {
 	private ArrayList<Order> orders;
 	
 	
-	public Rider(String id, String name, String lastName, String phoneNumber, String vehicle, boolean isAvailable) {
+	public Rider(String id, String name, String lastName, String phoneNumber, String vehicle) {
 		this.id = id;
 		this.name = name;
 		this.lastName = lastName;
 		this.phoneNumber = phoneNumber;
 		this.vehicle = vehicle;
-		this.isAvailable = isAvailable;
-
+		
+		this.isAvailable = true;
 		orders = new ArrayList<>();
 	}
 

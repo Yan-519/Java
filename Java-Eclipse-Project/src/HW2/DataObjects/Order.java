@@ -126,7 +126,7 @@ public class Order extends Coded {
 	}
 
 	// moving the delivery status forward toward delivering it
-	public void changeeliveryStatus() {
+	public void changeDliveryStatus() {
 		if(deliveryStatus == OrderStatus.Created)
 			deliveryStatus = OrderStatus.OnTheWay;
 		else if (deliveryStatus == OrderStatus.OnTheWay)

@@ -72,12 +72,11 @@ public class Main {
 
 		// Riders
 		Rider[] riders = {
-		    new Rider("123456789", "John", "Smith", "0511234567", "Motorcycle", true),
-		    new Rider("212345678", "David", "Brown", "0521234567", "Scooter", true),
-		    new Rider("312345678", "Michael", "Johnson", "0531234567", "Car", true),
-		    
-		    new Rider("412345678", "Daniel", "Wilson", "0541234567", "Bicycle", false),
-		    new Rider("512345678", "James", "Taylor", "0551234567", "Motorcycle", false)
+		    new Rider("123456789", "John", "Smith", "0511234567", "Motorcycle"),
+		    new Rider("212345678", "David", "Brown", "0521234567", "Scooter"),
+		    new Rider("312345678", "Michael", "Johnson", "0531234567", "Car"),
+		    new Rider("412345678", "Daniel", "Wilson", "0541234567", "Bicycle"),
+		    new Rider("512345678", "James", "Taylor", "0551234567", "Motorcycle")
 		};
 		
 		// Orders

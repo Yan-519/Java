@@ -109,13 +109,21 @@ public class InputManager {
 	// returns a result of a Yes\No question with stop condition buy choice (boolean)
 	public static Boolean inputBool(String text, boolean withBack) {
 		text += " (Yes/No): ";
-	    String in = inputString(text, false, withBack);
-	    while (!in.equalsIgnoreCase("Yes") && !in.equalsIgnoreCase("No")  && (!in.equalsIgnoreCase(BACK_STR) || !withBack)) {
-			in = inputString(text, false, withBack);
-		}
-	    if(in.equalsIgnoreCase(BACK_STR) && withBack)
-	    	return null;
-	    return in.equalsIgnoreCase("Yes");
+		while (true) {
+	        String in = inputString(text, false, withBack);
+
+	        if (withBack && in.equalsIgnoreCase(BACK_STR))
+	            return null;
+
+	        if (in.equalsIgnoreCase("Yes"))
+	            return true;
+
+	        if (in.equalsIgnoreCase("No"))
+	            return false;
+
+	        System.out.println("Please enter Yes or No" +
+	                (withBack ? " or " + BACK_STR : "") + ".");
+	    }
 	}
 	
 	// Returns a String with a stop condition
@@ -180,17 +188,13 @@ public class InputManager {
 
 	    String vehicle = inputString("Enter vehicle", false);
 	    if (vehicle.equalsIgnoreCase(BACK_STR)) return null;
-	    
-	    Boolean isAveilable = inputBool("Is aveilable");
-	    if(isAveilable == null) return null;
 
 	    return new Rider(
 	            id,
 	            firstName,
 	            lastName,
 	            phone,
-	            vehicle,
-	            isAveilable
+	            vehicle
 	    );
 	}
 

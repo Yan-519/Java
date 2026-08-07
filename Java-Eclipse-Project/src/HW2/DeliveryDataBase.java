@@ -448,6 +448,28 @@ public class DeliveryDataBase {
 				res.add(restaurant);
 		return res;
 	}
+	
+
+	// update the delivery status (add delivering date)
+	public void updateDeliveryStatus(String riderId, int orderCode, Date deliveryDate) {
+		Order order = tryGetOrder(orderCode);
+		Rider rider = tryGetRider(riderId);
+		if(order == null || rider == null || (deliveryDate == null && order.getDeliveryStatus() == OrderStatus.OnTheWay)) return;
+		if(deliveryDate != null)
+			order.setDeliveringDate(deliveryDate);
+			
+		order.changeDliveryStatus();
+		rider.setAvailable(order.getDeliveryStatus() == OrderStatus.Delivered);
+	}
+	
+	// switch between open and close restaurant by code
+	public boolean changeRestaurantStatus(int code) {
+		Restaurant restaurant = tryGetRestaurant(code);
+		if(restaurant == null) return false;
+		
+		restaurant.setOpen(!restaurant.isOpen());
+		return true;
+	}
 
 	public ArrayList<RestAdmin> getRestAdmins() {
 		return restAdmins;

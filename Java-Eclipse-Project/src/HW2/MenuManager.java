@@ -147,13 +147,13 @@ public class MenuManager {
 				
 			case 10:
 				DataOutput.showCoded(deliveryDataBase.getRestaurants());
-				Restaurant restaurant2 = DataSelector.selectRestaurant();
+				Restaurant rest = DataSelector.selectRestaurant();
 				
-				if(restaurant2 != null) {
+				if(rest != null) {
 					if (InputManager.inputBool("The restaurant is currently " +
-							(restaurant2.isOpen() ? "open" : "closed") + ". Do you want to change its status?", false)) {
-						restaurant2.setOpen(!restaurant2.isOpen());
-						System.out.println("Restaurant " + restaurant2.getName() + " is now " + (restaurant2.isOpen() ? "open" : "closed"));
+							(rest.isOpen() ? "open" : "closed") + ". Do you want to change its status?", false)) {
+						if(deliveryDataBase.changeRestaurantStatus(rest.getCode()))
+							System.out.println("Restaurant " + rest.getName() + " is now " + (rest.isOpen() ? "open" : "closed"));
 					}
 				}
 				break;
@@ -331,18 +331,8 @@ public class MenuManager {
 				boolean isUpdate = InputManager.inputBool("Do you want to update the status of the order?(created->on the way->delivered)", false);
 				if(!isUpdate) break;
 				
-				if(order.getDeliveryStatus() == OrderStatus.Created) {
-					order.changeeliveryStatus();
-					rider.setAvailable(false);
-				}
-				else if(order.getDeliveryStatus() == OrderStatus.OnTheWay) {					
-					Date aftreDate = InputManager.createDateAfterDate(order.getOrderingDate());
-					if(aftreDate == null) break;
-
-					order.changeeliveryStatus();
-					order.setDeliveringDate(aftreDate);
-					rider.setAvailable(true);
-				}
+				Date date = order.getDeliveryStatus() == OrderStatus.Created ? null : InputManager.createDateAfterDate(order.getOrderingDate());
+				deliveryDataBase.updateDeliveryStatus(rider.getId(), order.getCode(), date);
 				break;
 
 			case 2:
