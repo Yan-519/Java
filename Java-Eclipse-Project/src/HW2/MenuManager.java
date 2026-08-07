@@ -110,7 +110,11 @@ public class MenuManager {
 				break;
 
 			case 6:
-				DataOutput.showAveilableRiders(deliveryDataBase.getRiders());
+				if(!DataOutput.showAveilableRiders(deliveryDataBase.getRiders()))
+				{
+					System.out.println("No aveilable riders");
+					break;
+				}
 				Rider rider = DataSelector.selectAveilableRider();
 				if(rider == null) break;
 				
@@ -235,8 +239,12 @@ public class MenuManager {
 					System.out.println("No orders found");
 					break;
 				}
-
-				DataOutput.showAveilableRiders(deliveryDataBase.getRiders());
+				
+				if(!DataOutput.showAveilableRiders(deliveryDataBase.getRiders())) {
+					System.out.println("No aveilable riders");
+					break;
+				}
+				
 				Rider rider = DataSelector.selectAveilableRider();
 				if(rider == null) break;
 				

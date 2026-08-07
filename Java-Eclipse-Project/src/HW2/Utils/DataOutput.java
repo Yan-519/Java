@@ -36,15 +36,17 @@ public class DataOutput {
 	}
 	
 	// show all aveilable Riders
-	public static void showAveilableRiders(ArrayList<Rider> riders) {
+	public static boolean showAveilableRiders(ArrayList<Rider> riders) {
 		for(Rider rider_: riders) {
 			if(rider_.isAvailable()) {
 				System.out.println("Riders Id:");
 				for(Rider rider: riders)
 					if(rider.isAvailable())
 						System.out.println(rider.getName() + " " + rider.getLastName() + ": " + rider.getId());
-				return;
+				
+				return true;
 			}
 		}
+		return false;
 	}
 }

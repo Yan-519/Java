@@ -72,31 +72,26 @@ public class Main {
 
 		// Riders
 		Rider[] riders = {
-		    new Rider("123456789", "John", "Smith", "0511234567", "Motorcycle"),
-		    new Rider("212345678", "David", "Brown", "0521234567", "Scooter"),
-		    new Rider("312345678", "Michael", "Johnson", "0531234567", "Car"),
-		    new Rider("412345678", "Daniel", "Wilson", "0541234567", "Bicycle"),
-		    new Rider("512345678", "James", "Taylor", "0551234567", "Motorcycle")
+		    new Rider("123456789", "John", "Smith", "0511234567", "Motorcycle", false),
+		    new Rider("212345678", "David", "Brown", "0521234567", "Scooter", false),
+		    new Rider("312345678", "Michael", "Johnson", "0531234567", "Car", false),
+		    new Rider("412345678", "Daniel", "Wilson", "0541234567", "Bicycle", false),
+		    new Rider("512345678", "James", "Taylor", "0551234567", "Motorcycle", false)
 		};
 		
 		// Orders
 		Order[] orders = {
 		    new Order(1001, customers[0].getCode(), restaurants[0], riders[0].getId(), new Date(1, 1, 2026), 45.0),
-		    new Order(1002, customers[0].getCode(), restaurants[10], riders[0].getId(), new Date(3, 1, 2026), 32.5),
+		    new Order(1002, customers[0].getCode(), restaurants[10], riders[1].getId(), new Date(3, 1, 2026), 32.5),
+		    new Order(1003, customers[2].getCode(), restaurants[20], riders[2].getId(), new Date(5, 1, 2026), 180.0),
+		    new Order(1004, customers[3].getCode(), restaurants[5], riders[3].getId(), new Date(8, 1, 2026), 67.0),
+		    new Order(1005, customers[4].getCode(), restaurants[14], riders[4].getId(), new Date(10, 1, 2026), 29.5),
 		    
-		    new Order(1003, customers[2].getCode(), restaurants[20], riders[1].getId(), new Date(5, 1, 2026), 180.0),
-		    
-		    new Order(1004, customers[3].getCode(), restaurants[5], riders[2].getId(), new Date(8, 1, 2026), 67.0),
-		    
-		    new Order(1005, customers[4].getCode(), restaurants[14], riders[2].getId(), new Date(10, 1, 2026), 29.5),
-		    new Order(1006, customers[4].getCode(), restaurants[24], riders[1].getId(), new Date(12, 1, 2026), 210.0),
-		    
-		    new Order(1007, customers[6].getCode(), restaurants[2], riders[1].getId(), new Date(15, 1, 2026), 58.0),
-		    
-		    new Order(1008, customers[7].getCode(), restaurants[17], riders[0].getId(), new Date(18, 1, 2026), 41.0),
-		    new Order(1009, customers[7].getCode(), restaurants[28], riders[0].getId(), new Date(20, 1, 2026), 155.0),
-		    
-		    new Order(1010, customers[9].getCode(), restaurants[9], riders[0].getId(), new Date(25, 1, 2026), 72.0)
+		    new Order(1006, customers[4].getCode(), restaurants[24], new Date(12, 1, 2026), 210.0),
+		    new Order(1007, customers[6].getCode(), restaurants[2], new Date(15, 1, 2026), 58.0),
+		    new Order(1008, customers[7].getCode(), restaurants[17], new Date(18, 1, 2026), 41.0),
+		    new Order(1009, customers[7].getCode(), restaurants[28], new Date(20, 1, 2026), 155.0),
+		    new Order(1010, customers[9].getCode(), restaurants[9], new Date(25, 1, 2026), 72.0)
 		};
 
 		// Admins

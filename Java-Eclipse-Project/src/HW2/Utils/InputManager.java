@@ -194,7 +194,8 @@ public class InputManager {
 	            firstName,
 	            lastName,
 	            phone,
-	            vehicle
+	            vehicle,
+	            true
 	    );
 	}
 
