@@ -2,51 +2,72 @@ package HW2.DataObjects;
 
 import java.util.ArrayList;
 
+import HW2.DataObjects.Order.OrderStatus;
+
 public class Rider {
 	private final String id;
 	private String name, lastName;
 	private String phoneNumber;
 	private String vehicle;
 	private boolean isAvailable;
-	private ArrayList<Order> orders;
+	private ArrayList<Order> deliverdOrders;
+	private Order currentOrder;	
 	
-	
-	public Rider(String id, String name, String lastName, String phoneNumber, String vehicle, boolean isAvailable) {
+	public Rider(String id, String name, String lastName, String phoneNumber, String vehicle) {
 		this.id = id;
 		this.name = name;
 		this.lastName = lastName;
 		this.phoneNumber = phoneNumber;
 		this.vehicle = vehicle;
 		
-		this.isAvailable = isAvailable;
-		orders = new ArrayList<>();
-	}
-
-	// checks if contains order by given code
-	public boolean isContainsOrder(int code) {
-		return Coded.isContains(orders, code);
+		this.isAvailable = true;
+		
+		deliverdOrders = new ArrayList<>();
+		currentOrder = null;
 	}
 	
-	// adds order if not in list
-	public void addOrder(Order order) {
-		if(order != null && !orders.contains(order) && isAvailable)
-			this.orders.add(order);
-	}
-	
-	// remove order by code
-	public void removeOrder(int code) {
-		if(!isContainsOrder(code)) return;
-		orders.remove(Coded.tryGetCoded(orders, code));
+	// removes the current order of the rider
+	public void removeCurrentOrder() {
+		currentOrder = null;
 		isAvailable = true;
 	}
-
-	public ArrayList<Order> getOrders() {
-		return orders;
+	
+	// moving the delivery status forward toward delivering it
+	public void changeCurrentOrderStatus() {
+		if(currentOrder == null) return;
+		
+		if(currentOrder.getOrderStatus() == OrderStatus.Created)
+			currentOrder.setOrderStatus(OrderStatus.OnTheWay);
+		else {
+			currentOrder.setOrderStatus( OrderStatus.Delivered);
+			deliverdOrders.add(currentOrder);
+			removeCurrentOrder();
+		}
 	}
-
 
 	public String getId() {
 		return id;
+	}
+
+	public ArrayList<Order> getDeliverdOrders() {
+		return deliverdOrders;
+	}
+
+	public void setDeliverdOrders(ArrayList<Order> deliverdOrders) {
+		this.deliverdOrders = deliverdOrders;
+	}
+
+	public Order getCurrentOrder() {
+		return currentOrder;
+	}
+
+	public void setCurrentOrder(Order currentOrder) {
+		if(currentOrder.getOrderStatus() == OrderStatus.Delivered) 
+			return;
+		this.currentOrder = currentOrder;
+		currentOrder.setRiderId(id);
+		
+		isAvailable = currentOrder == null;
 	}
 
 	public String getName() {
@@ -90,14 +111,11 @@ public class Rider {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public void setOrders(ArrayList<Order> orders) {
-		this.orders = orders;
-	}
 
 	@Override
 	public String toString() {
 		return "Rider [id=" + id + ", name=" + name + ", lastName=" + lastName + ", phoneNumber=" + phoneNumber
-				+ ", vehicle=" + vehicle + ", isAvailable=" + isAvailable + ", orders=" + orders + "]";
+				+ ", vehicle=" + vehicle + ", isAvailable=" + isAvailable + ", orders=" + deliverdOrders + "]";
 	}
 	
 	

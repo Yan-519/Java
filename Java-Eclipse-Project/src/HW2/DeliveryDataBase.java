@@ -91,43 +91,46 @@ public class DeliveryDataBase {
 
 
 	// remove an order from the system
-	public void removeOrder(int code, int clientCode) {
+	public void removeOrder(int code) {
 		Order order = tryGetOrder(code);
-		Customer customer = tryGetCustomer(clientCode);
-		if (order == null || customer == null || order.getClientCode() != clientCode || order.getDeliveryStatus() == OrderStatus.Delivered)
-			return;
+		if (order == null || order.getOrderStatus() == OrderStatus.Delivered) return;
+		
+		Customer customer = tryGetCustomer(order.getClientCode());
+		if(customer == null) return;
 
 		
 	    Restaurant restaurant = tryGetRestaurant(order.getRestaurantCode());
-	    if (restaurant == null || !orders.contains(order))
+	    if (restaurant == null)
 	        return;
 
-	    if (!ordersByCustomer.containsKey(clientCode) || !ordersByCustomer.get(clientCode).contains(order))
+	    if (!ordersByCustomer.containsKey(order.getClientCode()) || !ordersByCustomer.get(order.getClientCode()).contains(order))
 	        return;
+	    
+	    if(order.getRiderId() != null) {
 
-	    Rider rider = tryGetRider(order.getRiderId());
-	    if (rider != null) {
-	        rider.removeOrder(code);
+		    Rider rider = tryGetRider(order.getRiderId());
+		    if (rider != null) 
+		    	rider.removeCurrentOrder();
 	    }
 		
 
-	    double backMoney = order.getFinalPrice() * (order.getDeliveryStatus() == OrderStatus.Created ? 1.0 : 0.5);
+	    double backMoney = order.getFinalPrice() * (order.getOrderStatus() == OrderStatus.Created ? 1.0 : 0.5);
 
-	    double currentTotal = totalSpentByCustomer.getOrDefault(clientCode, 0.0);
-	    totalSpentByCustomer.put(clientCode, Math.max(0.0, currentTotal - backMoney));
+	    double currentTotal = totalSpentByCustomer.getOrDefault(order.getClientCode(), 0.0);
+	    totalSpentByCustomer.put(order.getClientCode(), Math.max(0.0, currentTotal - backMoney));
 
 	    customer.setBalance(customer.getCreditBalance() + backMoney);
 
 	    orders.remove(order);
-	    ordersByCustomer.get(clientCode).remove(order);
+	    ordersByCustomer.get(order.getClientCode()).remove(order);
 
-	    if (selectedRestaurantsByCustomer.containsKey(clientCode)) {
-	        selectedRestaurantsByCustomer.get(clientCode).remove(restaurant);
+	    if (selectedRestaurantsByCustomer.containsKey(order.getClientCode())) {
+	        selectedRestaurantsByCustomer.get(order.getClientCode()).remove(restaurant);
 	        
 	        for (Order o : getOrdersOfCustomer(customer)) {
 	            if (o.getRestaurantCode() == restaurant.getCode()) {
-	                if (!selectedRestaurantsByCustomer.get(clientCode).contains(restaurant))
-	                    selectedRestaurantsByCustomer.get(clientCode).add(restaurant);
+	                if (!selectedRestaurantsByCustomer.get(order.getClientCode()).contains(restaurant))
+	                    selectedRestaurantsByCustomer.get(order.getClientCode()).add(restaurant);
 	                break;
 	            }
 	        }
@@ -178,7 +181,7 @@ public class DeliveryDataBase {
 		int maxOrders = 0;
 
 		for (Rider rider : riders) {
-			int orderCount = filterOrdersBuyStatus(rider.getOrders(), OrderStatus.Delivered).size();
+			int orderCount = rider.getDeliverdOrders().size();
 
 			if (orderCount >= maxOrders) {
 				maxOrders = orderCount;
@@ -224,7 +227,7 @@ public class DeliveryDataBase {
 		res.put(OrderStatus.Delivered, new ArrayList<>());
 		
 		for(Order order : orders)
-			res.get(order.getDeliveryStatus()).add(order);
+			res.get(order.getOrderStatus()).add(order);
 		return res;
 	}
 	
@@ -233,17 +236,17 @@ public class DeliveryDataBase {
 		return splitOrdersBuyTaype(orders).get(status);
 	}
 
-	// filter Orders Buy not given Status
-	public ArrayList<Order> filterOrdersBuyNotStatus(ArrayList<Order> orders, OrderStatus status){
-		ArrayList<Order> res = new ArrayList<Order>();
-		
-		Hashtable<OrderStatus, ArrayList<Order>> ordersHashtable = splitOrdersBuyTaype(orders);
-		ordersHashtable.remove(status);
-		
-		for(ArrayList<Order> ords : ordersHashtable.values())
-			res.addAll(ords);
-		return res;
-	}
+//	// filter Orders Buy not given Status
+//	public ArrayList<Order> filterOrdersBuyNotStatus(ArrayList<Order> orders, OrderStatus status){
+//		ArrayList<Order> res = new ArrayList<Order>();
+//		
+//		Hashtable<OrderStatus, ArrayList<Order>> ordersHashtable = splitOrdersBuyTaype(orders);
+//		ordersHashtable.remove(status);
+//		
+//		for(ArrayList<Order> ords : ordersHashtable.values())
+//			res.addAll(ords);
+//		return res;
+//	}
 	
 	// checks if the data matches to the systemAdministrator data
 	public boolean logIntoAdmin(String userName, int password) {
@@ -309,7 +312,7 @@ public class DeliveryDataBase {
 
 	// adds a Customer (if exists -> does nothing)
 	public boolean addCustomer(Customer customer) {
-		if (customer == null || customers.contains(customer))
+		if (customer == null || isContains(customer.getCode(), CodedType.Customer))
 			return false;
 		customers.add(customer);
 		return true;
@@ -317,7 +320,7 @@ public class DeliveryDataBase {
 
 	// adds a Admin (if exists -> does nothing)
 	public boolean addRestAdmine(RestAdmin admin) {
-		if (admin == null || restAdmins.contains(admin))
+		if (admin == null || isContains(admin.getCode(), CodedType.RestAdmin))
 			return false;
 		restAdmins.add(admin);
 		return true;
@@ -325,7 +328,7 @@ public class DeliveryDataBase {
 
 	// adds a Restaurant (if exists -> does nothing)
 	public boolean addRestaurant(Restaurant restaurant) {
-		if (restaurant == null || restaurants.contains(restaurant))
+		if (restaurant == null || isContains(restaurant.getCode(), CodedType.Restaurant))
 			return false;
 		restaurants.add(restaurant);
 		return true;
@@ -333,7 +336,7 @@ public class DeliveryDataBase {
 
 	// adds a Rider (if exists -> does nothing)
 	public void addRiders(Rider rider) {
-		if (rider == null || riders.contains(rider))
+		if (rider == null || isContainsRider(rider.getId()))
 			return;
 		riders.add(rider);
 	}
@@ -374,7 +377,7 @@ public class DeliveryDataBase {
 	// adds an Order to a Rider (RestAdmin)
 	public void addOrderToRider(String riderId, int orderCode) {
 		Order order = Coded.tryGetCoded(orders, orderCode);
-		if (order == null || order.getDeliveryStatus() != OrderStatus.Created)
+		if (order == null || order.getOrderStatus() != OrderStatus.Created)
 			return;
 
 		Rider rider = tryGetRider(riderId);
@@ -383,15 +386,11 @@ public class DeliveryDataBase {
 
 		if (order.getRiderId() != null) {
 			Rider oldRider = tryGetRider(order.getRiderId());
-			if(oldRider != null) {
-				oldRider.getOrders().remove(order);
-				oldRider.setAvailable(true);
-			}
+			if(oldRider != null)
+				oldRider.removeCurrentOrder();
 		}
 
-		order.setRiderId(rider.getId());
-		rider.setAvailable(false);
-		rider.addOrder(order);
+		rider.setCurrentOrder(order);
 	}
 
 	// adds an Order to a Rider (RestAdmin)
@@ -465,16 +464,17 @@ public class DeliveryDataBase {
 	
 
 	// update the delivery status (add delivering date)
-	public void updateDeliveryStatus(String riderId, int orderCode, Date deliveryDate) {
-		Order order = tryGetOrder(orderCode);
+	public void updateDeliveryStatus(String riderId, Date deliveryDate) {
 		Rider rider = tryGetRider(riderId);
-		if(order == null || rider == null ) return;
-		if (deliveryDate == null && order.getDeliveryStatus() == OrderStatus.OnTheWay) return;
+		if( rider == null) return;
+		Order order = rider.getCurrentOrder();
+		if(order == null) return;
+		
+		if (deliveryDate == null && order.getOrderStatus() == OrderStatus.OnTheWay) return;
 		if(deliveryDate != null)
 			order.setDeliveringDate(deliveryDate);
-			
-		order.changeDliveryStatus();
-		rider.setAvailable(order.getDeliveryStatus() == OrderStatus.Delivered);
+		
+		rider.changeCurrentOrderStatus();
 	}
 	
 	// switch between open and close restaurant by code

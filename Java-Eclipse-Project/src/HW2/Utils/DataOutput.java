@@ -6,7 +6,9 @@ import HW2.DataObjects.*;
 
 public class DataOutput {
 	// show Coded objects
-	public static <T extends Coded> void showCoded(T coded) {
+	public static <T extends Coded> boolean showCoded(T coded) {
+		if(coded == null) return false;
+		
         if (coded instanceof RestAdmin restAdmin) {
             System.out.println(restAdmin.getUserName() + ": " + restAdmin.getCode());
 
@@ -19,8 +21,12 @@ public class DataOutput {
         } else if (coded instanceof Order order) {
         	System.out.println("OrderCode=" + order.getCode() + ": client=" + order.getClientCode() + ", restaurant=" + order.getRestaurantCode()
         				+ ", riderId=" + order.getRiderId() + ", basePrice=" + order.getBasePrice() + ", finalPrice=" + order.getFinalPrice() + ", status="
-        				+ order.getDeliveryStatus());
+        				+ order.getOrderStatus());
         }
+        else {
+			return false;
+		}
+        return true;
 	}
 	
 	// show Coded objects

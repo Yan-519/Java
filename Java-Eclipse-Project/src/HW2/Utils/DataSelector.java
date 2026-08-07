@@ -89,8 +89,8 @@ public class DataSelector {
 	public static Order selectCreatedOrder() {
 		Order order = DataSelector.selectOrder();
 		if(order == null) return null;
-		while(order.getDeliveryStatus() != OrderStatus.Created) {
-			System.out.println("The order is already " + order.getDeliveryStatus());
+		while(order.getOrderStatus() != OrderStatus.Created) {
+			System.out.println("The order is already " + order.getOrderStatus());
 			order = DataSelector.selectOrder();
 			if(order == null) return null;
 		}

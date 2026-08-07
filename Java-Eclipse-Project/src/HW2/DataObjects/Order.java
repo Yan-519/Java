@@ -13,7 +13,7 @@ public class Order extends Coded {
 	private Date orderingDate, deliveringDate;
 	private double basePrice, finalPrice;
 	
-	private OrderStatus deliveryStatus; 
+	private OrderStatus orderStatus; 
 	
 	
 	public Order(int code, int clientCode, Restaurant restaurant, Date orderingDate, double basePrice) {
@@ -25,34 +25,20 @@ public class Order extends Coded {
 		this.basePrice = basePrice;
 		setBasePrice(basePrice);
 		
-		this.deliveryStatus = OrderStatus.Created;
+		this.orderStatus = OrderStatus.Created;
 
 		this.riderId = null;
 		this.deliveringDate = new Date();
 	}
-	
-	public Order(int code, int clientCode, Restaurant restaurant, String riderId, Date orderingDate, double basePrice) {
-		this(code, clientCode, restaurant, orderingDate, basePrice);
-
-		this.riderId = riderId;
-	}
-
-
-
-
 
 	public String getRiderId() {
 		return riderId;
 	}
 
-
-
 	public void setRiderId(String riderId) {
 		if(DataChecker.isValidId(riderId))
 			this.riderId = riderId;
 	}
-
-
 
 	public double getFinalPrice() {
 		return finalPrice;
@@ -63,8 +49,6 @@ public class Order extends Coded {
 		if( 0 <= finalPrice)
 		this.finalPrice = finalPrice;
 	}
-
-
 
 	public int getClientCode() {
 		return clientCode;
@@ -112,21 +96,16 @@ public class Order extends Coded {
 			 else finalPrice = basePrice + restaurant.getBaseDeliveryFee();
 		}
 	}
-
-	// moving the delivery status forward toward delivering it
-	public void changeDliveryStatus() {
-		if(deliveryStatus == OrderStatus.Created)
-			deliveryStatus = OrderStatus.OnTheWay;
-		else if (deliveryStatus == OrderStatus.OnTheWay)
-			deliveryStatus = OrderStatus.Delivered;
-	}
 	
-	public OrderStatus getDeliveryStatus() {
-		return deliveryStatus;
+	
+
+	public OrderStatus getOrderStatus() {
+		return orderStatus;
 	}
 
-
-	
+	public void setOrderStatus(OrderStatus orderStatus) {
+		this.orderStatus = orderStatus;
+	}
 
 	public void setClientCode(int clientCode) {
 		this.clientCode = clientCode;
@@ -144,15 +123,12 @@ public class Order extends Coded {
 		this.orderingDate = orderingDate;
 	}
 
-	public void setDeliveryStatus(OrderStatus deliveryStatus) {
-		this.deliveryStatus = deliveryStatus;
-	}
 
 	@Override
 	public String toString() {
 		return "Order [clientCode=" + clientCode + ", restaurantCode=" + restaurantCode
 				+ ", riderId=" + riderId + ", orderingDate=" + orderingDate + ", deliveringDate=" + deliveringDate
-				+ ", basePrice=" + basePrice + ", finalPrice=" + finalPrice + ", deliveryStatus=" + deliveryStatus
+				+ ", basePrice=" + basePrice + ", finalPrice=" + finalPrice + ", orderStatus=" + orderStatus
 				+ ", code=" + code + "]";
 	}
 	

@@ -51,7 +51,7 @@ public class MenuManager {
 					+ "6-assign a rider to a delivery \n"
 					+ "7-show all Orders \n"
 					+ "8-show customer with most orders \n"
-					+ "9-show rider with most orders \n"
+					+ "9-show rider with most deliverd orders \n"
 					+ "10-update restaurant status \n"
 					+ "else-exit \n"
 					+ ": ", false)) {
@@ -143,8 +143,8 @@ public class MenuManager {
 			case 9:
 				Rider riderWithMostOrders = deliveryDataBase.getRiderWithMostDeliverdOrders();
 				if(riderWithMostOrders != null)
-					System.out.println("The rider with most orders is: " + riderWithMostOrders.getName() + " " + riderWithMostOrders.getLastName() + 
-							" with id: " + riderWithMostOrders.getId() + " and number of orders: " + riderWithMostOrders.getOrders().size());
+					System.out.println("The rider with most deliverd orders is: " + riderWithMostOrders.getName() + " " + riderWithMostOrders.getLastName() + 
+							" with id: " + riderWithMostOrders.getId() + " and number of deliverd orders: " + riderWithMostOrders.getDeliverdOrders().size());
 				else System.out.println("No riders found");
 
 				break;
@@ -276,7 +276,8 @@ public class MenuManager {
 				}
 				if(rest == null) break;
 				
-				DataOutput.showCoded(deliveryDataBase.getOrdersByuRestaurant(rest.getCode()));
+				if(! DataOutput.showCoded(deliveryDataBase.getOrdersByuRestaurant(rest.getCode())))
+					System.out.println("The selected restaurant has no orders");
 
 				break;
 			case 6:
@@ -319,37 +320,28 @@ public class MenuManager {
 					+ "else-exit \n"
 					+ ": ", false)) {
 			case 1:
-				if(!DataOutput.showCoded(deliveryDataBase.filterOrdersBuyNotStatus(rider.getOrders(), OrderStatus.Delivered))) {
+				if(rider.isAvailable()) {
 					System.out.println("No order found");
 					break;
 				}
 
-				Order order = DataSelector.selectOrder();
-				if(order == null) break;
-				while(order.getDeliveryStatus() == OrderStatus.Delivered || order.getRiderId() == null || !order.getRiderId().equalsIgnoreCase(rider.getId())){
-					if(order.getDeliveryStatus() == OrderStatus.Delivered)
-						System.out.println("The order is already delivered");
-					else 
-						System.out.println("The current rider not in charge of the order");
-					order = DataSelector.selectOrder();
-					if(order == null) break;
-				}
-				if(order == null) break;
+				Order order = rider.getCurrentOrder();
 				
+				System.out.println("The status of the current order is " + order.getOrderStatus());
 				boolean isUpdate = InputManager.inputBool("Do you want to update the status of the order?(created->on the way->delivered)", false);
 				if(!isUpdate) break;
 				
-				Date date = order.getDeliveryStatus() == OrderStatus.Created ? null : InputManager.createDateAfterDate(order.getOrderingDate());
-				deliveryDataBase.updateDeliveryStatus(rider.getId(), order.getCode(), date);
+				Date date = order.getOrderStatus() == OrderStatus.Created ? null : InputManager.createDateAfterDate(order.getOrderingDate());
+				deliveryDataBase.updateDeliveryStatus(rider.getId(), date);
 				break;
 
 			case 2:
-				if(!DataOutput.showCoded(deliveryDataBase.filterOrdersBuyNotStatus(rider.getOrders(), OrderStatus.Delivered)))
-					System.out.println("No order found");
+				if(!DataOutput.showCoded(rider.getCurrentOrder()))
+					System.out.println("No oredr found");
 				break;
 				
 			case 3:
-				if(!DataOutput.showCoded(rider.getOrders())) 
+				if(!DataOutput.showCoded(rider.getDeliverdOrders()) && !DataOutput.showCoded(rider.getCurrentOrder())) 
 					System.out.println("No order found");
 				break;
 
@@ -385,7 +377,10 @@ public class MenuManager {
 					System.out.println("You cant buy anything");
 					break;
 				}
-				DataOutput.showCoded(deliveryDataBase.getOpenRestaurants());
+				if (!DataOutput.showCoded(deliveryDataBase.getOpenRestaurants())) {
+					System.out.println("No open restaurants found");
+					break;
+				}
 				
 				Restaurant restaurant = DataSelector.selectOpenRestaurant();
 				if(restaurant == null) break;
@@ -477,17 +472,17 @@ public class MenuManager {
 				
 				Order order = DataSelector.selectOrder();
 				if(order == null) break;
-				while(order.getClientCode() != customer.getCode() || order.getDeliveryStatus() == OrderStatus.Delivered) {
+				while(order.getClientCode() != customer.getCode() || order.getOrderStatus() == OrderStatus.Delivered) {
 					if(order.getClientCode() != customer.getCode())
 							System.out.println("The selected order must me your");
-					else if(order.getDeliveryStatus() == OrderStatus.Delivered)
+					else if(order.getOrderStatus() == OrderStatus.Delivered)
 						System.out.println("You can't cencel an order that has beed deliverd");
 					order = DataSelector.selectOrder();
 					if(order == null) break;
 				}
 				if(order == null) break;
 				
-				deliveryDataBase.removeOrder(order.getCode(), customer.getCode());
+				deliveryDataBase.removeOrder(order.getCode());
 				
 				break;
 
