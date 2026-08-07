@@ -32,21 +32,9 @@ public class Order extends Coded {
 	}
 	
 	public Order(int code, int clientCode, Restaurant restaurant, String riderId, Date orderingDate, double basePrice) {
-		super(code);
-		this.clientCode = clientCode;
-		this.restaurant = restaurant;
-		this.restaurantCode = restaurant.getCode();
+		this(code, clientCode, restaurant, orderingDate, basePrice);
+
 		this.riderId = riderId;
-		this.orderingDate = orderingDate;
-		this.basePrice = basePrice;
-		
-
-		setBasePrice(basePrice);
-		
-		this.deliveryStatus = OrderStatus.Created;
-
-		this.riderId = null;
-		this.deliveringDate = new Date();
 	}
 
 

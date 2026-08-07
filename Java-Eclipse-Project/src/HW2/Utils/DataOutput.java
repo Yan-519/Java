@@ -36,7 +36,7 @@ public class DataOutput {
 	}
 	
 	// show all aveilable Riders
-	public static boolean showAveilableRiders(ArrayList<Rider> riders) {
+	public static boolean showAvailableRiders(ArrayList<Rider> riders) {
 		for(Rider rider_: riders) {
 			if(rider_.isAvailable()) {
 				System.out.println("Riders Id:");

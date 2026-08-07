@@ -110,7 +110,7 @@ public class MenuManager {
 				break;
 
 			case 6:
-				if(!DataOutput.showAveilableRiders(deliveryDataBase.getRiders()))
+				if(!DataOutput.showAvailableRiders(deliveryDataBase.getRiders()))
 				{
 					System.out.println("No aveilable riders");
 					break;
@@ -240,7 +240,7 @@ public class MenuManager {
 					break;
 				}
 				
-				if(!DataOutput.showAveilableRiders(deliveryDataBase.getRiders())) {
+				if(!DataOutput.showAvailableRiders(deliveryDataBase.getRiders())) {
 					System.out.println("No aveilable riders");
 					break;
 				}
@@ -456,15 +456,17 @@ public class MenuManager {
 			case 7:
 				double add = InputManager.inputDouble("Enter money (not negative)", NumberSign.NOT_NEGATIVE);
 				if(add == BACK_INT) break;
-				if(!deliveryDataBase.setBalanceToCustomer(customer.getCode(), customer.getCreditBalance() + add))
-					System.out.println("Not valide final balance " + customer.getCreditBalance() + add);
+				double newAdd = customer.getCreditBalance() + add;
+				if(!deliveryDataBase.setBalanceToCustomer(customer.getCode(), newAdd))
+					System.out.println("Not valide final balance " + newAdd);
 				break;
 				
 			case 8:
 				double sub = InputManager.inputDouble("Enter money (not negative)", NumberSign.NOT_NEGATIVE);
 				if(sub == BACK_INT) break;
-				if(!deliveryDataBase.setBalanceToCustomer(customer.getCode(), customer.getCreditBalance() + sub))
-					System.out.println("Not valide final balance " + customer.getCreditBalance() + sub);
+				double newSub = customer.getCreditBalance() - sub;
+				if(!deliveryDataBase.setBalanceToCustomer(customer.getCode(), newSub))
+					System.out.println("Not valide final balance " + newSub);
 				break;
 				
 			case 9:

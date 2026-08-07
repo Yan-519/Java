@@ -71,20 +71,24 @@ public class DeliveryDataBase {
 
 	// add Order To Customer
 	public void addOrderToCustomer(int customerCode, Order order) {
-		if(order == null || orders.contains(order)) return;
-		orders.add(order);
+	    if (order == null || orders.contains(order)) return;
+	    orders.add(order);
 
-		ordersByCustomer.putIfAbsent(customerCode, new ArrayList<>());
-		if (!ordersByCustomer.get(customerCode).contains(order))
-			ordersByCustomer.get(customerCode).add(order);
+	    ordersByCustomer.putIfAbsent(customerCode, new ArrayList<>());
+	    ArrayList<Order> custOrders = ordersByCustomer.get(customerCode);
+	    if (!custOrders.contains(order))
+	        custOrders.add(order);
 
-		totalSpentByCustomer.putIfAbsent(customerCode, 0.0);
-		totalSpentByCustomer.put(customerCode, totalSpentByCustomer.get(order.getClientCode()) + order.getFinalPrice());
+	    totalSpentByCustomer.putIfAbsent(customerCode, 0.0);
+	    double currentTotal = totalSpentByCustomer.getOrDefault(customerCode, 0.0);
+	    totalSpentByCustomer.put(customerCode, currentTotal + order.getFinalPrice());
 
-		selectedRestaurantsByCustomer.putIfAbsent(customerCode, new ArrayList<>());
-		if (!selectedRestaurantsByCustomer.get(customerCode).contains(order.getRestaurant()))
-			selectedRestaurantsByCustomer.get(customerCode).add(order.getRestaurant());
+	    selectedRestaurantsByCustomer.putIfAbsent(customerCode, new ArrayList<>());
+	    ArrayList<Restaurant> selRests = selectedRestaurantsByCustomer.get(customerCode);
+	    if (!selRests.contains(order.getRestaurant()))
+	        selRests.add(order.getRestaurant());
 	}
+
 
 	// remove an order from the system
 	public void removeOrder(int code, int clientCode) {
@@ -94,30 +98,40 @@ public class DeliveryDataBase {
 			return;
 
 		
-		Restaurant restaurant = tryGetRestaurant(order.getRestaurantCode());
-		if (restaurant == null || !orders.contains(order) || !ordersByCustomer.get(clientCode).contains(order))
-			return;
-		
-		Rider rider = tryGetRider(order.getRiderId());
-		if(rider != null) {
-			rider.removeOrder(code);
-		}
-		
-		double backMoney = order.getFinalPrice() * (order.getDeliveryStatus() == OrderStatus.Created ? 1 : 0.5 );
-		totalSpentByCustomer.put(clientCode, totalSpentByCustomer.get(clientCode) + backMoney);
-		customer.setBalance(customer.getCreditBalance() + backMoney);
-		
-		
-		orders.remove(order);
-		ordersByCustomer.get(clientCode).remove(order);
-		selectedRestaurantsByCustomer.get(clientCode).remove(restaurant);
+	    Restaurant restaurant = tryGetRestaurant(order.getRestaurantCode());
+	    if (restaurant == null || !orders.contains(order))
+	        return;
 
-		for (Order o : getOrdersOfCustomer(customer)) {
-			if (o.getRestaurantCode() == restaurant.getCode()) {
-				selectedRestaurantsByCustomer.get(clientCode).add(restaurant);
-				break;
-			}
-		}
+	    if (!ordersByCustomer.containsKey(clientCode) || !ordersByCustomer.get(clientCode).contains(order))
+	        return;
+
+	    Rider rider = tryGetRider(order.getRiderId());
+	    if (rider != null) {
+	        rider.removeOrder(code);
+	    }
+		
+
+	    double backMoney = order.getFinalPrice() * (order.getDeliveryStatus() == OrderStatus.Created ? 1.0 : 0.5);
+
+	    double currentTotal = totalSpentByCustomer.getOrDefault(clientCode, 0.0);
+	    totalSpentByCustomer.put(clientCode, Math.max(0.0, currentTotal - backMoney));
+
+	    customer.setBalance(customer.getCreditBalance() + backMoney);
+
+	    orders.remove(order);
+	    ordersByCustomer.get(clientCode).remove(order);
+
+	    if (selectedRestaurantsByCustomer.containsKey(clientCode)) {
+	        selectedRestaurantsByCustomer.get(clientCode).remove(restaurant);
+	        
+	        for (Order o : getOrdersOfCustomer(customer)) {
+	            if (o.getRestaurantCode() == restaurant.getCode()) {
+	                if (!selectedRestaurantsByCustomer.get(clientCode).contains(restaurant))
+	                    selectedRestaurantsByCustomer.get(clientCode).add(restaurant);
+	                break;
+	            }
+	        }
+	    }
 	}
 
  
@@ -368,7 +382,7 @@ public class DeliveryDataBase {
 			return;
 
 		if (order.getRiderId() != null) {
-			Rider oldRider = tryGetRider(riderId);
+			Rider oldRider = tryGetRider(order.getRiderId());
 			if(oldRider != null) {
 				oldRider.getOrders().remove(order);
 				oldRider.setAvailable(true);
@@ -454,7 +468,8 @@ public class DeliveryDataBase {
 	public void updateDeliveryStatus(String riderId, int orderCode, Date deliveryDate) {
 		Order order = tryGetOrder(orderCode);
 		Rider rider = tryGetRider(riderId);
-		if(order == null || rider == null || (deliveryDate == null && order.getDeliveryStatus() == OrderStatus.OnTheWay)) return;
+		if(order == null || rider == null ) return;
+		if (deliveryDate == null && order.getDeliveryStatus() == OrderStatus.OnTheWay) return;
 		if(deliveryDate != null)
 			order.setDeliveringDate(deliveryDate);
 			

@@ -37,6 +37,7 @@ public class Rider {
 	public void removeOrder(int code) {
 		if(!isContainsOrder(code)) return;
 		orders.remove(Coded.tryGetCoded(orders, code));
+		isAvailable = true;
 	}
 
 	public ArrayList<Order> getOrders() {
