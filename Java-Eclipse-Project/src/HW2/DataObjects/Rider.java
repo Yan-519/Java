@@ -118,5 +118,14 @@ public class Rider {
 				+ ", vehicle=" + vehicle + ", isAvailable=" + isAvailable + ", orders=" + deliverdOrders + "]";
 	}
 	
+	@Override
+	public final boolean equals(Object object) {
+		return object instanceof Rider rider && rider.getId().equalsIgnoreCase(id);
+		
+	}
 	
+	@Override
+	public final int hashCode() {
+		return id.hashCode();
+	}
 }

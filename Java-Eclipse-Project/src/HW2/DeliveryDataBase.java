@@ -16,17 +16,17 @@ public class DeliveryDataBase {
 		Order
 	}
 
-	private final Admin systemAdministrator;
+	private Admin systemAdministrator;
 
-	private final ArrayList<RestAdmin> restAdmins;
-	private final ArrayList<Restaurant> restaurants;
-	private final ArrayList<Customer> customers;
-	private final ArrayList<Rider> riders;
-	private final ArrayList<Order> orders;
+	private ArrayList<RestAdmin> restAdmins;
+	private ArrayList<Restaurant> restaurants;
+	private ArrayList<Customer> customers;
+	private ArrayList<Rider> riders;
+	private ArrayList<Order> orders;
 
-	private final HashMap<Integer, ArrayList<Order>> ordersByCustomer;
-	private final HashMap<Integer, ArrayList<Restaurant>> selectedRestaurantsByCustomer;
-	private final HashMap<Integer, Double> totalSpentByCustomer;
+	private HashMap<Integer, ArrayList<Order>> ordersByCustomer;
+	private HashMap<Integer, ArrayList<Restaurant>> selectedRestaurantsByCustomer;
+	private HashMap<Integer, Double> totalSpentByCustomer;
 
 	
 	public DeliveryDataBase(Admin systemAdministrator) {
@@ -235,18 +235,6 @@ public class DeliveryDataBase {
 	public ArrayList<Order> filterOrdersBuyStatus(ArrayList<Order> orders, OrderStatus status){
 		return splitOrdersBuyTaype(orders).get(status);
 	}
-
-//	// filter Orders Buy not given Status
-//	public ArrayList<Order> filterOrdersBuyNotStatus(ArrayList<Order> orders, OrderStatus status){
-//		ArrayList<Order> res = new ArrayList<Order>();
-//		
-//		Hashtable<OrderStatus, ArrayList<Order>> ordersHashtable = splitOrdersBuyTaype(orders);
-//		ordersHashtable.remove(status);
-//		
-//		for(ArrayList<Order> ords : ordersHashtable.values())
-//			res.addAll(ords);
-//		return res;
-//	}
 	
 	// checks if the data matches to the systemAdministrator data
 	public boolean logIntoAdmin(String userName, int password) {
@@ -312,7 +300,7 @@ public class DeliveryDataBase {
 
 	// adds a Customer (if exists -> does nothing)
 	public boolean addCustomer(Customer customer) {
-		if (customer == null || isContains(customer.getCode(), CodedType.Customer))
+		if (customer == null || customers.contains(customer))
 			return false;
 		customers.add(customer);
 		return true;
@@ -320,7 +308,7 @@ public class DeliveryDataBase {
 
 	// adds a Admin (if exists -> does nothing)
 	public boolean addRestAdmine(RestAdmin admin) {
-		if (admin == null || isContains(admin.getCode(), CodedType.RestAdmin))
+		if (admin == null || restAdmins.contains(admin))
 			return false;
 		restAdmins.add(admin);
 		return true;
@@ -328,7 +316,7 @@ public class DeliveryDataBase {
 
 	// adds a Restaurant (if exists -> does nothing)
 	public boolean addRestaurant(Restaurant restaurant) {
-		if (restaurant == null || isContains(restaurant.getCode(), CodedType.Restaurant))
+		if (restaurant == null || restaurants.contains(restaurant))
 			return false;
 		restaurants.add(restaurant);
 		return true;
@@ -336,7 +324,7 @@ public class DeliveryDataBase {
 
 	// adds a Rider (if exists -> does nothing)
 	public void addRiders(Rider rider) {
-		if (rider == null || isContainsRider(rider.getId()))
+		if (rider == null || riders.contains(rider))
 			return;
 		riders.add(rider);
 	}
@@ -401,25 +389,6 @@ public class DeliveryDataBase {
 			return;
 		
 		addOrderToRider(riderId, orderCode);
-	}
-
-	// Checks if contains the object with the given code and type
-	public boolean isContains(int code, CodedType type) {
-		switch (type) {
-			case RestAdmin:
-				return Coded.isContains(restAdmins, code);
-
-			case Restaurant:
-				return Coded.isContains(restaurants, code);
-
-			case Customer:
-				return Coded.isContains(customers, code);
-
-			case Order:
-				return Coded.isContains(orders, code);
-
-			default: return false;
-		}
 	}
 	
 	// Checks if contains Rider with the given id
@@ -522,6 +491,42 @@ public class DeliveryDataBase {
 		return totalSpentByCustomer;
 	}
 
+	public void setSystemAdministrator(Admin systemAdministrator) {
+		this.systemAdministrator = systemAdministrator;
+	}
+
+	public void setRestAdmins(ArrayList<RestAdmin> restAdmins) {
+		this.restAdmins = restAdmins;
+	}
+
+	public void setRestaurants(ArrayList<Restaurant> restaurants) {
+		this.restaurants = restaurants;
+	}
+
+	public void setCustomers(ArrayList<Customer> customers) {
+		this.customers = customers;
+	}
+
+	public void setRiders(ArrayList<Rider> riders) {
+		this.riders = riders;
+	}
+
+	public void setOrders(ArrayList<Order> orders) {
+		this.orders = orders;
+	}
+
+	public void setOrdersByCustomer(HashMap<Integer, ArrayList<Order>> ordersByCustomer) {
+		this.ordersByCustomer = ordersByCustomer;
+	}
+
+	public void setSelectedRestaurantsByCustomer(HashMap<Integer, ArrayList<Restaurant>> selectedRestaurantsByCustomer) {
+		this.selectedRestaurantsByCustomer = selectedRestaurantsByCustomer;
+	}
+
+	public void setTotalSpentByCustomer(HashMap<Integer, Double> totalSpentByCustomer) {
+		this.totalSpentByCustomer = totalSpentByCustomer;
+	}
+
 	@Override
 	public String toString() {
 		return "DeliveryDataBase [systemAdministrator=" + systemAdministrator + ", restAdmins=" + restAdmins
@@ -529,7 +534,4 @@ public class DeliveryDataBase {
 				+ orders + ", ordersByCustomer=" + ordersByCustomer + ", selectedRestaurantsByCustomer="
 				+ selectedRestaurantsByCustomer + ", totalSpentByCustomer=" + totalSpentByCustomer + "]";
 	}
-
-	
-	
 }

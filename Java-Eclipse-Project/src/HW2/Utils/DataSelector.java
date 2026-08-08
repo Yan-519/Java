@@ -3,7 +3,6 @@ package HW2.Utils;
 import HW2.DeliveryDataBase;
 import HW2.DataObjects.*;
 import HW2.DataObjects.Order.OrderStatus;
-import HW2.DeliveryDataBase.CodedType;
 
 public class DataSelector {
 	
@@ -30,14 +29,16 @@ public class DataSelector {
 	// select Restaurant
 	public static Restaurant selectRestaurant() {
 		int code;
+		Restaurant restaurant;
 		while(true) {
 			code = InputManager.inputInt("Enter restaurant code");
 			
 			if(code == InputManager.BACK_INT) {
 				return null;
 			}
-			if(deliveryDataBase.isContains(code, CodedType.Restaurant))
-				return deliveryDataBase.tryGetRestaurant(code);
+			restaurant = deliveryDataBase.tryGetRestaurant(code);
+			if(restaurant != null)
+				return restaurant;
 			System.out.println("Restaurant with code " + code + " not found. Please try again.");
 		}
 	}
@@ -45,14 +46,16 @@ public class DataSelector {
 	// select RestAdmin
 	public static RestAdmin selectRestAdmin() {
 		int code;
+		RestAdmin restAdmin;
 		while(true) {
 			code = InputManager.inputInt("Enter restaurant admin code");
 			
 			if(code == InputManager.BACK_INT) {
 				return null;
 			}
-			if(deliveryDataBase.isContains(code, CodedType.RestAdmin))
-				return deliveryDataBase.tryGetRestAdmin(code);
+			restAdmin = deliveryDataBase.tryGetRestAdmin(code);
+			if(restAdmin != null)
+				return restAdmin;
 			System.out.println("Restaurant admin with code " + code + " not found. Please try again.");
 		}
 	}
@@ -73,14 +76,16 @@ public class DataSelector {
 	// select Rider
 	public static Rider selectRider() {
 		String ID;
+		Rider rider;
 		while(true) {
 			ID = InputManager.inputString("Enter rider ID", false);
 			
 			if(ID.equalsIgnoreCase(InputManager.BACK_STR)) {
 				return null;
 			}
-			if(deliveryDataBase.isContainsRider(ID))
-				return deliveryDataBase.tryGetRider(ID);
+			rider = deliveryDataBase.tryGetRider(ID);
+			if(rider != null)
+				return rider;
 			System.out.println("Rider with Id " + ID + " not found. Please try again.");
 		}
 	}
@@ -100,15 +105,16 @@ public class DataSelector {
 	// select Order
 	public static Order selectOrder() {
 		int code;
+		Order order;
 		while(true) {
 			code = InputManager.inputInt("Enter order code");
 			
 			if(code == InputManager.BACK_INT) {
 				return null;
 			}
-			
-			if(deliveryDataBase.isContains(code, CodedType.Order))
-				return deliveryDataBase.tryGetOrder(code);
+			order = deliveryDataBase.tryGetOrder(code);
+			if(order != null)
+				return order;
 			System.out.println("Order with code " + code + " not found. Please try again.");
 		}
 	}
@@ -116,15 +122,16 @@ public class DataSelector {
 	// select Customer
 	public static Customer selectCustomer() {
 		int code;
+		Customer customer;
 		while(true) {
 			code = InputManager.inputInt("Enter customer code");
 			
 			if(code == InputManager.BACK_INT) {
 				return null;
 			}
-			
-			if(deliveryDataBase.isContains(code, CodedType.Customer))
-				return deliveryDataBase.tryGetCustomer(code);
+			customer = deliveryDataBase.tryGetCustomer(code);
+			if(customer != null)
+				return customer;
 			System.out.println("Customer with code " + code + " not found. Please try again.");
 		}
 	}
