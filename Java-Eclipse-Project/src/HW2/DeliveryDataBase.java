@@ -25,7 +25,7 @@ public class DeliveryDataBase {
 	private ArrayList<Order> orders;
 
 	private HashMap<Integer, ArrayList<Order>> ordersByCustomer;
-	private HashMap<Integer, ArrayList<Restaurant>> selectedRestaurantsByCustomer;
+	private Hashtable<Integer, ArrayList<Restaurant>> selectedRestaurantsByCustomer;
 	private HashMap<Integer, Double> totalSpentByCustomer;
 
 	
@@ -37,7 +37,7 @@ public class DeliveryDataBase {
 		this.orders = new ArrayList<>();
 
 		ordersByCustomer = new HashMap<>();
-		selectedRestaurantsByCustomer = new HashMap<>();
+		selectedRestaurantsByCustomer = new Hashtable<>();
 		totalSpentByCustomer = new HashMap<>();
 
 		this.systemAdministrator = systemAdministrator;
@@ -220,20 +220,13 @@ public class DeliveryDataBase {
 		return ords;
 	}
 	
-	public Hashtable<OrderStatus, ArrayList<Order>> splitOrdersBuyTaype(ArrayList<Order> orders){
-		Hashtable<OrderStatus, ArrayList<Order>> res = new Hashtable<Order.OrderStatus, ArrayList<Order>>(3);
-		res.put(OrderStatus.Created, new ArrayList<>());
-		res.put(OrderStatus.OnTheWay, new ArrayList<>());
-		res.put(OrderStatus.Delivered, new ArrayList<>());
-		
-		for(Order order : orders)
-			res.get(order.getOrderStatus()).add(order);
-		return res;
-	}
-	
 	// filter Orders Buy given Status
 	public ArrayList<Order> filterOrdersBuyStatus(ArrayList<Order> orders, OrderStatus status){
-		return splitOrdersBuyTaype(orders).get(status);
+		ArrayList<Order> res = new ArrayList<>();
+		for (Order order : orders)
+			if(order.getOrderStatus() == status)
+				res.add(order);
+		return res;
 	}
 	
 	// checks if the data matches to the systemAdministrator data
@@ -483,7 +476,7 @@ public class DeliveryDataBase {
 		return ordersByCustomer;
 	}
 
-	public HashMap<Integer, ArrayList<Restaurant>> getSelectedRestaurantsByCustomer() {
+	public Hashtable<Integer, ArrayList<Restaurant>> getSelectedRestaurantsByCustomer() {
 		return selectedRestaurantsByCustomer;
 	}
 
@@ -519,7 +512,7 @@ public class DeliveryDataBase {
 		this.ordersByCustomer = ordersByCustomer;
 	}
 
-	public void setSelectedRestaurantsByCustomer(HashMap<Integer, ArrayList<Restaurant>> selectedRestaurantsByCustomer) {
+	public void setSelectedRestaurantsByCustomer(Hashtable<Integer, ArrayList<Restaurant>> selectedRestaurantsByCustomer) {
 		this.selectedRestaurantsByCustomer = selectedRestaurantsByCustomer;
 	}
 
