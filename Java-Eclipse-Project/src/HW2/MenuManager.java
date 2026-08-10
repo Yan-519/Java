@@ -281,7 +281,7 @@ public class MenuManager {
 
 				break;
 			case 6:
-				if(!DataOutput.showCoded(restAdmin.getRestaurants())) {
+				if(restAdmin.getRestaurants().isEmpty()) {
 					System.out.println("The current RestAdmin has no restaurants");
 					break;
 				}

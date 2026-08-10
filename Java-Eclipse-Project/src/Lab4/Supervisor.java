@@ -31,13 +31,10 @@ public class Supervisor extends Teacher {
     public boolean getByType() {
         if (current == 0) return true;
 
-        for (int i = 0; i < current; i++) {
-            if (arr[i] instanceof Teacher v) {
-                if (v.getByType()) 
+        for (int i = 0; i < current; i++)
+            if (arr[i] instanceof Teacher v) 
+                if (!v.getType().equalsIgnoreCase(Teacher.Senior)) 
                     return false;
-                
-            } else return false;
-        }
         return true;
     }
 

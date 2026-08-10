@@ -1,6 +1,12 @@
 package Testing;
 
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class Main {
 	
@@ -35,6 +41,24 @@ public class Main {
         // A second system instance maintains separate values
         MySystem backupSystem = new MySystem("Backup");
         backupSystem.console.write("Standing by.");
+        
+		
+		for (int i = 0; i < 100; i++) {
+			System.out.println(genWinKey());
+		}
+        
+        List<Integer> lst = Arrays.asList(1,2,3,4,5);
+        
+        System.out.println( lst.reversed());
+        
+        System.out.println( lst.stream().filter( n -> n % 2  == 0).collect(Collectors.toList()));
+        
+        Predicate<Integer> filt = x -> x % 2 == 0;
+        
+        
+        
+
+        
 	}
 
 }
