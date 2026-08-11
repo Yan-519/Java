@@ -2,17 +2,17 @@ package Lab7;
 
 public class AIcourse extends Course {
 
-	private int tokenCountToUse = 100;
+	private String researchModel;
 
 	public AIcourse(int code, String name, int count) throws InvalidEnrollmentException {
 		super(code, name, count);
-		// TODO Auto-generated constructor stub
+		
+		researchModel = "GPT+";
 	}
 
 	@Override
 	public String toString() {
-		return "AIcourse [tokenCountToUse=" + tokenCountToUse + ", code=" + code + ", name=" + name + ", count=" + count
-				+ "]";
+		return "AIcourse [researchModel=" + researchModel + ", code=" + code + ", name=" + name + ", count=" + count + "]";
 	}
 	
 	

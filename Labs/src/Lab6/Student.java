@@ -1,7 +1,5 @@
 package Lab6;
 
-import Models.Node;
-
 public class Student {
 	private String name;
 	private Node<Exam> grades;

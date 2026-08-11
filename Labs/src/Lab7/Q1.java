@@ -17,16 +17,13 @@ public class Q1 {
 			list.add(new Dog("Buster", 6));
 		} catch (AgeRestrictionException e) {
 			System.out.println(e.getMessage());
-			System.out.println("Failed to add dog due to age restriction");
-		} catch (UnsupportedOperationException e) {
-			System.out.println("Cannot add dogs to immutable list");
 		}
 	}
 
 	public static void main(String[] args) {
 		List<Animal> lst;
 		try {
-			lst = new ArrayList<>(Arrays.asList(
+			lst = new ArrayList<Animal>(Arrays.asList(
 				new Dog("Rex", 5),
 				new Cat("Mittens", 3),
 				new Bird("Tweety", 4),
@@ -44,7 +41,7 @@ public class Q1 {
 		catch (AgeRestrictionException e) {
 			System.out.println(e.getMessage());
 			System.out.println("Animals list is empty");
-			lst = new ArrayList<>();
+			lst = new ArrayList<Animal>();
 		}
 		
 		lst.forEach((Animal animal) -> System.out.println(animal.getName() + " says " + animal.makeSound()));
@@ -71,14 +68,12 @@ public class Q1 {
 		 * and so every object
 		 */
 		addDogs(lst);
-		// addDogs(Arrays.asList(1, 0)); also works (Integer extend Object)
 		
 		/*
 		 * the func get Anima or all objects that extending it
 		 * Animl, Dog, Cat, Bird
 		 */
 		playWithAnimals(lst);
-		// playWithAnimals(Arrays.asList(1,2)); error Integer doesn't extend Animal
 	}
 
 }

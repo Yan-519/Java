@@ -1,8 +1,6 @@
 package Lecture6;
 
-import Models.List;
-import Models.Node;
-import Models.Queue;
+import Lecture6.Moduls.*;
 
 public class Main {
 
