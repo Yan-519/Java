@@ -4,8 +4,6 @@ package Testing;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -53,7 +51,6 @@ public class Main {
         
         System.out.println( lst.stream().filter( n -> n % 2  == 0).collect(Collectors.toList()));
         
-        Predicate<Integer> filt = x -> x % 2 == 0;
         
         
         
