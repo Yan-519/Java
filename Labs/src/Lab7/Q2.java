@@ -16,7 +16,6 @@ public class Q2 {
 		try {
 			list.add(new ProgrammingCourse(201, "Programming", 22, "C++"));
 			list.add(new ProgrammingCourse(202, "Programming", 28, "JavaScript"));
-			list.add(new ProgrammingCourse(203, "Programming", 16, "Go"));
 		} catch (InvalidEnrollmentException e) {
 			System.out.println(e.getMessage());
 		}

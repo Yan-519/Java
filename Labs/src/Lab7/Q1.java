@@ -3,20 +3,45 @@ package Lab7;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class Q1 {
+	
+	public static final Scanner in = new Scanner(System.in);
 	
 	public static void playWithAnimals(List<? extends Animal> animals)
 	{
 		animals.forEach(System.out::println);
 	}
 	
+	public static int getInt() {
+		while (true) {
+			try {
+				System.out.print("Enter age: ");
+				return Integer.valueOf(in.nextLine());
+			} catch (NumberFormatException e) {
+				System.out.println("Age must be a number");
+			}
+		}
+	}
+	
 	public static void addDogs(List<? super Dog> list) 
 	{
-		try {
-			list.add(new Dog("Buster", 6));
-		} catch (AgeRestrictionException e) {
-			System.out.println(e.getMessage());
+		System.out.print("Enter Name: ");
+		String name;
+		while ((name = in.nextLine().trim()).isEmpty()) 
+			System.out.print("Enter Name (not empty): ");
+		
+		
+		int age = getInt();
+		while (true) {
+			try {
+				list.add(new Dog(name, age));
+				return;
+			} catch (AgeRestrictionException e) {
+				System.out.println(e.getMessage());
+				age = getInt();
+			}
 		}
 	}
 
