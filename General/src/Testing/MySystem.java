@@ -18,8 +18,7 @@ public class MySystem {
         
         // This function can directly access the outer class values
         public void write(String message) {
-            logCount++; 
-            System.out.println("[" + prefix + "] (#" + logCount + "): " + message);
+            System.out.println("[" + prefix + "] (#" + ++logCount + "): " + message);
         }
 
         public void clear() {
