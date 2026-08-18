@@ -1,5 +1,13 @@
 @echo off
 
+echo =========================
+echo          Pull
+echo =========================
+echo.
+
+choice /C YN /M "Are you sure you want to pull?"
+if errorlevel 2 exit /b 0
+
 echo Pulling...
 git pull
 
