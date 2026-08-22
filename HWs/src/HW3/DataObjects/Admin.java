@@ -4,10 +4,10 @@ public class Admin {
 
 	private String name;
 	private String userName;
-	private int password;
+	private String password;
 	
 	
-	public Admin(String name, String userName, int password) {
+	public Admin(String name, String userName, String password) {
 		super();
 		this.name = name;
 		this.userName = userName;
@@ -23,7 +23,7 @@ public class Admin {
 		return userName;
 	}
 	
-	public int getPassword() {
+	public String getPassword() {
 		return password;
 	}
 
@@ -38,7 +38,7 @@ public class Admin {
 	}
 
 
-	public void setPassword(int password) {
+	public void setPassword(String password) {
 		this.password = password;
 	}
 

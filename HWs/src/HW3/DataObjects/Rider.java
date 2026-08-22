@@ -3,6 +3,7 @@ package HW3.DataObjects;
 import java.util.ArrayList;
 
 import HW3.DataObjects.Order.OrderStatus;
+import HW3.Exceptions.DeliveryPersonUnavailableException;
 
 public class Rider {
 	private final String id;
@@ -61,13 +62,16 @@ public class Rider {
 		return currentOrder;
 	}
 
-	public void setCurrentOrder(Order currentOrder) {
-		if(currentOrder.getOrderStatus() == OrderStatus.Delivered) 
-			return;
+	public void setCurrentOrder(Order currentOrder) throws DeliveryPersonUnavailableException {
+		if(currentOrder == null) return;
+		
+		if(!isAvailable)
+			throw new DeliveryPersonUnavailableException(name, lastName);
+
 		this.currentOrder = currentOrder;
 		currentOrder.setRiderId(id);
 		
-		isAvailable = currentOrder == null;
+		isAvailable = false;
 	}
 
 	public String getName() {

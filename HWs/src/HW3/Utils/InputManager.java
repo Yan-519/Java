@@ -1,11 +1,76 @@
 package HW3.Utils;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 import HW3.DeliveryDataBase;
 import HW3.DataObjects.*;
+import javafx.scene.control.TextInputDialog;
 
 public class InputManager {
+	
+	
+	public static String input(String title, String header, String text) {
+		
+        TextInputDialog dialog = new TextInputDialog();
+
+        dialog.setTitle(title);
+        if(header != null)
+        	dialog.setHeaderText(header);
+        dialog.setContentText(text);
+
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()){
+            System.out.println("User entered: " + result.get());
+        }
+
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// DeliveryDataBase pointer
 	private static DeliveryDataBase deliveryDataBase;
 	// set DeliveryDataBase pointer once
@@ -248,26 +313,26 @@ public class InputManager {
 	    );
 	}
 
-	// returns a new RestAdmin
-	public static RestAdmin createRestAdmin(int code) {
-	    System.out.println("create RestAdmin");
-
-	    String name = inputString("Enter name", true);
-        if (name.equalsIgnoreCase(BACK_STR)) return null;
-
-	    String username = inputString("Enter username", false);
-	    if (username.equalsIgnoreCase(BACK_STR)) return null;
-
-	    int password = inputInt("Enter password");
-	    if (password == BACK_INT) return null;
-
-	    return new RestAdmin(
-	    		code,
-	            name,
-	            username,
-	            password
-	    );
-	}
+//	// returns a new RestAdmin
+//	public static RestAdmin createRestAdmin(int code) {
+//	    System.out.println("create RestAdmin");
+//
+//	    String name = inputString("Enter name", true);
+//        if (name.equalsIgnoreCase(BACK_STR)) return null;
+//
+//	    String username = inputString("Enter username", false);
+//	    if (username.equalsIgnoreCase(BACK_STR)) return null;
+//
+//	    int password = inputInt("Enter password");
+//	    if (password == BACK_INT) return null;
+//
+//	    return new RestAdmin(
+//	    		code,
+//	            name,
+//	            username,
+//	            password
+//	    );
+//	}
 
 	// returns a new Restaurant
 	public static Restaurant createRestaurant(int code) {

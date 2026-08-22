@@ -6,11 +6,11 @@ public class RestAdmin extends Coded {
 	
 	private String name;
 	private String userName;
-	private int password;
+	private String password;
 
 	private ArrayList<Restaurant> restaurants;
 
-	public RestAdmin(int code, String name, String userName, int password) {
+	public RestAdmin(int code, String name, String userName, String password) {
 		super(code);
 		this.name = name;
 		this.userName = userName;
@@ -51,7 +51,7 @@ public class RestAdmin extends Coded {
 		return userName;
 	}
 	
-	public int getPassword() {
+	public String getPassword() {
 		return password;
 	}
 
@@ -63,7 +63,7 @@ public class RestAdmin extends Coded {
 		this.userName = userName;
 	}
 
-	public void setPassword(int password) {
+	public void setPassword(String password) {
 		this.password = password;
 	}
 

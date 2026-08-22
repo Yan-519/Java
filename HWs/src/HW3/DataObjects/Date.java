@@ -1,6 +1,8 @@
 package HW3.DataObjects;
 
-public class Date {
+import java.util.Objects;
+
+public class Date implements Comparable<Date> {
 	private int day, month, year;
 
 	public Date(int day, int month, int year) {
@@ -52,6 +54,34 @@ public class Date {
 	@Override
 	public String toString() {
 		return "Date [day=" + day + ", month=" + month + ", year=" + year + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(Integer.valueOf(day), Integer.valueOf(month), Integer.valueOf(year));
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Date other = (Date) obj;
+		return day == other.day && month == other.month && year == other.year;
+	}
+
+	@Override
+	public int compareTo(Date o) {
+	    if (this.equals(o))
+	        return 0;
+	    
+	    if (this.isAfter(o))
+	        return 1;
+	    
+	    return -1;
 	}
 	
 	

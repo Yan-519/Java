@@ -1,8 +1,9 @@
 package HW3.DataObjects;
 
+import HW3.Exceptions.InsufficientBalanceException;
 import HW3.Utils.DataChecker;
 
-public class Customer extends Coded {
+public class Customer extends Coded implements Comparable<Customer>{
 	
 	private String name, lastName;
 	private String street, town, zipCode;
@@ -25,13 +26,11 @@ public class Customer extends Coded {
 	
 	
 	// spend the given double (if not go to negative as a result)
-	public boolean buy(double price) {
+	public void buy(double price) throws InsufficientBalanceException {
 		if(price <= creditBalance )
-		{
 			creditBalance -= price;
-			return true;
-		}
-		return false;
+		
+		throw new InsufficientBalanceException(creditBalance, price);
 	}
 	
 	// sets the balance (if not go to negative as a result)
@@ -117,6 +116,12 @@ public class Customer extends Coded {
 		return "Customer [name=" + name + ", lastName=" + lastName + ", street=" + street + ", town=" + town
 				+ ", zipCode=" + zipCode + ", phoneNumber=" + phoneNumber + ", emain=" + emain + ", creditBalance="
 				+ creditBalance + ", code=" + code + "]";
+	}
+
+
+	@Override
+	public int compareTo(Customer o) {
+		return (int)(o.getCreditBalance() - creditBalance);
 	}
 	
 	
