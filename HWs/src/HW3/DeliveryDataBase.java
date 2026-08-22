@@ -13,6 +13,7 @@ import HW3.Exceptions.DeliveryPersonUnavailableException;
 import HW3.Exceptions.InsufficientBalanceException;
 import HW3.Exceptions.RestaurantNotFoundException;
 import HW3.Exceptions.RiderNotFoundException;
+import HW3.Exceptions.TargetObjectAlreadyExistException;
 import HW3.Exceptions.TargetObjectDoesntExistException;
 
 public class DeliveryDataBase {
@@ -262,17 +263,14 @@ public class DeliveryDataBase {
 		throw new RiderNotFoundException(id);
 	}
 
-	// returns the Customer by code (if can't find -> return null)
 	public Customer tryGetCustomer(int code) throws CodedNotFoundException, TargetObjectDoesntExistException{
 		return Coded.tryGetCoded(customers, code, Customer.class);
 	}
 	
-	// returns the Order by code (if can't find -> return null)
 	public Order tryGetOrder(int code) throws CodedNotFoundException, TargetObjectDoesntExistException {
 		return Coded.tryGetCoded(orders, code, Order.class);
 	}
 	
-	// returns the Restaurant by code (if can't find -> return null)
 	public Restaurant tryGetRestaurant(int code) throws CodedNotFoundException, TargetObjectDoesntExistException{
 		return Coded.tryGetCoded(restaurants, code, Restaurant.class);
 	}
@@ -291,35 +289,49 @@ public class DeliveryDataBase {
 
 		return ords;
 	}
+	
+	// adds a Customer (if exists -> throws exception)
+	public boolean add(Customer customer) throws TargetObjectAlreadyExistException {
+	    if (customer == null)
+	        return false;
 
-	// adds a Customer (if exists -> does nothing)
-	public boolean addCustomer(Customer customer) {
-		if (customer == null || customers.contains(customer))
-			return false;
-		customers.add(customer);
-		return true;
+	    if (customers.contains(customer))
+	        throw new TargetObjectAlreadyExistException(customer.toString());
+
+	    customers.add(customer);
+	    return true;
 	}
 
-	// adds a Admin (if exists -> does nothing)
-	public boolean addRestAdmine(RestAdmin admin) {
-		if (admin == null || restAdmins.contains(admin))
-			return false;
-		restAdmins.add(admin);
-		return true;
+	// adds a RestAdmin (if exists -> throws exception)
+	public boolean add(RestAdmin admin) throws TargetObjectAlreadyExistException {
+	    if (admin == null)
+	        return false;
+
+	    if (restAdmins.contains(admin))
+	        throw new TargetObjectAlreadyExistException(admin.toString());
+
+	    restAdmins.add(admin);
+	    return true;
 	}
 
-	// adds a Restaurant (if exists -> does nothing)
-	public boolean addRestaurant(Restaurant restaurant) {
-		if (restaurant == null || restaurants.contains(restaurant))
-			return false;
-		restaurants.add(restaurant);
-		return true;
-	}
+	// adds a Restaurant (if exists -> throws exception)
+	public boolean add(Restaurant restaurant) throws TargetObjectAlreadyExistException {
+	    if (restaurant == null)
+	        return false;
 
-	// adds a Rider (if exists -> does nothing)
-	public void addRiders(Rider rider) {
-		if (rider == null || riders.contains(rider))
+	    if (restaurants.contains(restaurant))
+	        throw new TargetObjectAlreadyExistException(restaurant.toString());
+
+	    restaurants.add(restaurant);
+	    return true;
+	}
+	
+	
+	public void add(Rider rider) throws TargetObjectAlreadyExistException {
+		if (rider == null)
 			return;
+		if(riders.contains(rider)) 
+			throw new TargetObjectAlreadyExistException(rider.toString());
 		riders.add(rider);
 	}
 

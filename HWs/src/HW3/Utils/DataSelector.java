@@ -8,6 +8,8 @@ import HW3.DeliveryDataBase;
 import HW3.DataObjects.*;
 import HW3.DataObjects.Order.OrderStatus;
 import HW3.Exceptions.RiderNotFoundException;
+import HW3.UI.MessageBox;
+import HW3.UI.MessageBox.NumberSign;
 
 public class DataSelector {
 	
@@ -41,13 +43,10 @@ public class DataSelector {
 	
 	// select Restaurant
 	public static Restaurant selectRestaurant() {
-		int code;
+		Integer code;
 		while(true) {
-			code = InputManager.inputInt("Enter restaurant code");
-			
-			if(code == InputManager.BACK_INT) {
-				return null;
-			}
+			code = MessageBox.inputINT(null, "Enter restaurant code", NumberSign.POSITIVE);
+			if(code == null) return null;
 			try {
 				return deliveryDataBase.tryGetRestaurant(code);
 			} catch (Exception e) {
@@ -58,11 +57,11 @@ public class DataSelector {
 	
 	// select RestAdmin
 	public static RestAdmin selectRestAdmin() {
-		int code;
+		Integer code;
 		while(true) {
-			code = InputManager.inputInt("Enter restaurant admin code");
+			code = MessageBox.inputINT(null, "Enter restaurant admin code", NumberSign.POSITIVE);
 			
-			if(code == InputManager.BACK_INT) {
+			if(code == null) {
 				return null;
 			}
 			try {
@@ -82,11 +81,10 @@ public class DataSelector {
 	public static Rider selectRider() {
 		String ID;
 		while(true) {
-			ID = InputManager.inputString("Enter rider ID", false);
+			ID = MessageBox.inputSTR(null,  "Enter rider ID", null);
 			
-			if(ID.equalsIgnoreCase(InputManager.BACK_STR)) {
-				return null;
-			}
+			if(ID == null) return null;
+			
 			try {
 				return deliveryDataBase.tryGetRider(ID);
 			} catch (RiderNotFoundException e) {
@@ -103,11 +101,11 @@ public class DataSelector {
 	
 	// select Order
 	public static Order selectOrder() {
-		int code;
+		Integer code;
 		while(true) {
-			code = InputManager.inputInt("Enter order code");
+			code = MessageBox.inputINT(null, "Enter order code", NumberSign.POSITIVE);
 			
-			if(code == InputManager.BACK_INT) 
+			if(code == null) 
 				return null;
 			
 			try {
@@ -120,11 +118,10 @@ public class DataSelector {
 	
 	// select Customer
 	public static Customer selectCustomer() {
-		int code;
+		Integer code;
 		while(true) {
-			code = InputManager.inputInt("Enter customer code");
-			
-			if(code == InputManager.BACK_INT) 
+			code = MessageBox.inputINT(null, "Enter customer code", NumberSign.POSITIVE);
+			if(code == null) 
 				return null;
 			
 			try {

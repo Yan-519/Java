@@ -113,9 +113,7 @@ public class Customer extends Coded implements Comparable<Customer>{
 
 	@Override
 	public String toString() {
-		return "Customer [name=" + name + ", lastName=" + lastName + ", street=" + street + ", town=" + town
-				+ ", zipCode=" + zipCode + ", phoneNumber=" + phoneNumber + ", emain=" + emain + ", creditBalance="
-				+ creditBalance + ", code=" + code + "]";
+		return this.getName() + " " + this.getLastName() + ": " + this.getCode();
 	}
 
 

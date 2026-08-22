@@ -1,9 +1,9 @@
-package HW3.UI;
+package HW3.UI.Menus;
 
 import HW3.DeliveryDataBase;
+import HW3.UI.MessageBox;
+import HW3.UI.UIHelper;
 import HW3.Utils.DataInitializer;
-import HW3.Utils.MessageBox;
-import HW3.Utils.UIHelper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -36,20 +36,26 @@ public class MainUI extends UIBase {
 		
         stage.setTitle("Delivery System");
         
-        adminUI = new AdminUI(stage, deliveryDataBase, this::Init);
+        adminUI = new AdminUI(stage, deliveryDataBase, this::Auth);
         
     }
 	
 
 	@Override
-	public void Init() {
-        VBox root = UIHelper.createVRoot();
+	public void Auth() {
+        Main();
+	}
+	
+
+	@Override
+	protected void Main() {
+		VBox root = UIHelper.createVRoot();
 
         Label title = new Label("Delivery System");
 
         Button adminButton = UIHelper.createButton(
                 "System Administrator Login",
-                e -> adminUI.Init()
+                e -> adminUI.Auth()
         );
 
         Button userButton = UIHelper.createButton(
@@ -71,6 +77,7 @@ public class MainUI extends UIBase {
 
         UIHelper.setScene(stage, root, 500, 400);
 	}
+
 
     
     private void showUserTypeScreen() {
@@ -96,7 +103,7 @@ public class MainUI extends UIBase {
 
         Button backButton = UIHelper.createButton(
                 "Back",
-                e -> Init()
+                e -> Auth()
         );
 
         root.getChildren().addAll(

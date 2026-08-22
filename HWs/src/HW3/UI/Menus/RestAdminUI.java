@@ -1,4 +1,4 @@
-package HW3.UI;
+package HW3.UI.Menus;
 
 import HW3.DeliveryDataBase;
 import javafx.stage.Stage;
@@ -10,7 +10,13 @@ public class RestAdminUI extends UIBase  {
 	}
 
 	@Override
-	public void Init() {
+	public void Auth() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void Main() {
 		// TODO Auto-generated method stub
 		
 	}

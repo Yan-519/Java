@@ -1,4 +1,4 @@
-package HW3.Utils;
+package HW3.UI;
 
 import java.util.function.Consumer;
 

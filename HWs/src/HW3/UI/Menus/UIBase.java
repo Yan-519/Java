@@ -1,4 +1,4 @@
-package HW3.UI;
+package HW3.UI.Menus;
 
 import HW3.DeliveryDataBase;
 import javafx.stage.Stage;
@@ -17,5 +17,7 @@ public abstract class UIBase {
 		this.backF = backF;
 	}
 	
-	public abstract void Init();
+	public abstract void Auth();
+	
+	protected abstract void Main();
 }

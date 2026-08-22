@@ -1,11 +1,14 @@
-package HW3.UI;
+package HW3.UI.Menus;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import HW3.DeliveryDataBase;
-import HW3.Utils.MessageBox;
-import HW3.Utils.UIHelper;
+import HW3.DeliveryDataBase.CodedType;
+import HW3.UI.MessageBox;
+import HW3.UI.UIHelper;
+import HW3.DataObjects.Customer;
+import HW3.Utils.DataSelector;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -29,7 +32,7 @@ public class AdminUI extends UIBase {
 	}
 
 	@Override
-	public void Init() {
+	public void Auth() {
 		
         VBox root = UIHelper.createVRoot();
 
@@ -48,9 +51,9 @@ public class AdminUI extends UIBase {
 
         loginButton.setOnAction(e -> {
         	
-            if (deliveryDataBase.logIntoAdmin(username.getText(), password.getText())) {
-                showAdminScreen();
-            }
+            if (deliveryDataBase.logIntoAdmin(username.getText(), password.getText())) 
+                Main();
+            
             else MessageBox.error("Login Error", "Incorrect username or password.");
         });
 
@@ -65,12 +68,11 @@ public class AdminUI extends UIBase {
         );
 
         stage.setScene(new Scene(root, 500, 400));
-
-		
 	}
 	
-    private void showAdminScreen() {
 
+	@Override
+	protected void Main() {
         BorderPane root = new BorderPane();
 
         VBox header = UIHelper.createVRoot("System Administrator");
@@ -119,6 +121,7 @@ public class AdminUI extends UIBase {
         root.setCenter(grid);
 
         stage.setScene(new Scene(root, 700, 600));
+
     }
 
 
@@ -143,7 +146,7 @@ public class AdminUI extends UIBase {
 
         Button searchCustomer = UIHelper.createButton(
                 "Search Customer by Code",
-                e -> searchCustomer()
+                e -> MessageBox.Info(DataSelector.selectCustomer())
         );
 
         Button addCustomer = UIHelper.createButton(
@@ -178,7 +181,7 @@ public class AdminUI extends UIBase {
 
         Button logout = UIHelper.createButton(
                 "Logout",
-                e -> Init()
+                e -> Auth()
         );
 
         grid.add(showCustomers, 0, 0);
@@ -199,62 +202,6 @@ public class AdminUI extends UIBase {
 
         UIHelper.setScene(stage, root, 800, 650);
     }
-
-    private void showRestaurantManagement() {
-        MessageBox.Info(
-                "Restaurant Management",
-                "Restaurant management screen."
-        );
-    }
-
-    private void showOrderManagement() {
-        MessageBox.Info(
-                "Order Management",
-                "Order management screen."
-        );
-    }
-
-    private void showRiderManagement() {
-        MessageBox.Info(
-                "Rider Management",
-                "Rider management screen."
-        );
-    }
-
-    private void showRestaurantAdminManagement() {
-        MessageBox.Info(
-                "Restaurant Administrator Management",
-                "Restaurant administrator management screen."
-        );
-    }
-
-    private void showReports() {
-        MessageBox.Info(
-                "Reports and Sorting",
-                "Reports and sorting screen."
-        );
-    }
-
-    private void saveData() {
-
-        // TODO: Connect to your save method.
-
-        MessageBox.Info(
-                "Save Data",
-                "Data has been saved."
-        );
-    }
-
-    private void loadData() {
-
-        // TODO: Connect to your load method.
-
-        MessageBox.Info(
-                "Load Data",
-                "Data has been loaded."
-        );
-    }
-    
     
     private void showAllCustomers() {
     	
@@ -276,71 +223,58 @@ public class AdminUI extends UIBase {
     	UIHelper.setScene(stage, root, 300, 250);
     }
 
-    private void searchCustomer() {
-
-        TextInputDialog dialog = new TextInputDialog();
-
-        dialog.setTitle("Search Customer");
-        dialog.setHeaderText("Search Customer by Code");
-        dialog.setContentText("Customer Code:");
-
-        dialog.showAndWait().ifPresent(code -> {
-
-            // TODO: Search customer by code.
-
-            MessageBox.Info(
-                    "Search",
-                    "Searching for customer: " + code
-            );
-        });
-    }
-
     private void addCustomer() {
-
-        MessageBox.Info(
-                "Add Customer",
-                "Customer creation form will be displayed here."
-        );
+    	
+//		int code = deliveryDataBase.generateCode(CodedType.Customer);
+//		if(deliveryDataBase.addCustomer(InputManager.creatCustomer(code)))
+//			System.out.println("The customer code is " + code);
     }
 
     private void updateCustomer() {
-
-        MessageBox.Info(
-                "Update Customer",
-                "Customer update form will be displayed here."
-        );
     }
 
     private void showCustomerOrders() {
-
-        MessageBox.Info(
-                "Customer Orders",
-                "All orders of the customer will be displayed here."
-        );
     }
 
     private void cancelOrder() {
-
-        MessageBox.Info(
-                "Cancel Order",
-                "An order can only be cancelled when its status is Created or On the Way."
-        );
     }
 
     private void showOrderedRestaurants() {
-
-        MessageBox.Info(
-                "Ordered Restaurants",
-                "Restaurants from which the customer ordered will be displayed here."
-        );
     }
 
     private void showOrderedPremiumRestaurants() {
-
-        MessageBox.Info(
-                "Premium Restaurants",
-                "Premium restaurants from which the customer ordered will be displayed here."
-        );
     }
+
+    
+    
+    
+
+    private void showRestaurantManagement() {
+    }
+
+    private void showOrderManagement() {
+    }
+
+    private void showRiderManagement() {
+    }
+
+    private void showRestaurantAdminManagement() {
+    }
+
+    private void showReports() {
+    }
+
+    
+    
+    
+    
+    private void saveData() {
+    }
+
+    private void loadData() {
+    }
+
+    
+    
 	
 }
