@@ -1,266 +1,449 @@
-//package HW3.Utils;
-//
-//import java.util.Optional;
-//import java.util.Scanner;
-//
-//import HW3.DeliveryDataBase;
-//import HW3.DataObjects.*;
-//import javafx.scene.control.Alert;
-//import javafx.scene.control.Alert.AlertType;
-//import javafx.scene.control.TextInputDialog;
-//
-//import javafx.scene.control.ButtonType;
-//
-//public class InputManager {
-//
-//	// returns a new Rider
-//	public static Rider createRider() {
-//	    System.out.println("create Rider");
-//
-//	    String id;
-//	    while(!(id = inputString("Enter ID (positive 9 digits)", false)).equalsIgnoreCase(BACK_STR)) {
-//	    	if(DataChecker.isValidId(id)) {
-//	    		if(deliveryDataBase.isContainsRider(id)) {
-//	    			System.out.println("Rider with ID " + id + " already exists. Please enter a different ID.");
-//	    		} else {
-//	    			break;
-//	    		}
-//	    	}
-//	    }
-//	    if (id.equalsIgnoreCase(BACK_STR)) return null;
-//
-//	    String phone;
-//	    while (!DataChecker.isValidPhoneNumber(phone = inputString("Enter phone number (IL)", false)) &&
-//	            !phone.equalsIgnoreCase(BACK_STR));
-//	    if (phone.equalsIgnoreCase(BACK_STR)) return null;
-//
-//	    String firstName = inputString("Enter first name", true);
-//	    if (firstName.equalsIgnoreCase(BACK_STR)) return null;
-//	    if(firstName.indexOf(' ') != -1)
-//	    	firstName = firstName.substring(0, firstName.indexOf(' '));
-//
-//	    String lastName = inputString("Enter last name", true);
-//	    if (lastName.equalsIgnoreCase(BACK_STR)) return null;
-//
-//	    String vehicle = inputString("Enter vehicle", false);
-//	    if (vehicle.equalsIgnoreCase(BACK_STR)) return null;
-//
-//	    return new Rider(
-//	            id,
-//	            firstName,
-//	            lastName,
-//	            phone,
-//	            vehicle
-//	    );
-//	}
-//
-//	// returns a new Customer
-//	public static Customer creatCustomer(int code) {
-//	    System.out.println("create Customer");
-//
-//	    String phone;
-//	    while (!DataChecker.isValidPhoneNumber(phone = inputString("Enter the new phone number (IL)", false)) &&
-//	            !phone.equalsIgnoreCase(BACK_STR))
-//	    	System.out.println("Not valid phone number");
-//	    if (phone.equalsIgnoreCase(BACK_STR)) return null;
-//
-//	    String firstName = inputString("Enter first name", true);
-//	    if (firstName.equalsIgnoreCase(BACK_STR)) return null;
-//	    if(firstName.indexOf(' ') != -1)
-//	    	firstName = firstName.substring(0, firstName.indexOf(' '));
-//
-//	    String lastName = inputString("Enter last name", true);
-//	    if (lastName.equalsIgnoreCase(BACK_STR)) return null;
-//
-//	    String street = inputString("Enter street", false);
-//	    if (street.equalsIgnoreCase(BACK_STR)) return null;
-//
-//	    String town = inputString("Enter town", true);
-//	    if (town.equalsIgnoreCase(BACK_STR)) return null;
-//	    
-//	    String zip;
-//	    while(!DataChecker.isValidZipCode(zip = inputString("Enter new ZIP code", false)) && !zip.equalsIgnoreCase(BACK_STR))
-//	    	System.out.println("Zip code must be not newgative 5-7 digits");
-//	    if(zip.equalsIgnoreCase(BACK_STR)) return null;
-//
-//	    String email;
-//	    while(!DataChecker.isValidEmail( email = inputString("Enter email", false)) && !email.equalsIgnoreCase(BACK_STR))
-//	    	System.out.println("Not valid email");
-//	    if (email.equalsIgnoreCase(BACK_STR)) return null;
-//
-//	    double balance = inputDouble("Enter the balance ");
-//	    if (balance == BACK_INT) return null;
-//
-//	    return new Customer(
-//	            code,
-//	            firstName,
-//	            lastName,
-//	            street,
-//	            town,
-//	            zip,
-//	            phone,
-//	            email,
-//	            balance
-//	    );
-//	}
-//
-////	// returns a new RestAdmin
-////	public static RestAdmin createRestAdmin(int code) {
-////	    System.out.println("create RestAdmin");
-////
-////	    String name = inputString("Enter name", true);
-////        if (name.equalsIgnoreCase(BACK_STR)) return null;
-////
-////	    String username = inputString("Enter username", false);
-////	    if (username.equalsIgnoreCase(BACK_STR)) return null;
-////
-////	    int password = inputInt("Enter password");
-////	    if (password == BACK_INT) return null;
-////
-////	    return new RestAdmin(
-////	    		code,
-////	            name,
-////	            username,
-////	            password
-////	    );
-////	}
-//
-//	// returns a new Restaurant
-//	public static Restaurant createRestaurant(int code) {
-//	    System.out.println("create Restaurant");
-//
-//	    String name = inputString("Enter restaurant name", true);
-//	    if (name.equalsIgnoreCase(BACK_STR)) return null;
-//
-//	    String kitchenType = inputString("Enter kitchen type", false);
-//	    if (kitchenType.equalsIgnoreCase(BACK_STR)) return null;
-//
-//	    double rating = inputDouble("Enter rating (0 to 5)", NumberSign.NOT_NEGATIVE, 5);
-//	    if (rating == BACK_INT) return null;
-//
-//	    double fee = inputDouble("Enter base delivery fee (not negative)", NumberSign.NOT_NEGATIVE);
-//	    if (fee == BACK_INT) return null;
-//
-//	    Boolean isOpen = inputBool("Is the restaurant open?");
-//	    if(isOpen == null) return null;
-//	    
-//	    return new Restaurant(
-//	            code,
-//	            name,
-//	            kitchenType,
-//	            rating,
-//	            isOpen,
-//	            fee
-//	    );
-//	}
-//
-//	// returns a new FastFoodRestaurant
-//	public static FastFoodRestaurant createFastFoodRestaurant(int code) {
-//	    System.out.println("create FastFoodRestaurant");
-//
-//	    String name = inputString("Enter restaurant name", true);
-//	    if (name.equalsIgnoreCase(BACK_STR)) return null;
-//
-//	    String kitchenType = inputString("Enter kitchen type", false);
-//	    if (kitchenType.equalsIgnoreCase(BACK_STR)) return null;
-//
-//	    double rating = inputDouble("Enter rating (0 to 5)", NumberSign.NOT_NEGATIVE, 5);
-//	    if (rating == BACK_INT) return null;
-//
-//	    double fee = inputDouble("Enter base delivery fee (not negative)", NumberSign.NOT_NEGATIVE);
-//	    if (fee == BACK_INT) return null;
-//
-//	    int prepTime = inputInt("Enter average preparing time (not negative)", NumberSign.NOT_NEGATIVE);
-//	    if (prepTime == BACK_INT) return null;
-//
-//	    double expressCost = inputDouble("Enter additional cost for express delivery (not negative)", NumberSign.NOT_NEGATIVE);
-//	    if (expressCost == BACK_INT) return null;
-//	    
-//	    Boolean isOpen = inputBool("Is the restaurant open?");
-//	    if(isOpen == null) return null;
-//
-//	    return new FastFoodRestaurant(
-//	            code,
-//	            name,
-//	            kitchenType,
-//	            rating,
-//	            isOpen,
-//	            fee,
-//	            prepTime,
-//	            expressCost
-//	    );
-//	}
-//
-//	// returns a new PremiumRestaurant
-//	public static PremiumRestaurant createPremiumRestaurant(int code) {
-//	    System.out.println("create PremiumRestaurant");
-//
-//	    String name = inputString("Enter restaurant name", true);
-//	    if (name.equalsIgnoreCase(BACK_STR)) return null;
-//
-//	    String kitchenType = inputString("Enter kitchen type", false);
-//	    if (kitchenType.equalsIgnoreCase(BACK_STR)) return null;
-//
-//	    double rating = inputDouble("Enter rating (0 to 5)", NumberSign.NOT_NEGATIVE, 5);
-//	    if (rating == BACK_INT) return null;
-//
-//	    double fee = inputDouble("Enter base delivery fee (not negative)", NumberSign.NOT_NEGATIVE);
-//	    if (fee == BACK_INT) return null;
-//
-//	    double minOrder = inputDouble("Enter minimum order cost (not negative)", NumberSign.NOT_NEGATIVE);
-//	    if (minOrder == BACK_INT) return null;
-//
-//	    double commission = inputDouble("Enter additional commission percentage per order (not negative)", NumberSign.NOT_NEGATIVE);
-//	    if (commission == BACK_INT) return null;
-//
-//	    Boolean isOpen = inputBool("Is the restaurant open?");
-//	    if(isOpen == null) return null;
-//
-//	    return new PremiumRestaurant(
-//	            code,
-//	            name,
-//	            kitchenType,
-//	            rating,
-//	            isOpen,
-//	            fee,
-//	            minOrder,
-//	            commission
-//	    );
-//	}
-//
-//	// returns a new Date
-//	public static Date createDate() {
-//	    System.out.println("create Date");
-//
-//	    int year;
-//	    do {
-//	        year = inputInt("Enter year (2000-2026)");
-//	        if (year == BACK_INT) return null;
-//	    } while (year < 2000 || year > 2026);
-//
-//	    int month;
-//	    do {
-//	        month = inputInt("Enter month (1-12)");
-//	        if (month == BACK_INT) return null;
-//	    } while (month < 1 || month > 12);
-//	    
-//	    int maxDay = DataChecker.getDaysInMonth(year, month);
-//	    int day;
-//	    do {
-//	        day = inputInt("Enter day (1-"+ maxDay +")");
-//	        if (day == BACK_INT) return null;
-//	    } while (day < 1 || day > maxDay);
-//
-//
-//	    return new Date(day, month, year);
-//	}
-//	
-//	// Returns a new Date that is later than the given one
-//	public static Date createDateAfterDate(Date before) {
-//		Date date;
-//		while((date = createDate()) != null && !date.isAfter(before)) {
-//			System.out.println("The delivering date should be aftre the order create date");
-//		}
-//		return date;
-//	}
-//}
+package HW3.Utils;
+
+import HW3.DeliveryDataBase;
+import HW3.DataObjects.*;
+import HW3.UI.MessageBox;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.util.function.Consumer;
+
+public class InputManager {
+
+    private static DeliveryDataBase deliveryDataBase;
+
+    public static void setDeliveryDataBase(DeliveryDataBase db) {
+        deliveryDataBase = db;
+    }
+
+    // Helper method to setup a uniform form layout with Submit and Back buttons
+    private static VBox createBaseFormLayout(String titleText, GridPane grid, Runnable onSubmit, Runnable onBack) {
+        Label titleLabel = new Label(titleText);
+        titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+        Button submitBtn = new Button("Submit");
+        Button backBtn = new Button("Back");
+
+        submitBtn.setOnAction(e -> onSubmit.run());
+        backBtn.setOnAction(e -> onBack.run());
+
+        HBox buttonBox = new HBox(15, submitBtn, backBtn);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+
+        VBox root = new VBox(20, titleLabel, grid, buttonBox);
+        root.setPadding(new Insets(20));
+        return root;
+    }
+
+    private static GridPane createGrid() {
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        return grid;
+    }
+
+    // Creates a new Rider
+    public static void createRider(Stage stage, Consumer<Rider> callback) {
+        GridPane grid = createGrid();
+
+        TextField idField = new TextField();
+        TextField phoneField = new TextField();
+        TextField firstNameField = new TextField();
+        TextField lastNameField = new TextField();
+        TextField vehicleField = new TextField();
+
+        grid.add(new Label("ID (9 digits):"), 0, 0); grid.add(idField, 1, 0);
+        grid.add(new Label("Phone (IL):"), 0, 1); grid.add(phoneField, 1, 1);
+        grid.add(new Label("First Name:"), 0, 2); grid.add(firstNameField, 1, 2);
+        grid.add(new Label("Last Name:"), 0, 3); grid.add(lastNameField, 1, 3);
+        grid.add(new Label("Vehicle:"), 0, 4); grid.add(vehicleField, 1, 4);
+
+        VBox root = createBaseFormLayout("Create Rider", grid, () -> {
+            String id = idField.getText().trim();
+            String phone = phoneField.getText().trim();
+            String firstName = firstNameField.getText().trim();
+            String lastName = lastNameField.getText().trim();
+            String vehicle = vehicleField.getText().trim();
+
+            if (!DataChecker.isValidId(id)) {
+                MessageBox.error("Validation Error", "Invalid ID format. Must be 9 positive digits.");
+                return;
+            }
+            if (deliveryDataBase != null && deliveryDataBase.isContainsRider(id)) {
+                MessageBox.error("Validation Error", "Rider with ID " + id + " already exists.");
+                return;
+            }
+            if (!DataChecker.isValidPhoneNumber(phone)) {
+                MessageBox.error("Validation Error", "Invalid Israeli phone number.");
+                return;
+            }
+            if (firstName.isEmpty() || lastName.isEmpty() || vehicle.isEmpty()) {
+                MessageBox.error("Validation Error", "All fields are required.");
+                return;
+            }
+
+            if (firstName.indexOf(' ') != -1) {
+                firstName = firstName.substring(0, firstName.indexOf(' '));
+            }
+
+            callback.accept(new Rider(id, firstName, lastName, phone, vehicle));
+        }, () -> callback.accept(null));
+
+        stage.setOnCloseRequest(e -> callback.accept(null));
+        stage.setScene(new Scene(root, 400, 320));
+        stage.setTitle("Create Rider");
+        stage.show();
+    }
+
+    // Creates a new Customer
+    public static void createCustomer(Stage stage, int code, Consumer<Customer> callback) {
+        GridPane grid = createGrid();
+
+        TextField phoneField = new TextField();
+        TextField firstNameField = new TextField();
+        TextField lastNameField = new TextField();
+        TextField streetField = new TextField();
+        TextField townField = new TextField();
+        TextField zipField = new TextField();
+        TextField emailField = new TextField();
+        TextField balanceField = new TextField();
+
+        grid.add(new Label("Phone (IL):"), 0, 0); grid.add(phoneField, 1, 0);
+        grid.add(new Label("First Name:"), 0, 1); grid.add(firstNameField, 1, 1);
+        grid.add(new Label("Last Name:"), 0, 2); grid.add(lastNameField, 1, 2);
+        grid.add(new Label("Street:"), 0, 3); grid.add(streetField, 1, 3);
+        grid.add(new Label("Town:"), 0, 4); grid.add(townField, 1, 4);
+        grid.add(new Label("ZIP Code:"), 0, 5); grid.add(zipField, 1, 5);
+        grid.add(new Label("Email:"), 0, 6); grid.add(emailField, 1, 6);
+        grid.add(new Label("Balance:"), 0, 7); grid.add(balanceField, 1, 7);
+
+        VBox root = createBaseFormLayout("Create Customer", grid, () -> {
+            String phone = phoneField.getText().trim();
+            String firstName = firstNameField.getText().trim();
+            String lastName = lastNameField.getText().trim();
+            String street = streetField.getText().trim();
+            String town = townField.getText().trim();
+            String zip = zipField.getText().trim();
+            String email = emailField.getText().trim();
+            String balanceStr = balanceField.getText().trim();
+
+            if (!DataChecker.isValidPhoneNumber(phone)) {
+                MessageBox.error("Validation Error", "Invalid Israeli phone number.");
+                return;
+            }
+            if (!DataChecker.isValidZipCode(zip)) {
+                MessageBox.error("Validation Error", "ZIP code must be 5-7 non-negative digits.");
+                return;
+            }
+            if (!DataChecker.isValidEmail(email)) {
+                MessageBox.error("Validation Error", "Invalid email address.");
+                return;
+            }
+            if (firstName.isEmpty() || lastName.isEmpty() || street.isEmpty() || town.isEmpty()) {
+                MessageBox.error("Validation Error", "All fields are required.");
+                return;
+            }
+
+            try {
+                double balance = Double.parseDouble(balanceStr);
+                if (balance < 0) {
+                    MessageBox.error("Validation Error", "Balance cannot be negative.");
+                    return;
+                }
+
+                if (firstName.indexOf(' ') != -1) {
+                    firstName = firstName.substring(0, firstName.indexOf(' '));
+                }
+
+                callback.accept(new Customer(code, firstName, lastName, street, town, zip, phone, email, balance));
+            } catch (NumberFormatException e) {
+                MessageBox.error("Validation Error", "Balance must be a valid number.");
+            }
+        }, () -> callback.accept(null));
+
+        stage.setOnCloseRequest(e -> callback.accept(null));
+        stage.setScene(new Scene(root, 400, 420));
+        stage.setTitle("Create Customer");
+        stage.show();
+    }
+
+    // Creates a new RestAdmin
+    public static void createRestAdmin(Stage stage, int code, Consumer<RestAdmin> callback) {
+        GridPane grid = createGrid();
+
+        TextField nameField = new TextField();
+        TextField usernameField = new TextField();
+        PasswordField passwordField = new PasswordField();
+
+        grid.add(new Label("Name:"), 0, 0); grid.add(nameField, 1, 0);
+        grid.add(new Label("Username:"), 0, 1); grid.add(usernameField, 1, 1);
+        grid.add(new Label("Password (Numeric):"), 0, 2); grid.add(passwordField, 1, 2);
+
+        VBox root = createBaseFormLayout("Create Restaurant Admin", grid, () -> {
+            String name = nameField.getText().trim();
+            String username = usernameField.getText().trim();
+            String passStr = passwordField.getText().trim();
+
+            if (name.isEmpty() || username.isEmpty()) {
+                MessageBox.error("Validation Error", "Name and Username are required.");
+                return;
+            }
+
+            try {
+                callback.accept(new RestAdmin(code, name, username, passStr));
+            } catch (NumberFormatException e) {
+                MessageBox.error("Validation Error", "Password must be a numeric integer.");
+            }
+        }, () -> callback.accept(null));
+
+        stage.setOnCloseRequest(e -> callback.accept(null));
+        stage.setScene(new Scene(root, 400, 250));
+        stage.setTitle("Create Rest Admin");
+        stage.show();
+    }
+
+    // Creates a new Restaurant
+    public static void createRestaurant(Stage stage, int code, Consumer<Restaurant> callback) {
+        GridPane grid = createGrid();
+
+        TextField nameField = new TextField();
+        TextField kitchenField = new TextField();
+        TextField ratingField = new TextField();
+        TextField feeField = new TextField();
+        CheckBox isOpenBox = new CheckBox("Open");
+
+        grid.add(new Label("Name:"), 0, 0); grid.add(nameField, 1, 0);
+        grid.add(new Label("Kitchen Type:"), 0, 1); grid.add(kitchenField, 1, 1);
+        grid.add(new Label("Rating (0-5):"), 0, 2); grid.add(ratingField, 1, 2);
+        grid.add(new Label("Delivery Fee:"), 0, 3); grid.add(feeField, 1, 3);
+        grid.add(new Label("Is Open:"), 0, 4); grid.add(isOpenBox, 1, 4);
+
+        VBox root = createBaseFormLayout("Create Restaurant", grid, () -> {
+            String name = nameField.getText().trim();
+            String kitchen = kitchenField.getText().trim();
+
+            if (name.isEmpty() || kitchen.isEmpty()) {
+                MessageBox.error("Validation Error", "Name and Kitchen Type are required.");
+                return;
+            }
+
+            try {
+                double rating = Double.parseDouble(ratingField.getText().trim());
+                if (rating < 0 || rating > 5) {
+                    MessageBox.error("Validation Error", "Rating must be between 0 and 5.");
+                    return;
+                }
+                double fee = Double.parseDouble(feeField.getText().trim());
+                if (fee < 0) {
+                    MessageBox.error("Validation Error", "Delivery Fee must be non-negative.");
+                    return;
+                }
+
+                callback.accept(new Restaurant(code, name, kitchen, rating, isOpenBox.isSelected(), fee));
+            } catch (NumberFormatException e) {
+                MessageBox.error("Validation Error", "Rating and Delivery Fee must be valid numbers.");
+            }
+        }, () -> callback.accept(null));
+
+        stage.setOnCloseRequest(e -> callback.accept(null));
+        stage.setScene(new Scene(root, 400, 320));
+        stage.setTitle("Create Restaurant");
+        stage.show();
+    }
+
+    // Creates a new FastFoodRestaurant
+    public static void createFastFoodRestaurant(Stage stage, int code, Consumer<FastFoodRestaurant> callback) {
+        GridPane grid = createGrid();
+
+        TextField nameField = new TextField();
+        TextField kitchenField = new TextField();
+        TextField ratingField = new TextField();
+        TextField feeField = new TextField();
+        TextField prepTimeField = new TextField();
+        TextField expressCostField = new TextField();
+        CheckBox isOpenBox = new CheckBox("Open");
+
+        grid.add(new Label("Name:"), 0, 0); grid.add(nameField, 1, 0);
+        grid.add(new Label("Kitchen Type:"), 0, 1); grid.add(kitchenField, 1, 1);
+        grid.add(new Label("Rating (0-5):"), 0, 2); grid.add(ratingField, 1, 2);
+        grid.add(new Label("Delivery Fee:"), 0, 3); grid.add(feeField, 1, 3);
+        grid.add(new Label("Prep Time (min):"), 0, 4); grid.add(prepTimeField, 1, 4);
+        grid.add(new Label("Express Cost:"), 0, 5); grid.add(expressCostField, 1, 5);
+        grid.add(new Label("Is Open:"), 0, 6); grid.add(isOpenBox, 1, 6);
+
+        VBox root = createBaseFormLayout("Create Fast Food Restaurant", grid, () -> {
+            String name = nameField.getText().trim();
+            String kitchen = kitchenField.getText().trim();
+
+            if (name.isEmpty() || kitchen.isEmpty()) {
+                MessageBox.error("Validation Error", "Name and Kitchen Type are required.");
+                return;
+            }
+
+            try {
+                double rating = Double.parseDouble(ratingField.getText().trim());
+                if (rating < 0 || rating > 5) {
+                    MessageBox.error("Validation Error", "Rating must be between 0 and 5.");
+                    return;
+                }
+                double fee = Double.parseDouble(feeField.getText().trim());
+                int prepTime = Integer.parseInt(prepTimeField.getText().trim());
+                double expressCost = Double.parseDouble(expressCostField.getText().trim());
+
+                if (fee < 0 || prepTime < 0 || expressCost < 0) {
+                    MessageBox.error("Validation Error", "Numeric values must be non-negative.");
+                    return;
+                }
+
+                callback.accept(new FastFoodRestaurant(code, name, kitchen, rating, isOpenBox.isSelected(), fee, prepTime, expressCost));
+            } catch (NumberFormatException e) {
+                MessageBox.error("Validation Error", "Please enter valid numeric values.");
+            }
+        }, () -> callback.accept(null));
+
+        stage.setOnCloseRequest(e -> callback.accept(null));
+        stage.setScene(new Scene(root, 400, 380));
+        stage.setTitle("Create Fast Food Restaurant");
+        stage.show();
+    }
+
+    // Creates a new PremiumRestaurant
+    public static void createPremiumRestaurant(Stage stage, int code, Consumer<PremiumRestaurant> callback) {
+        GridPane grid = createGrid();
+
+        TextField nameField = new TextField();
+        TextField kitchenField = new TextField();
+        TextField ratingField = new TextField();
+        TextField feeField = new TextField();
+        TextField minOrderField = new TextField();
+        TextField commissionField = new TextField();
+        CheckBox isOpenBox = new CheckBox("Open");
+
+        grid.add(new Label("Name:"), 0, 0); grid.add(nameField, 1, 0);
+        grid.add(new Label("Kitchen Type:"), 0, 1); grid.add(kitchenField, 1, 1);
+        grid.add(new Label("Rating (0-5):"), 0, 2); grid.add(ratingField, 1, 2);
+        grid.add(new Label("Delivery Fee:"), 0, 3); grid.add(feeField, 1, 3);
+        grid.add(new Label("Minimum Order:"), 0, 4); grid.add(minOrderField, 1, 4);
+        grid.add(new Label("Commission %:"), 0, 5); grid.add(commissionField, 1, 5);
+        grid.add(new Label("Is Open:"), 0, 6); grid.add(isOpenBox, 1, 6);
+
+        VBox root = createBaseFormLayout("Create Premium Restaurant", grid, () -> {
+            String name = nameField.getText().trim();
+            String kitchen = kitchenField.getText().trim();
+
+            if (name.isEmpty() || kitchen.isEmpty()) {
+                MessageBox.error("Validation Error", "Name and Kitchen Type are required.");
+                return;
+            }
+
+            try {
+                double rating = Double.parseDouble(ratingField.getText().trim());
+                if (rating < 0 || rating > 5) {
+                    MessageBox.error("Validation Error", "Rating must be between 0 and 5.");
+                    return;
+                }
+                double fee = Double.parseDouble(feeField.getText().trim());
+                double minOrder = Double.parseDouble(minOrderField.getText().trim());
+                double commission = Double.parseDouble(commissionField.getText().trim());
+
+                if (fee < 0 || minOrder < 0 || commission < 0) {
+                    MessageBox.error("Validation Error", "Numeric values must be non-negative.");
+                    return;
+                }
+
+                callback.accept(new PremiumRestaurant(code, name, kitchen, rating, isOpenBox.isSelected(), fee, minOrder, commission));
+            } catch (NumberFormatException e) {
+                MessageBox.error("Validation Error", "Please enter valid numeric values.");
+            }
+        }, () -> callback.accept(null));
+
+        stage.setOnCloseRequest(e -> callback.accept(null));
+        stage.setScene(new Scene(root, 400, 380));
+        stage.setTitle("Create Premium Restaurant");
+        stage.show();
+    }
+
+    // Creates a new Date
+    public static void createDate(Stage stage, Consumer<Date> callback) {
+        GridPane grid = createGrid();
+
+        TextField yearField = new TextField();
+        TextField monthField = new TextField();
+        TextField dayField = new TextField();
+
+        grid.add(new Label("Year (2000-2026):"), 0, 0); grid.add(yearField, 1, 0);
+        grid.add(new Label("Month (1-12):"), 0, 1); grid.add(monthField, 1, 1);
+        grid.add(new Label("Day:"), 0, 2); grid.add(dayField, 1, 2);
+
+        VBox root = createBaseFormLayout("Create Date", grid, () -> {
+            try {
+                int year = Integer.parseInt(yearField.getText().trim());
+                int month = Integer.parseInt(monthField.getText().trim());
+                int day = Integer.parseInt(dayField.getText().trim());
+
+                if (year < 2000 || year > 2026) {
+                    MessageBox.error("Validation Error", "Year must be between 2000 and 2026.");
+                    return;
+                }
+                if (month < 1 || month > 12) {
+                    MessageBox.error("Validation Error", "Month must be between 1 and 12.");
+                    return;
+                }
+                int maxDay = DataChecker.getDaysInMonth(year, month);
+                if (day < 1 || day > maxDay) {
+                    MessageBox.error("Validation Error", "Day must be between 1 and " + maxDay + " for the selected month.");
+                    return;
+                }
+
+                callback.accept(new Date(day, month, year));
+            } catch (NumberFormatException e) {
+                MessageBox.error("Validation Error", "Please enter valid integers for date fields.");
+            }
+        }, () -> callback.accept(null));
+
+        stage.setOnCloseRequest(e -> callback.accept(null));
+        stage.setScene(new Scene(root, 350, 250));
+        stage.setTitle("Create Date");
+        stage.show();
+    }
+
+    // Creates a Date after a given Date
+    public static void createDateAfterDate(Stage stage, Date before, Consumer<Date> callback) {
+        createDate(stage, new DateConsumerWrapper(stage, before, callback));
+    }
+
+    // Wrapper to validate dates that depend on an earlier date
+    private static class DateConsumerWrapper implements Consumer<Date> {
+        private final Stage stage;
+        private final Date before;
+        private final Consumer<Date> callback;
+
+        public DateConsumerWrapper(Stage stage, Date before, Consumer<Date> callback) {
+            this.stage = stage;
+            this.before = before;
+            this.callback = callback;
+        }
+
+        @Override
+        public void accept(Date createdDate) {
+            if (createdDate == null) {
+                callback.accept(null);
+                return;
+            }
+
+            if (!createdDate.isAfter(before)) {
+                MessageBox.error("Validation Error", "The delivery date must be after the order creation date.");
+                // Re-open/refresh date creation window if validation fails
+                createDateAfterDate(stage, before, callback);
+            } else {
+                callback.accept(createdDate);
+            }
+        }
+    }
+}

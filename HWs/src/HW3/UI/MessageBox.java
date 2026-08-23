@@ -140,17 +140,28 @@ public class MessageBox {
 	}
 	
 
-	public static Boolean inputBOOL(String text, String header) {
+	public static Boolean inputBOOL(String title, String header, boolean isNull) {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-		alert.setTitle("Confirmation Dialog");
-		alert.setHeaderText("Look, a Confirmation Dialog");
-		alert.setContentText("Are you ok with this?");
+		if(title != null)
+			alert.setTitle(title);
+		alert.setHeaderText(header);
 
 		alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.isPresent())
 		    return result.get() == ButtonType.YES;
-		return null;
+		
+		if(isNull)
+			return null;
+		return false;
+	}
+	
+	public static Boolean inputBOOL(String header, boolean isNull) {
+		return inputBOOL(null, header, isNull);
+	}
+	
+	public static Boolean inputBOOL(String header) {
+		return inputBOOL(null, header, false);
 	}
 }

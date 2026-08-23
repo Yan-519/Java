@@ -4,17 +4,14 @@ import HW3.DeliveryDataBase;
 import HW3.UI.MessageBox;
 import HW3.UI.UIHelper;
 import HW3.Utils.DataInitializer;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
+import HW3.Utils.DataSelector;
+import HW3.Utils.InputManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -34,10 +31,11 @@ public class MainUI extends UIBase {
 	public MainUI(Stage stage) {
 		super(stage, DataInitializer.initialDataBase(), () -> {});
 		
+		DataSelector.setDeliveryDataBase(deliveryDataBase);
+		InputManager.setDeliveryDataBase(deliveryDataBase);
+		
         stage.setTitle("Delivery System");
-        
         adminUI = new AdminUI(stage, deliveryDataBase, this::Auth);
-        
     }
 	
 
