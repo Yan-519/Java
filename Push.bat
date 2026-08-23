@@ -8,49 +8,48 @@ echo.
  
 set "has_changes=0"
 for /f "delims=" %%A in ('git status --porcelain') do set "has_changes=1"
-
-set "commit_message="""
-
-if "%has_changes%"=="1" (
-    set /p "commit_message=Commit message: "
-    
-    :empty_message
-    if "%commit_message%"=="" (
-        echo.
-        echo Commit message cannot be empty.
-        set /p "commit_message=Commit message: "
-    
-        goto :empty_message
-    )
-    
-    echo.
-    choice /C YN /M "Are you sure you want to commit?"
-    if errorlevel 2 exit /b 0
-    
-    echo.
-    echo Adding files...
-    git add .
-    if errorlevel 1 (
-        echo Git add failed.
-        pause
-        exit /b 1
-    )
-    
-    echo.
-    echo Committing...
-    git commit -m "%commit_message%"
-    if errorlevel 1 (
-        echo Git commit failed.
-        pause
-        exit /b 1
-    )
-    
-    echo.
-    echo Changes commited successfully.
-)
 if "%has_changes%"=="0" (
     echo No changes found ^(skipping commit options^)
+    goto :push_flag
 )
+
+set /p "commit_message=Commit message: "
+
+:empty_message
+if "%commit_message%"=="" (
+    echo.
+    echo Commit message cannot be empty.
+    set /p "commit_message=Commit message: "
+
+    goto :empty_message
+)
+
+echo.
+choice /C YN /M "Are you sure you want to commit?"
+if errorlevel 2 exit /b 0
+
+echo.
+echo Adding files...
+git add .
+if errorlevel 1 (
+    echo Git add failed.
+    pause
+    exit /b 1
+)
+
+echo.
+echo Committing...
+git commit -m "%commit_message%"
+if errorlevel 1 (
+    echo Git commit failed.
+    pause
+    exit /b 1
+)
+
+echo.
+echo Changes commited successfully.
+
+:push_flag
 
 echo.
 choice /C YN /M "Are you sure you want to push?"
