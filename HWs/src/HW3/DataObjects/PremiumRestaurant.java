@@ -13,13 +13,13 @@ public class PremiumRestaurant extends Restaurant {
 	}
 
 	
-	@Override
-	public String toString() {
-		return "PremiumRestaurant [minimumOrderCost=" + minimumOrderCost + ", additionalCommissionPercentagePerOrder="
-				+ additionalCommissionPercentagePerOrder + ", code=" + getCode() + ", name=" + name + ", kitchenType="
-				+ kitchenType + ", rating=" + rating + ", isOpen=" + isOpen + ", baseDeliveryFee=" + baseDeliveryFee
-				+ "]";
-	}
+//	@Override
+//	public String toString() {
+//		return "PremiumRestaurant [minimumOrderCost=" + minimumOrderCost + ", additionalCommissionPercentagePerOrder="
+//				+ additionalCommissionPercentagePerOrder + ", code=" + getCode() + ", name=" + name + ", kitchenType="
+//				+ kitchenType + ", rating=" + rating + ", isOpen=" + isOpen + ", baseDeliveryFee=" + baseDeliveryFee
+//				+ "]";
+//	}
 
 	
 	public double getMinimumOrderCost() {

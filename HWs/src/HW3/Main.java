@@ -9,7 +9,7 @@ public class Main extends Application {
 	@Override
     public void start(Stage stage) {
         MainUI menuManager = new MainUI(stage);
-        menuManager.Auth();
+        menuManager.Init();
         stage.show();
     }
 

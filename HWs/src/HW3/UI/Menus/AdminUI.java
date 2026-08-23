@@ -1,28 +1,18 @@
 package HW3.UI.Menus;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import HW3.DeliveryDataBase;
-import HW3.DeliveryDataBase.CodedType;
-import HW3.DataObjects.Customer;
-import HW3.DataObjects.Order;
-import HW3.DataObjects.Order.OrderStatus;
-import HW3.Exceptions.*;
 import HW3.UI.MessageBox;
 import HW3.UI.UIHelper;
-import HW3.Utils.DataSelector;
-import HW3.Utils.DataChecker;
-import HW3.Utils.InputManager;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import HW3.UI.Menus.AdminManagment.CustomerManagment;
+import HW3.UI.Menus.AdminManagment.OrderManagment;
+import HW3.UI.Menus.AdminManagment.RestAdminManagment;
+import HW3.UI.Menus.AdminManagment.RestaurantManagment;
+import HW3.UI.Menus.AdminManagment.RiderManagment;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -31,13 +21,26 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class AdminUI extends UIBase {
+	
+	private CustomerManagment customerManagment;
+	private OrderManagment orderManagment;
+	private RestAdminManagment restAdminManagment;
+	private RestaurantManagment restaurantManagment;
+	private RiderManagment riderManagment;
+	
 
 	public AdminUI(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
 		super(stage, deliveryDataBase, backF);
+		
+		customerManagment = new CustomerManagment(stage, deliveryDataBase, this::Main);
+		orderManagment = new OrderManagment(stage, deliveryDataBase, this::Main);
+		restAdminManagment = new RestAdminManagment(stage, deliveryDataBase, this::Main);
+		restaurantManagment = new RestaurantManagment(stage, deliveryDataBase, this::Main);
+		riderManagment = new RiderManagment(stage, deliveryDataBase, this::Main);
 	}
 
 	@Override
-	public void Auth() {
+	public void Init() {
 		
         VBox root = UIHelper.createVRoot();
 
@@ -87,15 +90,15 @@ public class AdminUI extends UIBase {
         grid.setPadding(new Insets(30));
         grid.setAlignment(Pos.CENTER);
 
-        Button customersButton = UIHelper.createButton("Customer Management", this::showCustomerManagement);
+        Button customersButton = UIHelper.createButton("Customer Management", customerManagment::Init);
 
-        Button restaurantsButton = UIHelper.createButton("Restaurant Management", this::showRestaurantManagement);
+        Button restaurantsButton = UIHelper.createButton("Restaurant Management", restaurantManagment::Init);
 
-        Button ordersButton = UIHelper.createButton("Order Management", this::showOrderManagement);
+        Button ordersButton = UIHelper.createButton("Order Management", orderManagment::Init);
 
-        Button ridersButton = UIHelper.createButton("Rider Management", this::showRiderManagement);
+        Button ridersButton = UIHelper.createButton("Rider Management", riderManagment::Init);
 
-        Button restaurantAdminsButton = UIHelper.createButton("Restaurant Administrator Management", this::showRestaurantAdminManagement);
+        Button restaurantAdminsButton = UIHelper.createButton("Restaurant Administrator Management", restAdminManagment::Init);
 
         Button reportsButton = UIHelper.createButton("Reports and Sorting", this::showReports);
 
@@ -125,210 +128,12 @@ public class AdminUI extends UIBase {
 
     }
 
-
-
-    private void showCustomerManagement() {
-        BorderPane root = new BorderPane();
-        
-        VBox header = UIHelper.createVRoot("Customer");
-        root.setTop(header);
-
-        GridPane grid = new GridPane();
-
-        grid.setHgap(15);
-        grid.setVgap(15);
-        grid.setPadding(new Insets(30));
-        grid.setAlignment(Pos.CENTER);
-
-        Button showCustomers = UIHelper.createButton(
-                "Show All Customers",
-                () -> UIHelper.showList(stage, deliveryDataBase.getCustomers(), this::showCustomerManagement)
-        );
-
-        Button searchCustomer = UIHelper.createButton(
-                "Search Customer by Code",
-                () -> MessageBox.Info(DataSelector.selectCustomer())
-        );
-
-        Button addCustomer = UIHelper.createButton(
-                "Add New Customer",
-                e -> {
-                	int code = deliveryDataBase.generateCode(CodedType.Customer);
-
-                	InputManager.createCustomer(stage, code, customer -> {
-                	    if (customer != null) {
-                	    	try {
-	                	        if (deliveryDataBase.add(customer)) 
-	                	            MessageBox.Info("The customer code is " + code);
-	                	    } catch (TargetObjectAlreadyExistException ex) {
-	                	        MessageBox.error(ex);
-	                	    }
-                	    }
-                	    showCustomerManagement();
-                	});
-                }
-        );
-
-        Button updateCustomer = UIHelper.createButton(
-                "Update Customer",
-                this::updateCustomer
-        );
-
-        Button showOrders = UIHelper.createButton(
-                "Show Customer Orders",
-                e -> {
-                	Customer customer = DataSelector.selectCustomer();
-                	if(customer == null)
-                		showCustomerManagement();
-                	
-                	else UIHelper.showList(stage, deliveryDataBase.getOrdersOfCustomer(customer), this::showCustomerManagement);
-                }
-        );
-
-        Button cancelOrder = UIHelper.createButton(
-                "Cancel Order",
-                this::cancelOrder
-        );
-
-        Button showRestaurants = UIHelper.createButton(
-                "Show Ordered Restaurants",
-                e -> showOrderedRestaurants()
-        );
-
-        Button showPremiumRestaurants = UIHelper.createButton(
-                "Show Ordered Premium Restaurants",
-                e -> showOrderedPremiumRestaurants()
-        );
-
-        Button logout = UIHelper.createButton(
-                "Logout",
-                e -> Auth()
-        );
-
-        grid.add(showCustomers, 0, 0);
-        grid.add(searchCustomer, 1, 0);
-
-        grid.add(addCustomer, 0, 1);
-        grid.add(updateCustomer, 1, 1);
-
-        grid.add(showOrders, 0, 2);
-        grid.add(cancelOrder, 1, 2);
-
-        grid.add(showRestaurants, 0, 3);
-        grid.add(showPremiumRestaurants, 1, 3);
-
-        grid.add(logout, 0, 4, 2, 1);
-
-        root.setCenter(grid);
-
-        UIHelper.setScene(stage, root, 800, 650);
-    }
-
-
-    private void updateCustomer() {
-    	Customer customer = DataSelector.selectCustomer();
-    	
-		if(MessageBox.inputBOOL("Do you want to change your adress?")){
-			if(MessageBox.inputBOOL("Do you want to chage the town?")) {
-				String townString = MessageBox.inputSTR(null, "Enter new town", true);
-				if(townString != null)
-					customer.setTown(townString);
-			}
-	
-			if(MessageBox.inputBOOL("Do you want to chage the street?")) {
-				String streetString = MessageBox.inputSTR(null, "Enter new street", false);
-				if(streetString != null)
-					customer.setStreet(streetString);
-			}
-	
-			if(MessageBox.inputBOOL("Do you want to chage the ZIP code?")) {
-				String zip = DataSelector.dataFilter(() -> MessageBox.inputSTR(null, "Enter new ZIP code", ""), DataChecker::isValidZipCode, "Zip code must be not newgative 5-7 digits");
-			    if(zip != null)
-			    	customer.setZipCode(zip);
-			}
-		}
-		if(MessageBox.inputBOOL("Do you want to chage your phone number?")) {
-			String phone = DataSelector.dataFilter(() -> MessageBox.inputSTR(null, "Enter the new phone number (IL)", null), DataChecker::isValidPhoneNumber, "Not valid phone number");
-			if(phone != null)
-				customer.setPhoneNumber(phone);
-		}
-
-    }
-
-    private void cancelOrder() {
-    	
-    	Customer customer = DataSelector.selectCustomer();
-    	if(customer == null) {
-    		showCustomerManagement();
-    		return;
-    	}
-    	
-    	ArrayList<Order> orders = deliveryDataBase.getOrdersOfCustomer(customer);
-    	if(orders.isEmpty())
-    	{
-    		MessageBox.Info("selected customer has no orders");
-    		showCustomerManagement();
-    		return;
-    	}
-    	
-    	UIHelper.showList(stage, orders, this::showCustomerManagement);
-	
-		Order order = DataSelector.selectOrder();
-		if(order == null) break;
-		while(order.getClientCode() != customer.getCode() || order.getOrderStatus() == OrderStatus.Delivered) {
-			if(order.getClientCode() != customer.getCode())
-					System.out.println("The selected order must me your");
-			else if(order.getOrderStatus() == OrderStatus.Delivered)
-				System.out.println("You can't cencel an order that has beed deliverd");
-			order = DataSelector.selectOrder();
-			if(order == null) break;
-		}
-		if(order == null) break;
-		
-		try {
-			deliveryDataBase.removeOrder(order.getCode());
-		} catch (CodedNotFoundException | RiderNotFoundException | TargetObjectDoesntExistException e) {
-			MessageBox.error(e);
-		}
-
-    }
-
-    private void showOrderedRestaurants() {
-    }
-
-    private void showOrderedPremiumRestaurants() {
-    }
-
-    
-    
-    
-
-    private void showRestaurantManagement() {
-    }
-
-    private void showOrderManagement() {
-    }
-
-    private void showRiderManagement() {
-    }
-
-    private void showRestaurantAdminManagement() {
-    }
-
     private void showReports() {
     }
-
-    
-    
-    
     
     private void saveData() {
     }
 
     private void loadData() {
     }
-
-    
-    
-	
 }

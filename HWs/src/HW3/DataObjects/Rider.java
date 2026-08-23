@@ -118,8 +118,7 @@ public class Rider {
 
 	@Override
 	public String toString() {
-		return "Rider [id=" + id + ", name=" + name + ", lastName=" + lastName + ", phoneNumber=" + phoneNumber
-				+ ", vehicle=" + vehicle + ", isAvailable=" + isAvailable + ", orders=" + deliverdOrders + "]";
+		return this.getName() + " " + this.getLastName() + ": " + this.getId();
 	}
 	
 	@Override

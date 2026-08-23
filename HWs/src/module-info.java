@@ -13,4 +13,5 @@ module HWs {
 	
 	opens HW3 to javafx.graphics;
 	exports HW3;
+	exports HW3.DataObjects;
 }

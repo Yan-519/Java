@@ -73,8 +73,7 @@ public class RestAdmin extends Coded {
 
 	@Override
 	public String toString() {
-		return "RestAdmin [name=" + name + ", userName=" + userName + ", password=" + password + ", restaurants="
-				+ restaurants + ", code=" + code + "]";
+		return this.getUserName() + ": " + this.getCode();
 	}
 	
 	

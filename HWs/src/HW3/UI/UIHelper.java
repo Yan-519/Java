@@ -99,7 +99,13 @@ public class UIHelper {
     }
     
     public static void showList(Stage stage, List<?> lst, Runnable backF) {
-    	List<String> strL = lst.stream().map(Object::toString).collect(Collectors.toList());
+    	if(lst.isEmpty()) {
+    		MessageBox.Info("No values found");
+    		return;
+    	}
+    	
+    	
+    	List<String> strL = lst.stream().map(Object::toString).toList();
     	ObservableList<String> observableCustomers = FXCollections.observableArrayList(strL);
 
     	ListView<String> listView = new ListView<>(observableCustomers);

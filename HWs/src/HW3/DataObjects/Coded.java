@@ -40,7 +40,7 @@ public abstract class Coded {
 	}
 	
 	// returns the Coded woth the given code from the given list
-	public static <T extends Coded> T tryGetCoded(ArrayList<T> codeds, int code, Class<T> name) throws CodedNotFoundException, TargetObjectDoesntExistException {
+	public static <T extends Coded> T getCoded(ArrayList<T> codeds, int code, Class<T> name) throws CodedNotFoundException, TargetObjectDoesntExistException {
 		for (T coded : codeds) {
 	        if (coded.getCode() == code) {
 	        	return coded;

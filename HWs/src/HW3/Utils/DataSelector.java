@@ -6,7 +6,6 @@ import java.util.function.Supplier;
 
 import HW3.DeliveryDataBase;
 import HW3.DataObjects.*;
-import HW3.DataObjects.Order.OrderStatus;
 import HW3.Exceptions.RiderNotFoundException;
 import HW3.UI.MessageBox;
 import HW3.UI.MessageBox.NumberSign;
@@ -19,7 +18,6 @@ public class DataSelector {
 	public static void setDeliveryDataBase(DeliveryDataBase deliveryDataBase) {
 		DataSelector.deliveryDataBase = deliveryDataBase;
 	}
-	
 	
 	public static <T> T dataFilter(Supplier<T> inFunction, Predicate<T> ifPredicate, Function<T, String> message){
 		T val = inFunction.get();
@@ -35,11 +33,6 @@ public class DataSelector {
 	public static <T> T dataFilter(Supplier<T> inFunction, Predicate<T> ifPredicate, String message){
 		return dataFilter(inFunction, ifPredicate, o -> message);
 	}
-
-	// select Open Restaurant
-	public static Restaurant selectOpenRestaurant() {
-		return dataFilter(DataSelector::selectRestaurant, r  -> r.isOpen() , "The selected restaurannt is close");
-	}
 	
 	// select Restaurant
 	public static Restaurant selectRestaurant() {
@@ -48,7 +41,7 @@ public class DataSelector {
 			code = MessageBox.inputINT(null, "Enter restaurant code", NumberSign.POSITIVE);
 			if(code == null) return null;
 			try {
-				return deliveryDataBase.tryGetRestaurant(code);
+				return deliveryDataBase.getRestaurant(code);
 			} catch (Exception e) {
 				MessageBox.error(e);
 			}
@@ -65,16 +58,11 @@ public class DataSelector {
 				return null;
 			}
 			try {
-				return deliveryDataBase.tryGetRestAdmin(code);
+				return deliveryDataBase.getRestAdmin(code);
 			} catch (Exception e) {
 				MessageBox.error(e);
 			}
 		}
-	}
-	
-	// select Available Rider
-	public static Rider selectAveilableRider() {
-		return dataFilter(DataSelector::selectRider, r -> r.isAvailable(), "Rider isnt aveilable");
 	}
 	
 	// select Rider
@@ -86,17 +74,11 @@ public class DataSelector {
 			if(ID == null) return null;
 			
 			try {
-				return deliveryDataBase.tryGetRider(ID);
+				return deliveryDataBase.getRider(ID);
 			} catch (RiderNotFoundException e) {
 				MessageBox.error(e);
 			}
 		}
-	}
-	
-	// select  Created Order
-	public static Order selectCreatedOrder() {
-		return dataFilter(DataSelector::selectOrder, o -> o.getOrderStatus() == OrderStatus.Created,
-				o -> "The order is already " + o.getOrderStatus());
 	}
 	
 	// select Order
@@ -109,7 +91,7 @@ public class DataSelector {
 				return null;
 			
 			try {
-				return deliveryDataBase.tryGetOrder(code);
+				return deliveryDataBase.getOrder(code);
 			} catch (Exception e) {
 				MessageBox.error(e);
 			} 
@@ -125,7 +107,7 @@ public class DataSelector {
 				return null;
 			
 			try {
-				return deliveryDataBase.tryGetCustomer(code);
+				return deliveryDataBase.getCustomer(code);
 			} catch (Exception e) {
 				MessageBox.error(e);
 			}

@@ -104,17 +104,17 @@ public class DeliveryDataBase {
 
 	// remove an order from the system
 	public void removeOrder(int code) throws CodedNotFoundException, RiderNotFoundException, TargetObjectDoesntExistException {
-		Order order = tryGetOrder(code);
+		Order order = getOrder(code);
 		if (order == null || order.getOrderStatus() == OrderStatus.Delivered) return;
 		
-		Customer customer = tryGetCustomer(order.getClientCode());
-	    Restaurant restaurant = tryGetRestaurant(order.getRestaurantCode());
+		Customer customer = getCustomer(order.getClientCode());
+	    Restaurant restaurant = getRestaurant(order.getRestaurantCode());
 
 	    if (!ordersByCustomer.containsKey(order.getClientCode()) || !ordersByCustomer.get(order.getClientCode()).contains(order))
 	    	throw new TargetObjectDoesntExistException("Order :" + code, "ordersByCustomer, ordersByCustomer");
 	    
 	    if(order.getRiderId() != null) 
-	    	tryGetRider(order.getRiderId()).removeCurrentOrder();
+	    	getRider(order.getRiderId()).removeCurrentOrder();
 	    
 		
 
@@ -239,7 +239,7 @@ public class DeliveryDataBase {
 	}
 
 	// returns the RestAdmin by user name and password (if can't find -> return null)
-	public RestAdmin tryGetRestAdmin(String userName, String password) {
+	public RestAdmin getRestAdmin(String userName, String password) {
 		for (RestAdmin restAdmin : restAdmins) {
 			if (restAdmin.getUserName().equalsIgnoreCase(userName) && restAdmin.getPassword().equals(password)) {
 				return restAdmin;
@@ -249,12 +249,12 @@ public class DeliveryDataBase {
 	}
 
 	// returns the RestAdmin by code (if can't find -> return null)
-	public RestAdmin tryGetRestAdmin(int code) throws CodedNotFoundException, TargetObjectDoesntExistException {
-		return Coded.tryGetCoded(restAdmins, code, RestAdmin.class);
+	public RestAdmin getRestAdmin(int code) throws CodedNotFoundException, TargetObjectDoesntExistException {
+		return Coded.getCoded(restAdmins, code, RestAdmin.class);
 	}
 
 	// returns the Rider by id (if cant find -> return null)
-	public Rider tryGetRider(String id) throws RiderNotFoundException {
+	public Rider getRider(String id) throws RiderNotFoundException {
 		for (Rider rider : riders) {
 			if (rider.getId().equalsIgnoreCase(id)) {
 				return rider;
@@ -263,16 +263,16 @@ public class DeliveryDataBase {
 		throw new RiderNotFoundException(id);
 	}
 
-	public Customer tryGetCustomer(int code) throws CodedNotFoundException, TargetObjectDoesntExistException{
-		return Coded.tryGetCoded(customers, code, Customer.class);
+	public Customer getCustomer(int code) throws CodedNotFoundException, TargetObjectDoesntExistException{
+		return Coded.getCoded(customers, code, Customer.class);
 	}
 	
-	public Order tryGetOrder(int code) throws CodedNotFoundException, TargetObjectDoesntExistException {
-		return Coded.tryGetCoded(orders, code, Order.class);
+	public Order getOrder(int code) throws CodedNotFoundException, TargetObjectDoesntExistException {
+		return Coded.getCoded(orders, code, Order.class);
 	}
 	
-	public Restaurant tryGetRestaurant(int code) throws CodedNotFoundException, TargetObjectDoesntExistException{
-		return Coded.tryGetCoded(restaurants, code, Restaurant.class);
+	public Restaurant getRestaurant(int code) throws CodedNotFoundException, TargetObjectDoesntExistException{
+		return Coded.getCoded(restaurants, code, Restaurant.class);
 	}
 
 	// gets all the orders of the given Customer
@@ -282,7 +282,7 @@ public class DeliveryDataBase {
 	
 	// get Orders Of RestAdmin
 	public ArrayList<Order> getOrdersOfRestAdmin(int code) throws CodedNotFoundException, TargetObjectDoesntExistException{
-		RestAdmin restAdmin = Coded.tryGetCoded(restAdmins, code, RestAdmin.class);
+		RestAdmin restAdmin = Coded.getCoded(restAdmins, code, RestAdmin.class);
 		ArrayList<Order> ords = new ArrayList<>();
 		for(Restaurant restaurant : restAdmin.getRestaurants())
 			ords.addAll(getOrdersByuRestaurant(restaurant.getCode()));
@@ -340,11 +340,11 @@ public class DeliveryDataBase {
 		if (date == null)
 			return -1;
 
-		Customer customer = Coded.tryGetCoded(customers, customerCode, Customer.class);
+		Customer customer = Coded.getCoded(customers, customerCode, Customer.class);
 		if(customer == null)
 			throw new CustomerNotFoundException(customerCode);
 		
-		Restaurant restaurant = Coded.tryGetCoded(restaurants, restaurantCode, Restaurant.class);
+		Restaurant restaurant = Coded.getCoded(restaurants, restaurantCode, Restaurant.class);
 		if(restaurant == null)
 			throw new RestaurantNotFoundException(restaurantCode);
 
@@ -359,24 +359,24 @@ public class DeliveryDataBase {
 
 	// adds a Restaurant to a RestAdmin
 	public void addRestToAdmin(int adminCode, int restCode) throws CodedNotFoundException, TargetObjectDoesntExistException {
-		RestAdmin restAdmin = Coded.tryGetCoded(restAdmins, adminCode, RestAdmin.class);
-		Restaurant restaurant = Coded.tryGetCoded(restaurants, restCode, Restaurant.class);
+		RestAdmin restAdmin = Coded.getCoded(restAdmins, adminCode, RestAdmin.class);
+		Restaurant restaurant = Coded.getCoded(restaurants, restCode, Restaurant.class);
 
 		restAdmin.addRestaurant(restaurant);
 	}
 
 	// adds an Order to a Rider (RestAdmin)
 	public void addOrderToRider(String riderId, int orderCode) throws CodedNotFoundException, TargetObjectDoesntExistException, DeliveryPersonUnavailableException, RiderNotFoundException {
-		Order order = Coded.tryGetCoded(orders, orderCode, Order.class);
+		Order order = Coded.getCoded(orders, orderCode, Order.class);
 		if (order.getOrderStatus() != OrderStatus.Created)
 			return;
 
-		Rider rider = tryGetRider(riderId);
+		Rider rider = getRider(riderId);
 		if (rider == null || !rider.isAvailable())
 			return;
 
 		if (order.getRiderId() != null) 
-			tryGetRider(order.getRiderId()).removeCurrentOrder();
+			getRider(order.getRiderId()).removeCurrentOrder();
 		
 
 		rider.setCurrentOrder(order);
@@ -384,8 +384,8 @@ public class DeliveryDataBase {
 
 	// adds an Order to a Rider (RestAdmin)
 	public void addOrderToRider(String riderId, int orderCode, int restAdminCode) throws CodedNotFoundException, TargetObjectDoesntExistException, DeliveryPersonUnavailableException, RiderNotFoundException {
-		Order order = Coded.tryGetCoded(orders, orderCode, Order.class);
-		RestAdmin restAdmin = Coded.tryGetCoded(restAdmins, restAdminCode, RestAdmin.class);
+		Order order = Coded.getCoded(orders, orderCode, Order.class);
+		RestAdmin restAdmin = Coded.getCoded(restAdmins, restAdminCode, RestAdmin.class);
 		if (!restAdmin.containsRestaurant(order.getRestaurantCode()))
 			return;
 		
@@ -423,7 +423,12 @@ public class DeliveryDataBase {
 	
 	// updating the balance of a customer by his code
 	public boolean setBalanceToCustomer(int code, double balance) throws CodedNotFoundException, TargetObjectDoesntExistException {
-		return tryGetCustomer(code).setBalance(balance);
+		return getCustomer(code).setBalance(balance);
+	}
+	
+	public void updateRestaurantRaiting(int code, double reiting) throws CodedNotFoundException, TargetObjectDoesntExistException {
+		Restaurant restaurant = getRestaurant(code);
+		restaurant.setRating(reiting);
 	}
 	
 	// get all open restaurants
@@ -438,7 +443,7 @@ public class DeliveryDataBase {
 
 	// update the delivery status (add delivering date)
 	public void updateDeliveryStatus(String riderId, Date deliveryDate) throws RiderNotFoundException {
-		Rider rider = tryGetRider(riderId);
+		Rider rider = getRider(riderId);
 		Order order = rider.getCurrentOrder();
 		if(order == null) return;
 		
@@ -451,7 +456,7 @@ public class DeliveryDataBase {
 	
 	// switch between open and close restaurant by code
 	public void changeRestaurantStatus(int code) throws CodedNotFoundException, TargetObjectDoesntExistException {
-		Restaurant restaurant = tryGetRestaurant(code);
+		Restaurant restaurant = getRestaurant(code);
 		restaurant.setOpen(!restaurant.isOpen());
 	}
 
