@@ -12,7 +12,6 @@ for /f "delims=" %%A in ('git status --porcelain') do set "has_changes=1"
 set "commit_message="""
 
 if "%has_changes%"=="1" (
-
     set /p "commit_message=Commit message: "
     
     :empty_message
@@ -45,6 +44,9 @@ if "%has_changes%"=="1" (
         pause
         exit /b 1
     )
+    
+    echo.
+    echo Changes commited successfully.
 )
 if "%has_changes%"=="0" (
     echo No changes found ^(skipping commit options^)
