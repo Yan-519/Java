@@ -1,4 +1,4 @@
-package HW3.UI.Menus;
+package HW3.Menus;
 
 import HW3.DeliveryDataBase;
 import javafx.stage.Stage;

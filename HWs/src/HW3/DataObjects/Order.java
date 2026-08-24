@@ -13,7 +13,7 @@ public class Order extends Coded {
 	private Date orderingDate, deliveringDate;
 	private double basePrice, finalPrice;
 	
-	private OrderStatus orderStatus; 
+	private OrderStatus status; 
 	
 	
 	public Order(int code, int clientCode, Restaurant restaurant, Date orderingDate, double basePrice) {
@@ -25,7 +25,7 @@ public class Order extends Coded {
 		this.basePrice = basePrice;
 		setBasePrice(basePrice);
 		
-		this.orderStatus = OrderStatus.Created;
+		this.status = OrderStatus.Created;
 
 		this.riderId = null;
 		this.deliveringDate = new Date();
@@ -97,14 +97,13 @@ public class Order extends Coded {
 		}
 	}
 	
-	
 
-	public OrderStatus getOrderStatus() {
-		return orderStatus;
+	public OrderStatus getStatus() {
+		return status;
 	}
 
-	public void setOrderStatus(OrderStatus orderStatus) {
-		this.orderStatus = orderStatus;
+	public void setStatus(OrderStatus status) {
+		this.status = status;
 	}
 
 	public void setClientCode(int clientCode) {
@@ -128,7 +127,7 @@ public class Order extends Coded {
 	public String toString() {
 		return "OrderCode=" + this.getCode() + ": client=" + this.getClientCode() + ", restaurant=" + this.getRestaurantCode()
 		+ ", riderId=" + this.getRiderId() + ", basePrice=" + this.getBasePrice() + ", finalPrice=" + this.getFinalPrice() + ", status="
-		+ this.getOrderStatus();
+		+ this.getStatus();
 	}
 	
 }

@@ -1,4 +1,4 @@
-package HW3.UI.Menus.AdminManagment;
+package HW3.Menus.AdminManagment;
 
 import java.util.ArrayList;
 
@@ -11,12 +11,12 @@ import HW3.Exceptions.CodedNotFoundException;
 import HW3.Exceptions.RiderNotFoundException;
 import HW3.Exceptions.TargetObjectAlreadyExistException;
 import HW3.Exceptions.TargetObjectDoesntExistException;
-import HW3.UI.MessageBox;
-import HW3.UI.UIHelper;
-import HW3.UI.Menus.UIBase;
+import HW3.Menus.UIBase;
 import HW3.Utils.DataChecker;
 import HW3.Utils.DataSelector;
 import HW3.Utils.InputManager;
+import HW3.Utils.MessageBox;
+import HW3.Utils.UIHelper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -62,16 +62,14 @@ public class CustomerManagment extends UIBase {
                 () -> MessageBox.Info(DataSelector.selectCustomer())
         );
 
-        Button addCustomer = UIHelper.createButton(
-                "Add New Customer",
-                e -> {
+        Button addCustomer = UIHelper.createButton("Add New Customer", e -> {
                 	int code = deliveryDataBase.generateCode(CodedType.Customer);
 
                 	InputManager.createCustomer(stage, code, customer -> {
                 	    if (customer != null) {
                 	    	try {
-	                	        if (deliveryDataBase.add(customer)) 
-	                	            MessageBox.Info("The customer code is " + code);
+	                	        deliveryDataBase.add(customer); 
+	                	        MessageBox.Info("The customer code is " + code);
 	                	    } catch (TargetObjectAlreadyExistException ex) {
 	                	        MessageBox.error(ex);
 	                	    }
@@ -181,26 +179,14 @@ public class CustomerManagment extends UIBase {
     }
 
     private void cancelOrder() {
-    	
-    	Customer customer = DataSelector.selectCustomer();
-    	if(customer == null) {
+    	if(!deliveryDataBase.getOrders().stream().anyMatch(o -> o.getStatus() != OrderStatus.Delivered)) {
+    		MessageBox.Info(null, "No cancelable orders found");
     		Main();
     		return;
     	}
     	
-    	ArrayList<Order> orders = deliveryDataBase.getOrdersOfCustomer(customer);
-    	if(orders.isEmpty())
-    	{
-    		MessageBox.Info("selected customer has no orders");
-    		Main();
-    		return;
-    	}
-    	
-    	UIHelper.showList(stage, orders, this::Main);
-    	
-    	Order order = DataSelector.dataFilter(DataSelector::selectOrder, o ->
-    		o.getClientCode() == customer.getCode() && o.getOrderStatus() != OrderStatus.Delivered
-    		, "Select your order that hasn't been delivrd");
+    	Order order = DataSelector.dataFilter(DataSelector::selectOrder, o -> o.getStatus() != OrderStatus.Delivered
+    		, "Select order that hasn't been delivrd");
 		if(order == null) return;
 		
 		try {

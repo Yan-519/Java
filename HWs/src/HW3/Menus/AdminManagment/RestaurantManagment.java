@@ -1,4 +1,6 @@
-package HW3.UI.Menus.AdminManagment;
+package HW3.Menus.AdminManagment;
+
+import java.util.ArrayList;
 
 import HW3.DeliveryDataBase;
 import HW3.DeliveryDataBase.CodedType;
@@ -6,12 +8,12 @@ import HW3.DataObjects.Restaurant;
 import HW3.Exceptions.CodedNotFoundException;
 import HW3.Exceptions.TargetObjectAlreadyExistException;
 import HW3.Exceptions.TargetObjectDoesntExistException;
-import HW3.UI.MessageBox;
-import HW3.UI.UIHelper;
-import HW3.UI.Menus.UIBase;
-import HW3.UI.MessageBox.NumberSign;
+import HW3.Menus.UIBase;
 import HW3.Utils.DataSelector;
 import HW3.Utils.InputManager;
+import HW3.Utils.MessageBox;
+import HW3.Utils.UIHelper;
+import HW3.Utils.MessageBox.NumberSign;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -47,7 +49,7 @@ public class RestaurantManagment extends UIBase {
         grid.setAlignment(Pos.CENTER);
 
         Button showAllButton = UIHelper.createButton("Show All Restaurants", e -> {
-        	UIHelper.showList(stage, null, this::Main);
+        	UIHelper.showList(stage, deliveryDataBase.getRestaurants(), this::Main);
         });
         Button searchByCodeButton = UIHelper.createButton("Search Restaurant by Code", 
         		() -> MessageBox.Info(DataSelector.selectRestaurant()));
@@ -77,9 +79,14 @@ public class RestaurantManagment extends UIBase {
         	restaurant.setOpen(false);
         });
         
-        Button filterByTypeButton = UIHelper.createButton("Show Restaurants by Type", this::showRestaurantsByType);
+        Button filterByTypeButton = UIHelper.createButton("Show Restaurants by Type", () -> {
+			String type = MessageBox.inputSTR(null, "Enter restauran kitchen type", null);
+			if(type == null) return;
+			UIHelper.showList(stage,
+					deliveryDataBase.getRestaurants().stream().filter(r -> r.getKitchenType().equalsIgnoreCase(type)), this::Main);
+		});
         Button filterOpenOnlyButton = UIHelper.createButton("Show Open Restaurants Only", () ->
-        	UIHelper.showList(stage, deliveryDataBase.getRestaurants().stream().filter(r -> r.isOpen()).toList(), this::Main)
+        	UIHelper.showList(stage, deliveryDataBase.getRestaurants().stream().filter(r -> r.isOpen()), this::Main)
         );
 
         Button backButton = UIHelper.createButton("Back", backF);
@@ -110,8 +117,8 @@ public class RestaurantManagment extends UIBase {
     	InputManager.createRestaurant(stage, code, rest -> {
     	    if (rest != null) {
     	    	try {
-        	        if (deliveryDataBase.add(rest)) 
-        	            MessageBox.Info("The customer code is " + code);
+        	        deliveryDataBase.add(rest);
+        	        MessageBox.Info("The customer code is " + code);
         	    } catch (TargetObjectAlreadyExistException ex) {
         	        MessageBox.error(ex);
         	    }
@@ -119,10 +126,5 @@ public class RestaurantManagment extends UIBase {
     	    Main();
     	});
     }
-
-    private void showRestaurantsByType() {
-        // TODO: Implement logic to filter and display restaurants by cuisine/type
-    }
-
 
 }

@@ -1,8 +1,9 @@
-package HW3.UI;
+package HW3.Utils;
 
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -98,18 +99,16 @@ public class UIHelper {
         return grid;
     }
     
-    public static void showList(Stage stage, List<?> lst, Runnable backF) {
-    	if(lst.isEmpty()) {
+    public static void showList(Stage stage, Stream<?> lst, Runnable backF) {
+    	ObservableList<String> observables = 
+    			FXCollections.observableArrayList(lst.map(Object::toString).toList());
+    	
+    	if(observables.isEmpty()) {
     		MessageBox.Info("No values found");
     		return;
     	}
-    	
-    	
-    	List<String> strL = lst.stream().map(Object::toString).toList();
-    	ObservableList<String> observableCustomers = FXCollections.observableArrayList(strL);
 
-    	ListView<String> listView = new ListView<>(observableCustomers);
-    	
+    	ListView<String> listView = new ListView<>(observables);
     	
     	Button backButton = UIHelper.createButton("Back", e -> backF.run());
     	
@@ -119,5 +118,9 @@ public class UIHelper {
     	
     	UIHelper.setScene(stage, root, 300, 250);
 
+    }
+    
+    public static void showList(Stage stage, List<?> lst, Runnable backF) {
+    	showList(stage, lst.stream(), backF);
     }
 }

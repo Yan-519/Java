@@ -1,9 +1,7 @@
-package HW3.UI;
+package HW3.Utils;
 
 import java.util.Optional;
 
-import HW3.Utils.DataChecker;
-import HW3.Utils.DataSelector;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
@@ -140,11 +138,13 @@ public class MessageBox {
 	}
 	
 
-	public static Boolean inputBOOL(String title, String header, boolean isNull) {
+	public static Boolean inputBOOL(String title, String header, String taxt, boolean isNull) {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		if(title != null)
 			alert.setTitle(title);
 		alert.setHeaderText(header);
+		if(taxt != null)
+			alert.setContentText(taxt);
 
 		alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 
@@ -158,10 +158,10 @@ public class MessageBox {
 	}
 	
 	public static Boolean inputBOOL(String header, boolean isNull) {
-		return inputBOOL(null, header, isNull);
+		return inputBOOL(null, header, null, isNull);
 	}
 	
 	public static Boolean inputBOOL(String header) {
-		return inputBOOL(null, header, false);
+		return inputBOOL(null, header, null, false);
 	}
 }

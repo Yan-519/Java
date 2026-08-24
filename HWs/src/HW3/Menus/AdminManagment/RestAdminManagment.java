@@ -1,12 +1,12 @@
-package HW3.UI.Menus.AdminManagment;
+package HW3.Menus.AdminManagment;
 
 import HW3.DeliveryDataBase;
-import HW3.UI.Menus.UIBase;
+import HW3.Menus.UIBase;
 import javafx.stage.Stage;
 
-public class OrderManagment extends UIBase {
+public class RestAdminManagment extends UIBase {
 
-	public OrderManagment(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
+	public RestAdminManagment(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
 		super(stage, deliveryDataBase, backF);
 		// TODO Auto-generated constructor stub
 	}
@@ -14,13 +14,13 @@ public class OrderManagment extends UIBase {
 	@Override
 	public void Init() {
 		Main();
-		
+
 	}
 
 	@Override
 	protected void Main() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

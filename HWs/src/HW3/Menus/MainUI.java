@@ -1,10 +1,10 @@
-package HW3.UI.Menus;
+package HW3.Menus;
 
 import HW3.DeliveryDataBase;
-import HW3.UI.UIHelper;
 import HW3.Utils.DataInitializer;
 import HW3.Utils.DataSelector;
 import HW3.Utils.InputManager;
+import HW3.Utils.UIHelper;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;

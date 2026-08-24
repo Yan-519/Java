@@ -37,10 +37,10 @@ public class Rider {
 	public void changeCurrentOrderStatus() {
 		if(currentOrder == null) return;
 		
-		if(currentOrder.getOrderStatus() == OrderStatus.Created)
-			currentOrder.setOrderStatus(OrderStatus.OnTheWay);
+		if(currentOrder.getStatus() == OrderStatus.Created)
+			currentOrder.setStatus(OrderStatus.OnTheWay);
 		else {
-			currentOrder.setOrderStatus( OrderStatus.Delivered);
+			currentOrder.setStatus( OrderStatus.Delivered);
 			deliverdOrders.add(currentOrder);
 			removeCurrentOrder();
 		}

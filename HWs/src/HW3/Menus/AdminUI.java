@@ -1,13 +1,13 @@
-package HW3.UI.Menus;
+package HW3.Menus;
 
 import HW3.DeliveryDataBase;
-import HW3.UI.MessageBox;
-import HW3.UI.UIHelper;
-import HW3.UI.Menus.AdminManagment.CustomerManagment;
-import HW3.UI.Menus.AdminManagment.OrderManagment;
-import HW3.UI.Menus.AdminManagment.RestAdminManagment;
-import HW3.UI.Menus.AdminManagment.RestaurantManagment;
-import HW3.UI.Menus.AdminManagment.RiderManagment;
+import HW3.Menus.AdminManagment.CustomerManagment;
+import HW3.Menus.AdminManagment.OrderManagment;
+import HW3.Menus.AdminManagment.RestAdminManagment;
+import HW3.Menus.AdminManagment.RestaurantManagment;
+import HW3.Menus.AdminManagment.RiderManagment;
+import HW3.Utils.MessageBox;
+import HW3.Utils.UIHelper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

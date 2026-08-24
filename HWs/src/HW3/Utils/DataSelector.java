@@ -7,8 +7,7 @@ import java.util.function.Supplier;
 import HW3.DeliveryDataBase;
 import HW3.DataObjects.*;
 import HW3.Exceptions.RiderNotFoundException;
-import HW3.UI.MessageBox;
-import HW3.UI.MessageBox.NumberSign;
+import HW3.Utils.MessageBox.NumberSign;
 
 public class DataSelector {
 	

@@ -105,7 +105,7 @@ public class DeliveryDataBase {
 	// remove an order from the system
 	public void removeOrder(int code) throws CodedNotFoundException, RiderNotFoundException, TargetObjectDoesntExistException {
 		Order order = getOrder(code);
-		if (order == null || order.getOrderStatus() == OrderStatus.Delivered) return;
+		if (order == null || order.getStatus() == OrderStatus.Delivered) return;
 		
 		Customer customer = getCustomer(order.getClientCode());
 	    Restaurant restaurant = getRestaurant(order.getRestaurantCode());
@@ -118,7 +118,7 @@ public class DeliveryDataBase {
 	    
 		
 
-	    double backMoney = order.getFinalPrice() * (order.getOrderStatus() == OrderStatus.Created ? 1.0 : 0.5);
+	    double backMoney = order.getFinalPrice() * (order.getStatus() == OrderStatus.Created ? 1.0 : 0.5);
 
 	    double currentTotal = totalSpentByCustomer.getOrDefault(order.getClientCode(), 0.0);
 	    totalSpentByCustomer.put(order.getClientCode(), Math.max(0.0, currentTotal - backMoney));
@@ -224,14 +224,14 @@ public class DeliveryDataBase {
 		return ords;
 	}
 	
-	// filter Orders Buy given Status
-	public ArrayList<Order> filterOrdersBuyStatus(ArrayList<Order> orders, OrderStatus status){
-		ArrayList<Order> res = new ArrayList<>();
-		for (Order order : orders)
-			if(order.getOrderStatus() == status)
-				res.add(order);
-		return res;
-	}
+//	// filter Orders Buy given Status
+//	public ArrayList<Order> filterOrdersBuyStatus(ArrayList<Order> orders, OrderStatus status){
+//		ArrayList<Order> res = new ArrayList<>();
+//		for (Order order : orders)
+//			if(order.getOrderStatus() == status)
+//				res.add(order);
+//		return res;
+//	}
 	
 	// checks if the data matches to the systemAdministrator data
 	public boolean logIntoAdmin(String userName, String password) {
@@ -291,39 +291,36 @@ public class DeliveryDataBase {
 	}
 	
 	// adds a Customer (if exists -> throws exception)
-	public boolean add(Customer customer) throws TargetObjectAlreadyExistException {
+	public void add(Customer customer) throws TargetObjectAlreadyExistException {
 	    if (customer == null)
-	        return false;
+	    	throw new NullPointerException("Added object cant be null");
 
 	    if (customers.contains(customer))
 	        throw new TargetObjectAlreadyExistException(customer.toString());
 
 	    customers.add(customer);
-	    return true;
 	}
 
 	// adds a RestAdmin (if exists -> throws exception)
-	public boolean add(RestAdmin admin) throws TargetObjectAlreadyExistException {
+	public void add(RestAdmin admin) throws TargetObjectAlreadyExistException {
 	    if (admin == null)
-	        return false;
+	    	throw new NullPointerException("Added object cant be null");
 
 	    if (restAdmins.contains(admin))
 	        throw new TargetObjectAlreadyExistException(admin.toString());
 
 	    restAdmins.add(admin);
-	    return true;
 	}
 
 	// adds a Restaurant (if exists -> throws exception)
-	public boolean add(Restaurant restaurant) throws TargetObjectAlreadyExistException {
+	public void add(Restaurant restaurant) throws TargetObjectAlreadyExistException {
 	    if (restaurant == null)
-	        return false;
+	    	throw new NullPointerException("Added object cant be null");
 
 	    if (restaurants.contains(restaurant))
 	        throw new TargetObjectAlreadyExistException(restaurant.toString());
 
 	    restaurants.add(restaurant);
-	    return true;
 	}
 	
 	
@@ -368,7 +365,7 @@ public class DeliveryDataBase {
 	// adds an Order to a Rider (RestAdmin)
 	public void addOrderToRider(String riderId, int orderCode) throws CodedNotFoundException, TargetObjectDoesntExistException, DeliveryPersonUnavailableException, RiderNotFoundException {
 		Order order = Coded.getCoded(orders, orderCode, Order.class);
-		if (order.getOrderStatus() != OrderStatus.Created)
+		if (order.getStatus() != OrderStatus.Created)
 			return;
 
 		Rider rider = getRider(riderId);
@@ -447,7 +444,7 @@ public class DeliveryDataBase {
 		Order order = rider.getCurrentOrder();
 		if(order == null) return;
 		
-		if (deliveryDate == null && order.getOrderStatus() == OrderStatus.OnTheWay) return;
+		if (deliveryDate == null && order.getStatus() == OrderStatus.OnTheWay) return;
 		if(deliveryDate != null)
 			order.setDeliveringDate(deliveryDate);
 		

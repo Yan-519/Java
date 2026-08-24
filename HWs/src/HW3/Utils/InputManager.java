@@ -2,7 +2,6 @@ package HW3.Utils;
 
 import HW3.DeliveryDataBase;
 import HW3.DataObjects.*;
-import HW3.UI.MessageBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.awt.font.TextHitInfo;
 import java.util.function.Consumer;
 
 public class InputManager {
@@ -415,35 +415,14 @@ public class InputManager {
 
     // Creates a Date after a given Date
     public static void createDateAfterDate(Stage stage, Date before, Consumer<Date> callback) {
-        createDate(stage, new DateConsumerWrapper(stage, before, callback));
-    }
-
-    // Wrapper to validate dates that depend on an earlier date
-    private static class DateConsumerWrapper implements Consumer<Date> {
-        private final Stage stage;
-        private final Date before;
-        private final Consumer<Date> callback;
-
-        public DateConsumerWrapper(Stage stage, Date before, Consumer<Date> callback) {
-            this.stage = stage;
-            this.before = before;
-            this.callback = callback;
-        }
-
-        @Override
-        public void accept(Date createdDate) {
-            if (createdDate == null) {
-                callback.accept(null);
-                return;
-            }
-
-            if (!createdDate.isAfter(before)) {
-                MessageBox.error("Validation Error", "The delivery date must be after the order creation date.");
-                // Re-open/refresh date creation window if validation fails
-                createDateAfterDate(stage, before, callback);
-            } else {
-                callback.accept(createdDate);
-            }
-        }
+        createDate(stage, d ->{
+        	if(d == null) callback.accept(null);
+        	else if(!d.isAfter(before))
+        	{
+        		MessageBox.error("Validation Error", "The delivery date must be after the order creation date.");
+        		createDateAfterDate(stage, before, callback);
+        	}
+        	else callback.accept(d);
+        } );
     }
 }

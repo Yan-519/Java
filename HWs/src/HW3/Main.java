@@ -1,6 +1,6 @@
 package HW3;
 
-import HW3.UI.Menus.MainUI;
+import HW3.Menus.MainUI;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
