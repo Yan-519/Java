@@ -22,12 +22,6 @@ public class OrderManagment extends UIBase {
 	}
 
 	@Override
-	public void Init() {
-		Main();
-		
-	}
-
-	@Override
 	protected void Main() {
 	    BorderPane root = new BorderPane();
 

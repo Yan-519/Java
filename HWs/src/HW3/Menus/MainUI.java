@@ -37,12 +37,6 @@ public class MainUI extends UIBase {
 	
 
 	@Override
-	public void Init() {
-        Main();
-	}
-	
-
-	@Override
 	protected void Main() {
 		VBox root = UIHelper.createVRoot();
 

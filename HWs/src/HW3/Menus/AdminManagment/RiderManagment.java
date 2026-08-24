@@ -1,9 +1,10 @@
 package HW3.Menus.AdminManagment;
 
 import HW3.DeliveryDataBase;
-import HW3.DeliveryDataBase.CodedType;
 import HW3.DataObjects.Order;
+import HW3.DataObjects.Order.OrderStatus;
 import HW3.DataObjects.Rider;
+import HW3.Exceptions.RiderNotFoundException;
 import HW3.Exceptions.TargetObjectAlreadyExistException;
 import HW3.Menus.UIBase;
 import javafx.stage.Stage;
@@ -22,12 +23,6 @@ public class RiderManagment extends UIBase {
 	public RiderManagment(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
 		super(stage, deliveryDataBase, backF);
 		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	public void Init() {
-		Main();
-
 	}
 
 	@Override
@@ -82,22 +77,35 @@ public class RiderManagment extends UIBase {
 
 			Order order = rider.getCurrentOrder();
 			
-			System.out.println("The status of the current order is " + order.getOrderStatus());
+			System.out.println("The status of the current order is " + order.getStatus());
 			boolean isUpdate = MessageBox.inputBOOL( null, 
 					"Do you want to update the status of the order (The status of the current order is " + order.getStatus(),
 					"(created->on the way->delivered)", false);
 			if(!isUpdate) return;
 			
-			Date date = order.getOrderStatus() == OrderStatus.Created ? null : InputManager.createDateAfterDate(order.getOrderingDate());
-			try {
-				deliveryDataBase.updateDeliveryStatus(rider.getId(), date);
-			} catch (RiderNotFoundException e) {
-				MessageBox.error(e);
+			
+			if(order.getStatus() == OrderStatus.OnTheWay) {
+				InputManager.createDateAfterDate(stage, order.getOrderingDate(), d ->{
+					try {
+						deliveryDataBase.updateDeliveryStatus(rider.getId(), d);
+					} catch (RiderNotFoundException e) {
+						MessageBox.error(e);
+					}
+				});
+			}else {
+				try {
+					deliveryDataBase.updateDeliveryStatus(rider.getId(), null);
+				} catch (RiderNotFoundException e) {
+					MessageBox.error(e);
+				}
 			}
 
 	    });
-	    Button topRiderButton = UIHelper.createButton("Show Top Rider", this::showTopRider);
-
+	    Button topRiderButton = UIHelper.createButton("Show Top Rider", () -> {
+	    	Rider rider = deliveryDataBase.getRiderWithMostDeliverdOrders();
+	    	MessageBox.Info(rider.toString() + " ( count: " + rider.getDeliverdOrders().size() + ")" );
+	    });
+	    
 	    Button backButton = UIHelper.createButton("Back", backF);
 
 	    grid.add(showAllButton, 0, 0);
@@ -114,32 +122,6 @@ public class RiderManagment extends UIBase {
 	    root.setCenter(grid);
 
 	    stage.setScene(new Scene(root, 700, 600));
-	}
-
-	// Empty handler methods:
-
-	private void showAllRiders() {
-	    // TODO: Implement logic to display all riders
-	}
-
-	private void addNewRider() {
-	    // TODO: Implement logic to add a new rider
-	}
-
-	private void searchRider() {
-	    // TODO: Implement logic to search for a rider
-	}
-
-	private void showRiderOrders() {
-	    // TODO: Implement logic to display all orders assigned to a specific rider
-	}
-
-	private void updateOrderStatus() {
-	    // TODO: Implement logic to update the status of an order
-	}
-
-	private void showTopRider() {
-	    // TODO: Implement logic to display the rider with the highest number of deliveries
 	}
 
 }

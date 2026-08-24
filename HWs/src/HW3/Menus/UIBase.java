@@ -17,7 +17,9 @@ public abstract class UIBase {
 		this.backF = backF;
 	}
 	
-	public abstract void Init();
+	public void Init() {
+		Main();
+	}
 	
 	protected abstract void Main();
 }

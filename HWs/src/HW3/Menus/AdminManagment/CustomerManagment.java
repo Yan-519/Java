@@ -1,7 +1,5 @@
 package HW3.Menus.AdminManagment;
 
-import java.util.ArrayList;
-
 import HW3.DeliveryDataBase;
 import HW3.DataObjects.Customer;
 import HW3.DataObjects.Order;
@@ -30,12 +28,6 @@ public class CustomerManagment extends UIBase {
 	public CustomerManagment(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
 		super(stage, deliveryDataBase, backF);
 		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	public void Init() {
-		Main();
-
 	}
 
 	@Override
