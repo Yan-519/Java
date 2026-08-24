@@ -5,6 +5,7 @@ import HW3.Utils.DataInitializer;
 import HW3.Utils.DataSelector;
 import HW3.Utils.InputManager;
 import HW3.Utils.UIHelper;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -29,7 +30,7 @@ public class MainUI extends UIBase {
 		InputManager.setDeliveryDataBase(deliveryDataBase);
 		
         stage.setTitle("Delivery System");
-        adminUI = new AdminUI(stage, deliveryDataBase, this::Init);
+        adminUI = new AdminUI(stage, deliveryDataBase, this::Auth);
         customerUI = new CustomerUI(stage, deliveryDataBase, this::showUserTypeScreen);
         restAdminUI = new RestAdminUI(stage, deliveryDataBase, this::showUserTypeScreen);
         riderUI = new RiderUI(stage, deliveryDataBase, this::showUserTypeScreen);
@@ -43,7 +44,7 @@ public class MainUI extends UIBase {
         Label title = new Label("Delivery System");
 
         Button adminButton = UIHelper.createButton(
-                "System Administrator Login", adminUI::Init
+                "System Administrator Login", adminUI::Auth
         );
 
         Button userButton = UIHelper.createButton(
@@ -63,7 +64,7 @@ public class MainUI extends UIBase {
                 exitButton
         );
 
-        UIHelper.setScene(stage, root, 500, 400);
+    	stage.setScene(new Scene(root, 500, 400));
 	}
     
     private void showUserTypeScreen() {
@@ -73,19 +74,19 @@ public class MainUI extends UIBase {
         Label title = new Label("Select User Type");
 
         Button customerButton = UIHelper.createButton(
-                "Customer", customerUI::Init
+                "Customer", customerUI::Auth
         );
 
         Button riderButton = UIHelper.createButton(
-                "Rider", riderUI::Init
+                "Rider", riderUI::Auth
         );
 
         Button restaurantAdminButton = UIHelper.createButton(
-                "Restaurant Administrator", restAdminUI::Init
+                "Restaurant Administrator", restAdminUI::Auth
         );
 
         Button backButton = UIHelper.createButton(
-                "Back", this::Init
+                "Back", this::Auth
         );
 
         root.getChildren().addAll(
@@ -96,6 +97,6 @@ public class MainUI extends UIBase {
                 backButton
         );
 
-        UIHelper.setScene(stage, root, 500, 500);
+    	stage.setScene(new Scene(root, 500, 500));
     }
 }

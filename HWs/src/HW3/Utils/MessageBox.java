@@ -1,9 +1,14 @@
 package HW3.Utils;
 
+import java.util.List;
 import java.util.Optional;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 
@@ -75,7 +80,7 @@ public class MessageBox {
 	
 	public static Integer inputINT(String title, String header, String text) {
 
-		String n = DataSelector.dataFilter(() -> inputSTR(title, header, text), 
+		String n = DataSelector.dataFilter(() -> inputSTR(title, header, text + "[Integer]"), 
 				str -> {
             try {
                 Integer.valueOf(str);
@@ -93,7 +98,7 @@ public class MessageBox {
 
 	public static Integer inputINT(String title, String header, NumberSign inputSign) {
 		
-		return DataSelector.dataFilter(() -> inputINT(title, header, inputSign) ,
+		return DataSelector.dataFilter(() -> inputINT(title, header, inputSign.toString()) ,
 				n -> {
 					if(inputSign == NumberSign.ALL) return true;
 					else if(inputSign == NumberSign.NOT_NEGATIVE) return 0 <= n;
@@ -103,8 +108,7 @@ public class MessageBox {
 	}
 	
 	public static Double inputDOUB(String title, String header, String text) {
-
-		String n = DataSelector.dataFilter(() -> inputSTR(title, header, text), 
+		String n = DataSelector.dataFilter(() -> inputSTR(title, header, text + "[Double]"), 
 				str -> {
             try {
                 Double.valueOf(str);
@@ -121,7 +125,7 @@ public class MessageBox {
 	
 
 	public static Double inputDOUB(String title, String header, NumberSign inputSign) {
-		return DataSelector.dataFilter(() -> inputDOUB(title, header, inputSign) ,
+		return DataSelector.dataFilter(() -> inputDOUB(title, header, inputSign.toString()) ,
 				n -> {
 					if(inputSign == NumberSign.ALL) return true;
 					else if(inputSign == NumberSign.NOT_NEGATIVE) return 0 <= n;
@@ -163,5 +167,20 @@ public class MessageBox {
 	
 	public static Boolean inputBOOL(String header) {
 		return inputBOOL(null, header, null, false);
+	}
+	
+	public static String inputSelect(String... options) {
+		if(options.length == 0) return null;
+		
+		ChoiceDialog<String> dialog = new ChoiceDialog<>(options[0], options);
+
+		dialog.setTitle("Select Option");
+		dialog.setHeaderText("Choose one item from the list:");
+		dialog.setContentText("Select:");
+
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent())
+		    return result.get();
+		return null;
 	}
 }

@@ -40,8 +40,7 @@ public class AdminUI extends UIBase {
 	}
 
 	@Override
-	public void Init() {
-		
+	public void Auth() {
         VBox root = UIHelper.createVRoot();
 
         Label title = new Label("System Administrator Login");
@@ -90,15 +89,15 @@ public class AdminUI extends UIBase {
         grid.setPadding(new Insets(30));
         grid.setAlignment(Pos.CENTER);
 
-        Button customersButton = UIHelper.createButton("Customer Management", customerManagment::Init);
+        Button customersButton = UIHelper.createButton("Customer Management", customerManagment::Auth);
 
-        Button restaurantsButton = UIHelper.createButton("Restaurant Management", restaurantManagment::Init);
+        Button restaurantsButton = UIHelper.createButton("Restaurant Management", restaurantManagment::Auth);
 
-        Button ordersButton = UIHelper.createButton("Order Management", orderManagment::Init);
+        Button ordersButton = UIHelper.createButton("Order Management", orderManagment::Auth);
 
-        Button ridersButton = UIHelper.createButton("Rider Management", riderManagment::Init);
+        Button ridersButton = UIHelper.createButton("Rider Management", riderManagment::Auth);
 
-        Button restaurantAdminsButton = UIHelper.createButton("Restaurant Administrator Management", restAdminManagment::Init);
+        Button restaurantAdminsButton = UIHelper.createButton("Restaurant Administrator Management", restAdminManagment::Auth);
 
         Button reportsButton = UIHelper.createButton("Reports and Sorting", this::showReports);
 

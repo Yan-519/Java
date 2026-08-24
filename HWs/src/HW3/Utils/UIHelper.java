@@ -1,9 +1,12 @@
 package HW3.Utils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import HW3.DataObjects.Order;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -29,18 +32,6 @@ public class UIHelper {
 
         return button;
     }
-
-    public static void setScene(
-    		Stage stage,
-            Parent root,
-            double width,
-            double height) {
-
-        stage.setScene(
-                new Scene(root, width, height)
-        );
-    }
-
 
     public static Button createButton(String text, Consumer<ActionEvent> onPress) {
         Button button = createButton(text);
@@ -115,11 +106,18 @@ public class UIHelper {
     	
     	root.getChildren().addAll(listView, backButton);
     	
-    	UIHelper.setScene(stage, root, 300, 250);
-
+    	stage.setScene(new Scene(root, 300, 250));
     }
     
     public static void showList(Stage stage, List<?> lst, Runnable backF) {
     	showList(stage, lst.stream(), backF);
+    }
+    
+    public static void showList(Stage stage, List<Order> lst, Runnable backF, Order additional) {
+    	ArrayList<Order> orders = new ArrayList<Order>(lst);
+    	if(additional != null)
+    		orders.add(additional);
+    	
+    	showList(stage, orders.stream(), backF);
     }
 }

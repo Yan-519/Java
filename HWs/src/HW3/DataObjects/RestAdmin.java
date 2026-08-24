@@ -1,6 +1,7 @@
 package HW3.DataObjects;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class RestAdmin extends Coded {
 	
@@ -29,17 +30,17 @@ public class RestAdmin extends Coded {
 		return Coded.isContains(restaurants, code);
 	}
 	
+	public void removeRestaurants(Set<Integer> codes) {
+		restaurants = new ArrayList<Restaurant>(restaurants.stream().filter(r -> !codes.contains(r.getCode())).toList());
+	}
+	
 	public ArrayList<Restaurant> getRestaurants() {
 		return restaurants;
 	}
 	
 	// get all open restaurants
 	public ArrayList<Restaurant> getOpenRestaurants(){
-		ArrayList<Restaurant> res = new ArrayList<>();
-		for(Restaurant restaurant: restaurants)
-			if(restaurant.isOpen())
-				res.add(restaurant);
-		return res;
+		return new ArrayList<Restaurant>(restaurants.stream().filter(r -> r.isOpen()).toList());
 	}
 
 
@@ -73,8 +74,10 @@ public class RestAdmin extends Coded {
 
 	@Override
 	public String toString() {
-		return this.getUserName() + ": " + this.getCode();
+		return "RestAdmin [name=" + name + ", userName=" + userName + ", password=" + password + ", restaurants="
+				+ restaurants + ", code=" + code + "]";
 	}
+
 	
 	
 

@@ -114,13 +114,16 @@ public class Rider {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-
+	
+	
 
 	@Override
 	public String toString() {
-		return this.getName() + " " + this.getLastName() + ": " + this.getId();
+		return "Rider [id=" + id + ", name=" + name + ", lastName=" + lastName + ", phoneNumber=" + phoneNumber
+				+ ", vehicle=" + vehicle + ", isAvailable=" + isAvailable + ", deliverdOrders=" + deliverdOrders
+				+ ", currentOrder=" + currentOrder + "]";
 	}
-	
+
 	@Override
 	public final boolean equals(Object object) {
 		return object instanceof Rider rider && rider.getId().equalsIgnoreCase(id);

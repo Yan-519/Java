@@ -5,10 +5,7 @@ import HW3.DataObjects.Customer;
 import HW3.DataObjects.Order;
 import HW3.DataObjects.Order.OrderStatus;
 import HW3.DeliveryDataBase.CodedType;
-import HW3.Exceptions.CodedNotFoundException;
-import HW3.Exceptions.RiderNotFoundException;
 import HW3.Exceptions.TargetObjectAlreadyExistException;
-import HW3.Exceptions.TargetObjectDoesntExistException;
 import HW3.Menus.UIBase;
 import HW3.Utils.DataChecker;
 import HW3.Utils.DataSelector;
@@ -17,6 +14,7 @@ import HW3.Utils.MessageBox;
 import HW3.Utils.UIHelper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -27,7 +25,6 @@ public class CustomerManagment extends UIBase {
 
 	public CustomerManagment(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
 		super(stage, deliveryDataBase, backF);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -136,7 +133,7 @@ public class CustomerManagment extends UIBase {
 
         root.setCenter(grid);
 
-        UIHelper.setScene(stage, root, 800, 650);
+    	stage.setScene(new Scene(root, 800, 650));
     }
 
 
@@ -183,7 +180,7 @@ public class CustomerManagment extends UIBase {
 		
 		try {
 			deliveryDataBase.removeOrder(order.getCode());
-		} catch (CodedNotFoundException | RiderNotFoundException | TargetObjectDoesntExistException e) {
+		} catch (Exception e) {
 			MessageBox.error(e);
 		}
     }

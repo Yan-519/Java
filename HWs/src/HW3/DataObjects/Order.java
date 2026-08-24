@@ -122,12 +122,13 @@ public class Order extends Coded {
 		this.orderingDate = orderingDate;
 	}
 
-
 	@Override
 	public String toString() {
-		return "OrderCode=" + this.getCode() + ": client=" + this.getClientCode() + ", restaurant=" + this.getRestaurantCode()
-		+ ", riderId=" + this.getRiderId() + ", basePrice=" + this.getBasePrice() + ", finalPrice=" + this.getFinalPrice() + ", status="
-		+ this.getStatus();
+		return "Order [clientCode=" + clientCode + ", restaurant=" + restaurant + ", restaurantCode=" + restaurantCode
+				+ ", riderId=" + riderId + ", orderingDate=" + orderingDate + ", deliveringDate=" + deliveringDate
+				+ ", basePrice=" + basePrice + ", finalPrice=" + finalPrice + ", status=" + status + ", code=" + code
+				+ "]";
 	}
-	
+
+
 }

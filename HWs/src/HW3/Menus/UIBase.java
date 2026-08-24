@@ -17,7 +17,7 @@ public abstract class UIBase {
 		this.backF = backF;
 	}
 	
-	public void Init() {
+	public void Auth() {
 		Main();
 	}
 	

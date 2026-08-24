@@ -18,7 +18,6 @@ public class OrderManagment extends UIBase {
 
 	public OrderManagment(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
 		super(stage, deliveryDataBase, backF);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

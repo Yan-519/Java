@@ -13,13 +13,13 @@ public class FastFoodRestaurant extends Restaurant {
 	}
 
 	
-//	@Override
-//	public String toString() {
-//		return "FastFoodRestaurant [averagePreparingTimeInMinutes=" + averagePreparingTimeInMinutes
-//				+ ", additionalCostForExpressDelivery=" + additionalCostForExpressDelivery + ", code=" + code
-//				+ ", name=" + name + ", kitchenType=" + kitchenType + ", rating=" + rating + ", isOpen=" + isOpen
-//				+ ", baseDeliveryFee=" + baseDeliveryFee + "]";
-//	}
+	@Override
+	public String toString() {
+		return "FastFoodRestaurant [averagePreparingTimeInMinutes=" + averagePreparingTimeInMinutes
+				+ ", additionalCostForExpressDelivery=" + additionalCostForExpressDelivery + ", code=" + code
+				+ ", name=" + name + ", kitchenType=" + kitchenType + ", rating=" + rating + ", isOpen=" + isOpen
+				+ ", baseDeliveryFee=" + baseDeliveryFee + "]";
+	}
 	
 
 	public int getAveragePreparingTimeInMinutes() {

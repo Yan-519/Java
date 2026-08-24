@@ -1,15 +1,31 @@
 package HW3.Menus.AdminManagment;
 
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
+
 import HW3.DeliveryDataBase;
+import HW3.DataObjects.RestAdmin;
+import HW3.DataObjects.Restaurant;
+import HW3.Exceptions.CodedNotFoundException;
+import HW3.Exceptions.TargetObjectDoesntExistException;
 import HW3.Menus.UIBase;
+import HW3.Utils.DataSelector;
+import HW3.Utils.MessageBox;
 import HW3.Utils.UIHelper;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -17,7 +33,6 @@ public class RestAdminManagment extends UIBase {
 
 	public RestAdminManagment(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
 		super(stage, deliveryDataBase, backF);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -37,7 +52,9 @@ public class RestAdminManagment extends UIBase {
 	    		() -> UIHelper.showList(stage, deliveryDataBase.getRestAdmins(), this::Main));
 	    Button addAdminButton = UIHelper.createButton("Add Restaurant Admin to a restaurant", this::addRestaurantAdmin);
 
-	    Button searchAdminButton = UIHelper.createButton("Search Restaurant Admin", this::searchRestaurantAdmin);
+	    Button searchAdminButton = UIHelper.createButton("Search Restaurant Admin", 
+	    		() -> MessageBox.Info(DataSelector.selectRestAdmin())
+		);
 	    Button updateStatusButton = UIHelper.createButton("Update Admin Status", this::updateAdminStatus);
 
 	    Button backButton = UIHelper.createButton("Back", backF);
@@ -56,15 +73,78 @@ public class RestAdminManagment extends UIBase {
 	}
 
 	private void addRestaurantAdmin() {
-	    // TODO: Implement logic to add a new administrator and assign them to a restaurant
-	}
-
-	private void searchRestaurantAdmin() {
-	    // TODO: Implement logic to search for a restaurant administrator
+		RestAdmin restAdmin = DataSelector.selectRestAdmin();
+		if(restAdmin == null) return;
+		
+		Restaurant restaurant = DataSelector.dataFilter(DataSelector::selectRestaurant, 
+				r -> !restAdmin.containsRestaurant(r.getCode()),
+				"The selected restaurant is already under the selected manager control");
+		if(restaurant == null) return;
+		
+		try {
+			deliveryDataBase.addRestToAdmin(restAdmin.getCode(), restaurant.getCode());
+		} catch (CodedNotFoundException | TargetObjectDoesntExistException e) {
+			MessageBox.error(e);
+		}
 	}
 
 	private void updateAdminStatus() {
-	    // TODO: Implement logic to update a restaurant administrator's status
+		RestAdmin restAdmin = DataSelector.selectRestAdmin();
+		if(restAdmin == null) return;
+		
+		if(restAdmin.getRestaurants().isEmpty())
+			MessageBox.Info("The selected manager has no restaurants");
+		
+		else
+			stage.setScene(new Scene(createCodedSelectionView(restAdmin.getRestaurants(), 
+				s -> {
+					restAdmin.removeRestaurants(s);
+					Main();
+				}
+		)));
 	}
 
+	
+	private static VBox createCodedSelectionView(List<Restaurant> items, Consumer<HashSet<Integer>> onFinish) {
+        // Track selected items using their toString representation
+		HashSet<Integer> selected = new HashSet<>();
+
+        // Setup ListView with custom cells
+        ListView<Restaurant> listView = new ListView<>(FXCollections.observableArrayList(items));
+        listView.setCellFactory(param -> new ListCell<>() {
+            private final CheckBox checkBox = new CheckBox();
+            private final HBox container = new HBox(10, checkBox);
+
+            {
+                checkBox.setOnAction(e -> {
+                    Restaurant currentItem = getItem();
+                    if(currentItem == null) e.consume();
+                    
+                    if (checkBox.isSelected()) 
+                        selected.add(currentItem.getCode());
+                    else 
+                        selected.remove(currentItem.getCode());
+                });
+            }
+
+            @Override
+            protected void updateItem(Restaurant item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    checkBox.setText(item.toString());
+                    checkBox.setSelected(selected.contains(item.toString()));
+                    setGraphic(container);
+                }
+            }
+        });
+
+        Button finishButton = new Button("Finish");
+        finishButton.setOnAction(e -> onFinish.accept(selected));
+
+        VBox layout = new VBox(10, listView, finishButton);
+        layout.setPadding(new Insets(15));
+        return layout;
+    }
 }

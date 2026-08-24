@@ -25,7 +25,6 @@ public class RestaurantManagment extends UIBase {
 
 	public RestaurantManagment(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
 		super(stage, deliveryDataBase, backF);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -103,21 +102,54 @@ public class RestaurantManagment extends UIBase {
         stage.setScene(new Scene(root, 700, 600));
     }
 
-    private void addNewRestaurant() { // add select type ////////////////////////////////////////////////////////////////////////////////////
+    private void addNewRestaurant() {
     	
     	int code = deliveryDataBase.generateCode(CodedType.Restaurant);
+    	
+    	switch (MessageBox.inputSelect("Regular", "Fast food", "Primium")) {
+		case "Regular": 
+	    	InputManager.createRestaurant(stage, code, rest -> {
+	    	    if (rest != null) {
+	    	    	try {
+	        	        deliveryDataBase.add(rest);
+	        	        MessageBox.Info("The customer code is " + code);
+	        	    } catch (TargetObjectAlreadyExistException ex) {
+	        	        MessageBox.error(ex);
+	        	    }
+	    	    }
+	    	    Main();
+	    	});
 
-    	InputManager.createRestaurant(stage, code, rest -> {
-    	    if (rest != null) {
-    	    	try {
-        	        deliveryDataBase.add(rest);
-        	        MessageBox.Info("The customer code is " + code);
-        	    } catch (TargetObjectAlreadyExistException ex) {
-        	        MessageBox.error(ex);
-        	    }
-    	    }
-    	    Main();
-    	});
+		case "Fast food": 
+	    	InputManager.createFastFoodRestaurant(stage, code, rest -> {
+	    	    if (rest != null) {
+	    	    	try {
+	        	        deliveryDataBase.add(rest);
+	        	        MessageBox.Info("The customer code is " + code);
+	        	    } catch (TargetObjectAlreadyExistException ex) {
+	        	        MessageBox.error(ex);
+	        	    }
+	    	    }
+	    	    Main();
+	    	});
+
+		case "Primium": 
+	    	InputManager.createPremiumRestaurant(stage, code, rest -> {
+	    	    if (rest != null) {
+	    	    	try {
+	        	        deliveryDataBase.add(rest);
+	        	        MessageBox.Info("The customer code is " + code);
+	        	    } catch (TargetObjectAlreadyExistException ex) {
+	        	        MessageBox.error(ex);
+	        	    }
+	    	    }
+	    	    Main();
+	    	});
+			
+		default: return;
+		}
+    	
+
     }
 
 }

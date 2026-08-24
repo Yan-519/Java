@@ -1,59 +1,56 @@
 package HW3.Menus;
 
 import HW3.DeliveryDataBase;
+import HW3.DataObjects.Rider;
+import HW3.Exceptions.RiderNotFoundException;
+import HW3.Utils.MessageBox;
 import HW3.Utils.UIHelper;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class RiderUI extends UIBase  {
+	
+	private Rider rider;
 
 	public RiderUI(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
 		super(stage, deliveryDataBase, backF);
 	}
 
 	@Override
-	public void Init() {
-	        VBox root = UIHelper.createVRoot();
+	public void Auth() {
+        VBox root = UIHelper.createVRoot();
 
-	        Label title = new Label("Rider Login");
+        Label title = new Label("Rider Login");
 
-	        TextField code = new TextField();
-	        code.setPromptText("Rider Code");
+        TextField code = new TextField();
+        code.setPromptText("Rider ID");
 
-	        PasswordField password = new PasswordField();
-	        password.setPromptText("Password");
+        Button loginButton = UIHelper.createButton("Login");
+        Button backButton = UIHelper.createButton("Back");
 
-	        Button loginButton = UIHelper.createButton("Login");
-	        Button backButton = UIHelper.createButton("Back");
+        loginButton.setOnAction(e -> {
+        	try {
+				rider = deliveryDataBase.getRider(code.getText());
+				Main();
+			} catch (RiderNotFoundException e1) {
+				MessageBox.error(e1);
+			}
+        });
 
-	        loginButton.setOnAction(e -> {
+        backButton.setOnAction( e -> backF.run());
 
-	            // TODO:
-	            // Authenticate rider.
+        root.getChildren().addAll(
+                title,
+                code,
+                loginButton,
+                backButton
+        );
 
-	            Main();
-	        });
-
-	        backButton.setOnAction(e ->
-	                backF.run()
-	        );
-
-	        root.getChildren().addAll(
-	                title,
-	                code,
-	                password,
-	                loginButton,
-	                backButton
-	        );
-
-	        UIHelper.setScene(stage, root, 500, 400);
-	    
-
-		
+    	stage.setScene(new Scene(root, 500, 400));
 	}
 
 	@Override

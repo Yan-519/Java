@@ -6,6 +6,7 @@ import HW3.DataObjects.Order.OrderStatus;
 import HW3.DataObjects.Rider;
 import HW3.Exceptions.RiderNotFoundException;
 import HW3.Exceptions.TargetObjectAlreadyExistException;
+import HW3.Exceptions.TargetObjectDoesntExistException;
 import HW3.Menus.UIBase;
 import javafx.stage.Stage;
 import HW3.Utils.DataSelector;
@@ -22,7 +23,6 @@ public class RiderManagment extends UIBase {
 
 	public RiderManagment(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
 		super(stage, deliveryDataBase, backF);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -55,15 +55,13 @@ public class RiderManagment extends UIBase {
                 }
 );
 
-	    Button searchRiderButton = UIHelper.createButton("Search Rider", () ->{
-	    	Rider rider = DataSelector.selectRider();
-	    	if(rider == null) return;
-	    	MessageBox.Info(rider);
-	    });
+	    Button searchRiderButton = UIHelper.createButton("Search Rider", () ->
+	    	MessageBox.Info(DataSelector.selectRider())
+	    );
 	    Button riderOrdersButton = UIHelper.createButton("Show Rider Orders", () ->{
 	    	Rider rider = DataSelector.selectRider();
 	    	if(rider == null) return;
-	    	UIHelper.showList(stage, rider.getDeliverdOrders(), this::Main);
+	    	UIHelper.showList(stage, rider.getDeliverdOrders(), this::Main, rider.getCurrentOrder());
 	    });
 
 	    Button updateStatusButton = UIHelper.createButton("Update Order Status", () ->{
@@ -88,14 +86,14 @@ public class RiderManagment extends UIBase {
 				InputManager.createDateAfterDate(stage, order.getOrderingDate(), d ->{
 					try {
 						deliveryDataBase.updateDeliveryStatus(rider.getId(), d);
-					} catch (RiderNotFoundException e) {
+					} catch (RiderNotFoundException | TargetObjectDoesntExistException e) {
 						MessageBox.error(e);
 					}
 				});
 			}else {
 				try {
 					deliveryDataBase.updateDeliveryStatus(rider.getId(), null);
-				} catch (RiderNotFoundException e) {
+				} catch (RiderNotFoundException | TargetObjectDoesntExistException e) {
 					MessageBox.error(e);
 				}
 			}

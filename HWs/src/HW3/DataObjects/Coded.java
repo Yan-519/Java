@@ -11,7 +11,7 @@ import HW3.Exceptions.RestaurantNotFoundException;
 import HW3.Exceptions.TargetObjectDoesntExistException;
 
 public abstract class Coded {
-	public static final Random random = new Random();
+	private static final Random random = new Random();
 	
 	protected final int code;
 

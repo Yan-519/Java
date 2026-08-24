@@ -18,11 +18,15 @@ public class Restaurant extends Coded {
 	}
 	
 	
+	
 	@Override
 	public String toString() {
-		return this.getName() + ": " + this.getCode() + " ("+ (this.isOpen() ? "Open" : "Close") +")";
+		return "Restaurant [name=" + name + ", kitchenType=" + kitchenType + ", rating=" + rating + ", isOpen=" + isOpen
+				+ ", baseDeliveryFee=" + baseDeliveryFee + ", code=" + code + "]";
 	}
-	
+
+
+
 	public String getName() {
 		return name;
 	}

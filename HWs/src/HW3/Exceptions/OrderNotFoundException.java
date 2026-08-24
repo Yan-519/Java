@@ -7,4 +7,8 @@ public class OrderNotFoundException extends CodedNotFoundException {
 	public OrderNotFoundException(int code) {
 		super(code, Order.class.getSimpleName());
 	}
+	
+	public OrderNotFoundException() {
+		super("Order not found");
+	}
 }

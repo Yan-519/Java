@@ -109,8 +109,7 @@ public class DataInitializer {
 			riders[3].setCurrentOrder(orders[3]);
 			riders[4].setCurrentOrder(orders[4]);
 		} catch (DeliveryPersonUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			MessageBox.error(e);
 		}
 
 		// Admins

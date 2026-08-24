@@ -8,7 +8,7 @@ public class Customer extends Coded implements Comparable<Customer>{
 	private String name, lastName;
 	private String street, town, zipCode;
 	private String phoneNumber, emain;
-	private double creditBalance;
+	private double balance;
 
 	
 	public Customer(int code, String name, String lastName, String street, String town, String zipCode, String phoneNum,
@@ -21,23 +21,24 @@ public class Customer extends Coded implements Comparable<Customer>{
 		this.zipCode = zipCode;
 		this.phoneNumber = phoneNum;
 		this.emain = emain;
-		this.creditBalance = creditBalance;
+		this.balance = creditBalance;
 	}
 	
 	
 	// spend the given double (if not go to negative as a result)
 	public void buy(double price) throws InsufficientBalanceException {
-		if(price <= creditBalance )
-			creditBalance -= price;
+		if(price <= balance )
+			balance -= price;
 		
-		throw new InsufficientBalanceException(creditBalance, price);
+		throw new InsufficientBalanceException(balance, price);
 	}
 	
 	// sets the balance (if not go to negative as a result)
-	public boolean setBalance(double balance) {
-		if( 0 <= balance )
-			creditBalance = balance;
-		return 0 <= balance;
+	public void setBalance(double balance) throws InsufficientBalanceException {
+		if( balance < 0)
+			throw new InsufficientBalanceException(balance);
+
+		this.balance = balance;
 	}
 	
 	public String getName() {
@@ -68,8 +69,8 @@ public class Customer extends Coded implements Comparable<Customer>{
 		return emain;
 	}
 	
-	public double getCreditBalance() {
-		return creditBalance;
+	public double getBalance() {
+		return balance;
 	}
 
 	public void setStreet(String street) {
@@ -106,20 +107,17 @@ public class Customer extends Coded implements Comparable<Customer>{
 	}
 
 
-	public void setCreditBalance(double creditBalance) {
-		this.creditBalance = creditBalance;
-	}
-
-
 	@Override
 	public String toString() {
-		return this.getName() + " " + this.getLastName() + ": " + this.getCode();
+		return "Customer [name=" + name + ", lastName=" + lastName + ", street=" + street + ", town=" + town
+				+ ", zipCode=" + zipCode + ", phoneNumber=" + phoneNumber + ", emain=" + emain + ", creditBalance="
+				+ balance + ", code=" + code + "]";
 	}
 
 
 	@Override
 	public int compareTo(Customer o) {
-		return (int)(o.getCreditBalance() - creditBalance);
+		return (int)(o.getBalance() - balance);
 	}
 	
 	
