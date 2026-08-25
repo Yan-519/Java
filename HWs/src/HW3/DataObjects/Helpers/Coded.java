@@ -1,8 +1,12 @@
-package HW3.DataObjects;
+package HW3.DataObjects.Helpers;
 
 import java.util.ArrayList;
 import java.util.Random;
 
+import HW3.DataObjects.Customer;
+import HW3.DataObjects.Order;
+import HW3.DataObjects.RestAdmin;
+import HW3.DataObjects.Restaurant;
 import HW3.Exceptions.CodedNotFoundException;
 import HW3.Exceptions.CustomerNotFoundException;
 import HW3.Exceptions.OrderNotFoundException;

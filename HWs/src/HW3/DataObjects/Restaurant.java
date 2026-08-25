@@ -1,5 +1,8 @@
 package HW3.DataObjects;
 
+import HW3.DataObjects.Helpers.Coded;
+import HW3.DataObjects.Helpers.ConvertorHolder;
+
 public class Restaurant extends Coded<Restaurant> {
     protected String name;
     protected String kitchenType;
@@ -16,7 +19,8 @@ public class Restaurant extends Coded<Restaurant> {
 		this.isOpen = isOpen;
 		this.baseDeliveryFee = baseDeliveryFee;
 	}
-	
+
+	public Restaurant() {super(-1);}
 	
 	
 	@Override
@@ -24,8 +28,6 @@ public class Restaurant extends Coded<Restaurant> {
 		return "Restaurant [name=" + name + ", kitchenType=" + kitchenType + ", rating=" + rating + ", isOpen=" + isOpen
 				+ ", baseDeliveryFee=" + baseDeliveryFee + ", code=" + code + "]";
 	}
-
-
 
 	public String getName() {
 		return name;
@@ -74,18 +76,36 @@ public class Restaurant extends Coded<Restaurant> {
 
 
 	@Override
-	public Restaurant convert(String in) {
-		// TODO Auto-generated method stub
-		return null;
+	public String convert() {
+		return joiner(
+			getCode(),
+			name,
+			kitchenType,
+			rating,
+			isOpen,
+			baseDeliveryFee
+		).trim();
 	}
-
-
 
 	@Override
-	public String convert() {
-		// TODO Auto-generated method stub
-		return null;
+	public ConvertorHolder<Restaurant> convert(String in) {
+		if (in == null || in.trim().isEmpty()) {
+			return null;
+		}
+
+		String[] parts = in.trim().split(" ");
+		if (parts.length < 6) {
+			throw new IllegalArgumentException("Invalid input format for Restaurant: " + in);
+		}
+
+		int parsedCode = Integer.parseInt(parts[0]);
+		String parsedName = parts[1].replace("_", " ");
+		String parsedKitchenType = parts[2].replace("_", " ");
+		double parsedRating = Double.parseDouble(parts[3]);
+		boolean parsedIsOpen = Boolean.parseBoolean(parts[4]);
+		double parsedBaseDeliveryFee = Double.parseDouble(parts[5]);
+
+		return new ConvertorHolder<>( new Restaurant(parsedCode, parsedName, parsedKitchenType, parsedRating, parsedIsOpen, parsedBaseDeliveryFee));
 	}
-	
 	
 }

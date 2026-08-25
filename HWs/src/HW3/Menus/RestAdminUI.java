@@ -21,6 +21,7 @@ import HW3.DataObjects.Restaurant;
 import HW3.DataObjects.Rider;
 import HW3.DeliveryDataBase.CodedType;
 import HW3.Exceptions.TargetObjectAlreadyExistException;
+import HW3.Exceptions.TargetObjectDoesntExistException;
 import HW3.Utils.DataSelector;
 import HW3.Utils.InputManager;
 import HW3.Utils.MessageBox.NumberSign;
@@ -123,7 +124,13 @@ public class RestAdminUI extends UIBase  {
 	}
 
 	private void addNewCustomer() {
-	    int code = deliveryDataBase.generateCode(CodedType.Customer);
+	    int code;
+		try {
+			code = deliveryDataBase.generateCode(CodedType.Customer);
+		} catch (TargetObjectDoesntExistException e) {
+			MessageBox.error(e);
+			return;
+		}
 	    InputManager.createCustomer(stage, code, customer -> {
 	        if (customer != null) {
 	            try {
@@ -250,6 +257,7 @@ public class RestAdminUI extends UIBase  {
 	}
 
 	private void viewBasicReports() {
+		// TODO
 	    // Shows a simple summary report for the admin's managed restaurants
 	    int totalRestaurants = restAdmin.getRestaurants().size();
 	    long openCount = restAdmin.getOpenRestaurants().size();

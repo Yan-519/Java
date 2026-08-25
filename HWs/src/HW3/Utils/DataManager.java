@@ -5,8 +5,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import HW3.DeliveryDataBase;
@@ -19,15 +17,17 @@ import HW3.DataObjects.PremiumRestaurant;
 import HW3.DataObjects.RestAdmin;
 import HW3.DataObjects.Restaurant;
 import HW3.DataObjects.Rider;
-import HW3.DataObjects.StringConverter;
+import HW3.DataObjects.Helpers.ConvertorHolder;
+import HW3.DataObjects.Helpers.StringConverter;
 import HW3.Exceptions.DeliveryPersonUnavailableException;
+import HW3.Exceptions.OrderNotFoundException;
 import HW3.Exceptions.TargetObjectDoesntExistException;
 
 public class DataManager {
-	private static final String DIR = "src/DataFiles/";
+	private static final String DIR = "src" + File.separator + "HW3" + File.separator + "DataFiles";
 
 	// initial program values:
-	public static DeliveryDataBase initialDataBase() {
+	public static DeliveryDataBase initialDataBase() throws OrderNotFoundException {
 
 		// Customers
 		Customer[] customers = {
@@ -100,7 +100,7 @@ public class DataManager {
 		
 		// Orders
 		Order[] orders = {
-		    new Order(1001, customers[0].getCode(), restaurants[0], new Date(1, 1, 2026), 45.0),
+		    new Order(1001, customers[0].getCode(), restaurants[0], new Date(1, 2, 2026), 45.0),
 		    new Order(1002, customers[0].getCode(), restaurants[10], new Date(3, 1, 2026), 32.5),
 		    new Order(1003, customers[2].getCode(), restaurants[20], new Date(5, 1, 2026), 180.0),
 		    new Order(1004, customers[3].getCode(), restaurants[5], new Date(8, 1, 2026), 67.0),
@@ -134,42 +134,48 @@ public class DataManager {
 		return new DeliveryDataBase(new Admin("Admin", "admin", "12345"), customers, restaurants, riders, orders, admins);
 	}
 	
-	public static <T extends StringConverter<T>> ArrayList<T> load(Class<T> c) 
-			throws TargetObjectDoesntExistException, InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException{
+	public static <T extends StringConverter<T>> ArrayList<ConvertorHolder<T>> load(Class<T> c) 
+			throws Exception{
 		String fileName = c.getSimpleName().toUpperCase() + ".txt";
-		String path = DIR + fileName;
 		
-		File file = new File("src/DataFiles"+  fileName);
+		File file = new File(DIR, fileName);
 		
 		if(!file.exists())
-			throw new TargetObjectDoesntExistException(path);
+			throw new TargetObjectDoesntExistException(file.getPath());
 		
-		ArrayList<T> res = new ArrayList<T>();
+		ArrayList<ConvertorHolder<T>> res = new ArrayList<>();
 		
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-		
+				
 		T empty = c.getDeclaredConstructor().newInstance();
 		
 		String line;
-		while ((line = bufferedReader.readLine()) != null)
-			res.add(empty.convert(line));
-		
+		while ((line = bufferedReader.readLine()) != null) {
+			ConvertorHolder<T> t = empty.convert(line);
+			if(t == null)
+				throw new TargetObjectDoesntExistException(line);
+			res.add(t);
+			
+		}
+	
 		bufferedReader.close();
 		return res;
 	}
 
-	public static <T extends StringConverter<T>> void save(ArrayList<T> arr, Class<T> c) throws IOException {
+	public static <T extends StringConverter<T>> void save(ArrayList<T> arr, Class<T> c) throws Exception {
 		String fileName = c.getSimpleName().toUpperCase() + ".txt";
-		String path = DIR + fileName;
 		
-		File file = new File("src/DataFiles"+  fileName);
+		File file = new File(DIR, fileName);
 		file.createNewFile();
 		
 		BufferedWriter bufferedWriter = new BufferedWriter( new FileWriter(file));
 		
-		for (T t : arr) 
-			bufferedWriter.write(t.convert() + "\n");
+		for (T t : arr) {
+			if(t== null) 
+				throw new TargetObjectDoesntExistException(c.getSimpleName());
+			bufferedWriter.write(t.convert());
+			bufferedWriter.newLine();
+		}
 		
 		bufferedWriter.close();
 	}

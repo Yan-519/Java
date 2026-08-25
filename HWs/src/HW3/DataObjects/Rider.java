@@ -2,8 +2,12 @@ package HW3.DataObjects;
 
 import java.util.ArrayList;
 
+import HW3.DataObjects.Helpers.ConvertorHolder;
+import HW3.DataObjects.Helpers.StringConverter;
 import HW3.DataObjects.Order.OrderStatus;
 import HW3.Exceptions.DeliveryPersonUnavailableException;
+import HW3.Exceptions.TargetObjectAlreadyExistException;
+import HW3.Exceptions.TargetObjectDoesntExistException;
 
 public class Rider extends StringConverter<Rider> {
 	private final String id;
@@ -27,6 +31,19 @@ public class Rider extends StringConverter<Rider> {
 		currentOrder = null;
 	}
 	
+
+	public Rider() {id = "";}
+
+	public void addDeliverdOrder(Order order) throws TargetObjectDoesntExistException, TargetObjectAlreadyExistException {
+		if(order == null)
+			throw new TargetObjectDoesntExistException("Deliverd order");
+			
+		if(deliverdOrders.contains(order))
+			throw new TargetObjectAlreadyExistException(order.toString());
+		
+		deliverdOrders.add(order);
+	}
+
 	// removes the current order of the rider
 	public void removeCurrentOrder() {
 		currentOrder = null;
@@ -136,14 +153,51 @@ public class Rider extends StringConverter<Rider> {
 	}
 
 	@Override
-	public Rider convert(String in) {
-		// TODO Auto-generated method stub
-		return null;
+	public String convert() {
+		ArrayList<Integer> orderCodes = new ArrayList<>(deliverdOrders.stream().map(o-> o.getCode()).toList());
+		return joiner(
+			id,
+			name,
+			lastName,
+			phoneNumber,
+			vehicle,
+			orderCodes.isEmpty() ? "none" : orderCodes,
+			currentOrder == null ? "null" : currentOrder.getCode()
+		);
 	}
 
 	@Override
-	public String convert() {
-		// TODO Auto-generated method stub
-		return null;
+	public ConvertorHolder<Rider> convert(String in) throws DeliveryPersonUnavailableException {
+		if (in == null || in.trim().isEmpty()) 
+			return null;
+		
+
+		String[] parts = in.trim().split(" ");
+		if (parts.length < 7) 
+			throw new IllegalArgumentException("Invalid input format for Rider: " + in);
+		
+
+		String parsedId = parts[0].replace("_", " ");
+		String parsedName = parts[1].replace("_", " ");
+		String parsedLastName = parts[2].replace("_", " ");
+		String parsedPhoneNumber = parts[3].replace("_", " ");
+		String parsedVehicle = parts[4].replace("_", " ");
+
+		ArrayList<Integer> parsedDeliveredOrders = new ArrayList<>();
+		if (!parts[5].equals("none")) 
+			for (String codeStr : parts[5].split(",")) 
+				if (!codeStr.trim().isEmpty()) 
+					parsedDeliveredOrders.add(Integer.parseInt(codeStr));
+
+
+		Order parsedCurrentOrder = null;
+		if (!parts[6].equals("null")) 
+			parsedCurrentOrder = (new Order(0, 0, null, null, 0)).convert(parts[7]).output;
+		
+
+		Rider rider = new Rider(parsedId, parsedName, parsedLastName, parsedPhoneNumber, parsedVehicle);
+		rider.setCurrentOrder(parsedCurrentOrder);
+
+		return new ConvertorHolder<>( rider, parsedDeliveredOrders);
 	}
 }

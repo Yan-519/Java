@@ -156,7 +156,7 @@ public class CustomerUI extends UIBase  {
 			if(d != null)
 				try {
 					MessageBox.Info("New code", deliveryDataBase.addOrder(restaurant.getCode(), customer.getCode(), basePrice, d));
-				} catch (CodedNotFoundException | InsufficientBalanceException | TargetObjectDoesntExistException e) {
+				} catch (Exception e) {
 					MessageBox.error(e);
 				}
 			

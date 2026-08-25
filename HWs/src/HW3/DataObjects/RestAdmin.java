@@ -3,6 +3,9 @@ package HW3.DataObjects;
 import java.util.ArrayList;
 import java.util.Set;
 
+import HW3.DataObjects.Helpers.Coded;
+import HW3.DataObjects.Helpers.ConvertorHolder;
+
 public class RestAdmin extends Coded<RestAdmin> {
 	
 	private String name;
@@ -18,6 +21,19 @@ public class RestAdmin extends Coded<RestAdmin> {
 		this.password = password;
 		this.restaurants = new ArrayList<>();
 	}
+	
+	
+
+	private RestAdmin(int code, String name, String userName, String password, ArrayList<Restaurant> restaurants) {
+		super(code);
+		this.name = name;
+		this.userName = userName;
+		this.password = password;
+		this.restaurants = restaurants;
+	}
+
+
+	public RestAdmin() {super(-1);}
 
 	// add new restaurant
 	public void addRestaurant(Restaurant restaurant) {
@@ -79,15 +95,41 @@ public class RestAdmin extends Coded<RestAdmin> {
 	}
 
 	@Override
-	public RestAdmin convert(String in) {
-		// TODO Auto-generated method stub
-		return null;
+	public String convert() {
+		ArrayList<Integer> orderCodes = new ArrayList<>(restaurants.stream().map(r -> r.getCode()).toList());
+
+		return joiner(
+			getCode(),
+			name,
+			userName,
+			password,
+			orderCodes.isEmpty() ? "none" : orderCodes
+		);
 	}
 
 	@Override
-	public String convert() {
-		// TODO Auto-generated method stub
-		return null;
+	public ConvertorHolder<RestAdmin> convert(String in) {
+		if (in == null || in.trim().isEmpty()) {
+			return null;
+		}
+
+		String[] parts = in.trim().split(" ");
+		if (parts.length < 5) {
+			throw new IllegalArgumentException("Invalid input format for RestAdmin: " + in);
+		}
+
+		int parsedCode = Integer.parseInt(parts[0]);
+		String parsedName = parts[1].replace("_", " ");
+		String parsedUserName = parts[2].replace("_", " ");
+		String parsedPassword = parts[3].replace("_", " ");
+
+		ArrayList<Integer> codes = new ArrayList<Integer>();
+		
+		if(!parts[4].equals("none"))
+			for(String RestCode : parts[4].split(","))
+				codes.add(Integer.valueOf(RestCode));
+		RestAdmin restAdmin = new RestAdmin(parsedCode, parsedName, parsedUserName, parsedPassword);
+		return new ConvertorHolder<>( restAdmin, codes);
 	}
 
 	

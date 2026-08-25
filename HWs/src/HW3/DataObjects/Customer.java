@@ -1,5 +1,7 @@
 package HW3.DataObjects;
 
+import HW3.DataObjects.Helpers.Coded;
+import HW3.DataObjects.Helpers.ConvertorHolder;
 import HW3.Exceptions.InsufficientBalanceException;
 import HW3.Utils.DataChecker;
 
@@ -24,6 +26,7 @@ public class Customer extends Coded<Customer> implements Comparable<Customer>{
 		this.balance = creditBalance;
 	}
 	
+	public Customer() {super(-1);}
 	
 	// spend the given double (if not go to negative as a result)
 	public void buy(double price) throws InsufficientBalanceException {
@@ -122,15 +125,30 @@ public class Customer extends Coded<Customer> implements Comparable<Customer>{
 
 
 	@Override
-	public Customer convert(String in) {
-		// TODO Auto-generated method stub
-		return null;
+	public ConvertorHolder<Customer> convert(String in) {
+		String[] tokens = in.trim().split(" ");
+        if (tokens.length < 9) {
+            throw new IllegalArgumentException("Invalid input format for Customer: " + in);
+        }
+
+        int parsedCode = Integer.parseInt(tokens[0].trim());
+        String parsedName = tokens[1].replace("_", " ");
+        String parsedLastName = tokens[2].replace("_", " ");
+        String parsedStreet = tokens[3].replace("_", " ");
+        String parsedTown = tokens[4].replace("_", " ");
+        String parsedZipCode = tokens[5].replace("_", " ");
+        String parsedPhone = tokens[6].replace("_", " ");
+        String parsedEmail = tokens[7];
+        double parsedBalance = Double.parseDouble(tokens[8].trim());
+        
+        return new ConvertorHolder<>(new Customer(parsedCode, parsedName, parsedLastName, parsedStreet, 
+                parsedTown, parsedZipCode, parsedPhone, parsedEmail, parsedBalance));
 	}
 
 
 	@Override
 	public String convert() {
-		return joiner(name, lastName, street, town, zipCode, phoneNumber, emain, balance, code);
+		return joiner(code, name, lastName, street, town, zipCode, phoneNumber, emain, balance);
 	}
 	
 	

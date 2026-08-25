@@ -1,5 +1,7 @@
 package HW3.DataObjects;
 
+import HW3.DataObjects.Helpers.Coded;
+import HW3.DataObjects.Helpers.ConvertorHolder;
 import HW3.Utils.DataChecker;
 
 public class Order extends Coded<Order> {
@@ -30,6 +32,23 @@ public class Order extends Coded<Order> {
 		this.riderId = null;
 		this.deliveringDate = new Date();
 	}
+
+	private Order(int code, int clientCode, Restaurant restaurant, int restaurantCode, String riderId,
+			Date orderingDate, Date deliveringDate, double basePrice, double finalPrice, OrderStatus status) {
+		super(code);
+		this.clientCode = clientCode;
+		this.restaurant = restaurant;
+		this.restaurantCode = restaurantCode;
+		this.riderId = riderId;
+		this.orderingDate = orderingDate;
+		this.deliveringDate = deliveringDate;
+		this.basePrice = basePrice;
+		this.finalPrice = finalPrice;
+		this.status = status;
+	}
+
+
+	public Order() {super(-1);}
 
 	public String getRiderId() {
 		return riderId;
@@ -131,15 +150,49 @@ public class Order extends Coded<Order> {
 	}
 
 	@Override
-	public Order convert(String in) {
-		// TODO Auto-generated method stub
-		return null;
+	public String convert() {
+		return joiner(
+			getCode(),
+			clientCode,
+			restaurantCode,
+			riderId == null ? "null" : riderId,
+			orderingDate.convert(),
+			deliveringDate == null ? "null" : deliveringDate.convert(),
+			basePrice,
+			finalPrice,
+			status.name()
+		);
 	}
 
 	@Override
-	public String convert() {
-		// TODO Auto-generated method stub
-		return null;
+	public ConvertorHolder<Order> convert(String in) {
+		if (in == null || in.trim().isEmpty()) {
+			return null;
+		}
+
+		String[] parts = in.trim().split(" ");
+		if (parts.length < 9) {
+			throw new IllegalArgumentException("Invalid input format for Order: " + in);
+		}
+
+		int parsedCode = Integer.parseInt(parts[0]);
+		int parsedClientCode = Integer.parseInt(parts[1]);
+		int parsedRestaurantCode = Integer.parseInt(parts[2]);
+		String parsedRiderId = parts[3].equals("null") ? null : parts[3].replace("_", " ");
+
+		Date parsedOrderingDate = (new Date().convert(parts[4].replace("_", " "))).output;
+		
+		Date parsedDeliveringDate = (new Date().convert(parts[5].replace("_", " "))).output;
+
+		double parsedBasePrice = Double.parseDouble(parts[6]);
+		double parsedFinalPrice = Double.parseDouble(parts[7]);
+		OrderStatus parsedStatus = OrderStatus.valueOf(parts[8]);
+
+		return new ConvertorHolder<>( new Order(
+			parsedCode, parsedClientCode, null, parsedRestaurantCode,
+			parsedRiderId, parsedOrderingDate, parsedDeliveringDate,
+			parsedBasePrice, parsedFinalPrice, parsedStatus
+		));
 	}
 
 

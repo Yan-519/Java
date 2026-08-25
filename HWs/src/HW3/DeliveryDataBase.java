@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 import HW3.DataObjects.*;
+import HW3.DataObjects.Helpers.Coded;
+import HW3.DataObjects.Helpers.ConvertorHolder;
 import HW3.DataObjects.Order.OrderStatus;
 import HW3.Exceptions.*;
 
@@ -54,7 +56,7 @@ public class DeliveryDataBase {
 	}
 
 	public DeliveryDataBase(Admin systemAdministrator, Customer[] customers, Restaurant[] restaurants, Rider[] riders,
-			Order[] orders, RestAdmin[] restAdmins) {
+			Order[] orders, RestAdmin[] restAdmins) throws OrderNotFoundException {
 
 		this(systemAdministrator);
 		
@@ -305,14 +307,14 @@ public class DeliveryDataBase {
 	
 	public void add(Rider rider) throws TargetObjectAlreadyExistException {
 		if (rider == null)
-			return;
+	    	throw new NullPointerException("Added object cant be null");
 		if(riders.contains(rider)) 
 			throw new TargetObjectAlreadyExistException(rider.toString());
 		riders.add(rider);
 	}
 
 	// adds a Order by the needed parameters to do so (if exists -> does nothing)
-	public int addOrder(int restaurantCode, int customerCode, double basePrice, Date date) throws CodedNotFoundException, InsufficientBalanceException, TargetObjectDoesntExistException {
+	public int addOrder(int restaurantCode, int customerCode, double basePrice, Date date) throws CodedNotFoundException, InsufficientBalanceException, TargetObjectDoesntExistException, TargetObjectAlreadyExistException {
 		if (date == null)
 			throw new TargetObjectDoesntExistException("Orderring date");
 
@@ -337,10 +339,10 @@ public class DeliveryDataBase {
 	}
 
 	// adds an Order to a Rider (RestAdmin)
-	public void addOrderToRider(String riderId, int orderCode) throws CodedNotFoundException, TargetObjectDoesntExistException, DeliveryPersonUnavailableException, RiderNotFoundException {
+	public void addOrderToRider(String riderId, int orderCode) throws Exception {
 		Order order = Coded.getCoded(orders, orderCode, Order.class);
 		if (order.getStatus() != OrderStatus.Created)
-			return;
+			throw new Exception("Can assing to a rider only Created orders ");
 
 		Rider rider = getRider(riderId);
 		
@@ -355,7 +357,7 @@ public class DeliveryDataBase {
 	}
 
 	// adds an Order to a Rider (RestAdmin)
-	public void addOrderToRider(String riderId, int orderCode, int restAdminCode) throws CodedNotFoundException, TargetObjectDoesntExistException, DeliveryPersonUnavailableException, RiderNotFoundException {
+	public void addOrderToRider(String riderId, int orderCode, int restAdminCode) throws Exception {
 		Order order = Coded.getCoded(orders, orderCode, Order.class);
 		RestAdmin restAdmin = Coded.getCoded(restAdmins, restAdminCode, RestAdmin.class);
 		if (!restAdmin.containsRestaurant(order.getRestaurantCode()))
@@ -370,7 +372,7 @@ public class DeliveryDataBase {
 	}
 	
 	// returns a unique code (not negative) for the given type
-	public int generateCode(CodedType type) {
+	public int generateCode(CodedType type) throws TargetObjectDoesntExistException {
 		switch (type) {
 			case RestAdmin:
 				return Coded.generateCode(restAdmins);
@@ -384,7 +386,7 @@ public class DeliveryDataBase {
 			case Order:
 				return Coded.generateCode(orders);
 				
-			default: return -1;
+			default: throw new TargetObjectDoesntExistException("CodedType " + type);
 		}
 	}
 	
@@ -496,6 +498,16 @@ public class DeliveryDataBase {
 	public void setRestAdmins(ArrayList<RestAdmin> restAdmins) {
 		this.restAdmins = restAdmins;
 	}
+	
+	public void loadRestAdmins(ArrayList<ConvertorHolder<RestAdmin>> restAdmins) throws CodedNotFoundException, TargetObjectDoesntExistException {
+		for(ConvertorHolder<RestAdmin> convertorHolder : restAdmins) {
+			RestAdmin restAdmin = convertorHolder.output;
+			for(Integer code : convertorHolder.codes)
+				restAdmin.addRestaurant(getRestaurant(code));
+			
+			this.restAdmins.add(restAdmin);
+		}
+	}
 
 	public void setRestaurants(ArrayList<Restaurant> restaurants) {
 		this.restaurants = restaurants;
@@ -508,13 +520,20 @@ public class DeliveryDataBase {
 	public void setRiders(ArrayList<Rider> riders) {
 		this.riders = riders;
 	}
+	
+	public void loadRiders(ArrayList<ConvertorHolder<Rider>> riders) throws TargetObjectDoesntExistException, TargetObjectAlreadyExistException, CodedNotFoundException {
+		for(ConvertorHolder<Rider> convertorHolder : riders) {
+			Rider rider = convertorHolder.output;
+			for(Integer code : convertorHolder.codes)
+				rider.addDeliverdOrder(getOrder(code));
+			
+			this.riders.add(rider);
+		}
+	}
 
-	public void setOrders(ArrayList<Order> orders) {
+	public void setOrders(ArrayList<Order> orders) throws OrderNotFoundException {
 		for (Order order : orders)
-			try {
-				addOrderToCustomer(order.getClientCode(), order);
-			} catch (OrderNotFoundException e) {
-			}
+			addOrderToCustomer(order.getClientCode(), order);
 	}
 
 	public void setOrdersByCustomer(HashMap<Integer, ArrayList<Order>> ordersByCustomer) {

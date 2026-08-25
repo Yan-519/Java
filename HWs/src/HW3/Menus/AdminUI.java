@@ -43,39 +43,39 @@ public class AdminUI extends UIBase {
 		reportsUI = new ReportsUI(stage, deliveryDataBase, this::Main);
 	}
 
-	@Override
-	public void Auth() {
-        VBox root = UIHelper.createVRoot();
-
-        Label title = new Label("System Administrator Login");
-
-        TextField username = new TextField();
-        username.setPromptText("Username");
-        username.setMaxWidth(300);
-
-        PasswordField password = new PasswordField();
-        password.setPromptText("Password");
-        password.setMaxWidth(300);
-
-        Button loginButton = UIHelper.createButton("Login", () -> {
-        	if (deliveryDataBase.logIntoAdmin(username.getText(), password.getText())) 
-                Main();
-            
-            else MessageBox.error("Login Error", "Incorrect username or password.");
-        });
-        
-        Button backButton = UIHelper.createButton("Back", backF);
-        
-        root.getChildren().addAll(
-                title,
-                username,
-                password,
-                loginButton,
-                backButton
-        );
-
-        stage.setScene(new Scene(root, 500, 400));
-	}
+//	@Override
+//	public void Auth() {
+//        VBox root = UIHelper.createVRoot();
+//
+//        Label title = new Label("System Administrator Login");
+//
+//        TextField username = new TextField();
+//        username.setPromptText("Username");
+//        username.setMaxWidth(300);
+//
+//        PasswordField password = new PasswordField();
+//        password.setPromptText("Password");
+//        password.setMaxWidth(300);
+//
+//        Button loginButton = UIHelper.createButton("Login", () -> {
+//        	if (deliveryDataBase.logIntoAdmin(username.getText(), password.getText())) 
+//                Main();
+//            
+//            else MessageBox.error("Login Error", "Incorrect username or password.");
+//        });
+//        
+//        Button backButton = UIHelper.createButton("Back", backF);
+//        
+//        root.getChildren().addAll(
+//                title,
+//                username,
+//                password,
+//                loginButton,
+//                backButton
+//        );
+//
+//        stage.setScene(new Scene(root, 500, 400));
+//	}
 	
 
 	@Override
@@ -146,11 +146,14 @@ public class AdminUI extends UIBase {
 
     private void loadData() {
         try {
-            deliveryDataBase.setRestAdmins(DataManager.load(RestAdmin.class));
-            deliveryDataBase.setRestaurants(DataManager.load(Restaurant.class));
-            deliveryDataBase.setCustomers(DataManager.load(Customer.class));
-            deliveryDataBase.setRiders(DataManager.load(Rider.class));
-            deliveryDataBase.setOrders(DataManager.load(Order.class));
+        	// the sequence is important
+            deliveryDataBase.setRestaurants(new ArrayList<>(DataManager.load(Restaurant.class).stream().map(c -> c.output).toList()));
+            deliveryDataBase.setCustomers(new ArrayList<>(DataManager.load(Customer.class).stream().map(c -> c.output).toList()));
+            
+            
+            deliveryDataBase.loadRestAdmins(DataManager.load(RestAdmin.class));
+            deliveryDataBase.setOrders(new ArrayList<>(DataManager.load(Order.class).stream().map(c -> c.output).toList()));
+            deliveryDataBase.loadRiders(DataManager.load(Rider.class));
             MessageBox.Info("Load Data", "Data loaded successfully.");
         } catch (Exception e) {
             MessageBox.error("Load Error", e);

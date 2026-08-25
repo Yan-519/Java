@@ -1,5 +1,7 @@
 package HW3.DataObjects;
 
+import HW3.DataObjects.Helpers.ConvertorHolder;
+
 public class FastFoodRestaurant extends Restaurant {
 	private int averagePreparingTimeInMinutes;
 	private double additionalCostForExpressDelivery;
@@ -38,5 +40,45 @@ public class FastFoodRestaurant extends Restaurant {
 	public void setAdditionalCostForExpressDelivery(double additionalCostForExpressDelivery) {
 		if(0 <= additionalCostForExpressDelivery)
 		this.additionalCostForExpressDelivery = additionalCostForExpressDelivery;
+	}
+	
+	@Override
+	public String convert() {
+		return joiner(
+			getCode(),
+			name,
+			kitchenType,
+			rating,
+			isOpen,
+			baseDeliveryFee,
+			averagePreparingTimeInMinutes,
+			additionalCostForExpressDelivery
+		);
+	}
+
+	@Override
+	public ConvertorHolder convert(String in) {
+		if (in == null || in.trim().isEmpty()) {
+			return null;
+		}
+
+		String[] parts = in.trim().split(" ");
+		if (parts.length < 8) {
+			throw new IllegalArgumentException("Invalid input format for FastFoodRestaurant: " + in);
+		}
+
+		int parsedCode = Integer.parseInt(parts[0]);
+		String parsedName = parts[1].replace("_", " ");
+		String parsedKitchenType = parts[2].replace("_", " ");
+		double parsedRating = Double.parseDouble(parts[3]);
+		boolean parsedIsOpen = Boolean.parseBoolean(parts[4]);
+		double parsedBaseDeliveryFee = Double.parseDouble(parts[5]);
+		int parsedPrepTime = Integer.parseInt(parts[6]);
+		double parsedExpressFee = Double.parseDouble(parts[7]);
+
+		return new ConvertorHolder<>( new FastFoodRestaurant(
+			parsedCode, parsedName, parsedKitchenType, parsedRating,
+			parsedIsOpen, parsedBaseDeliveryFee, parsedPrepTime, parsedExpressFee
+		));
 	}
 }

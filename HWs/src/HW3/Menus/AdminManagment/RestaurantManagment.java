@@ -11,7 +11,6 @@ import HW3.Utils.DataSelector;
 import HW3.Utils.InputManager;
 import HW3.Utils.MessageBox;
 import HW3.Utils.UIHelper;
-import HW3.Utils.MessageBox.NumberSign;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -104,7 +103,13 @@ public class RestaurantManagment extends UIBase {
 
     private void addNewRestaurant() {
     	
-    	int code = deliveryDataBase.generateCode(CodedType.Restaurant);
+    	int code;
+		try {
+			code = deliveryDataBase.generateCode(CodedType.Restaurant);
+		} catch (TargetObjectDoesntExistException e) {
+			MessageBox.error(e);
+			return;
+		}
     	
     	switch (MessageBox.inputSelect("Regular", "Fast food", "Primium")) {
 		case "Regular": 

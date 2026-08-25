@@ -1,6 +1,7 @@
 package HW3.Menus;
 
 import HW3.DeliveryDataBase;
+import HW3.Exceptions.OrderNotFoundException;
 import HW3.Utils.DataManager;
 import HW3.Utils.DataSelector;
 import HW3.Utils.InputManager;
@@ -23,8 +24,8 @@ public class MainUI extends UIBase {
 		super(stage, deliveryDataBase, backF);
 	}
 
-	public MainUI(Stage stage) {
-		super(stage, DataManager.initialDataBase(), () -> {});
+	public MainUI(Stage stage) throws OrderNotFoundException {
+		super(stage, new DeliveryDataBase(), () -> {});
 		
 		DataSelector.setDeliveryDataBase(deliveryDataBase);
 		InputManager.setDeliveryDataBase(deliveryDataBase);

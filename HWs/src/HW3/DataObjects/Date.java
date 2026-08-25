@@ -2,6 +2,9 @@ package HW3.DataObjects;
 
 import java.util.Objects;
 
+import HW3.DataObjects.Helpers.ConvertorHolder;
+import HW3.DataObjects.Helpers.StringConverter;
+
 public class Date extends StringConverter<Date> implements Comparable<Date> {
 	private int day, month, year;
 
@@ -85,17 +88,27 @@ public class Date extends StringConverter<Date> implements Comparable<Date> {
 	}
 
 	@Override
-	public Date convert(String in) {
-		// TODO Auto-generated method stub
-		return null;
+	public String convert() {
+		return joiner(day, month, year);
 	}
 
 	@Override
-	public String convert() {
-		// TODO Auto-generated method stub
-		return null;
+	public ConvertorHolder<Date> convert(String in) {
+		if (in == null || in.trim().isEmpty()) {
+			return null;
+		}
+
+		String[] parts = in.trim().split(" ");
+		if (parts.length < 3) {
+			throw new IllegalArgumentException("Invalid input format for Date: " + in);
+		}
+
+		int parsedDay = Integer.parseInt(parts[0]);
+		int parsedMonth = Integer.parseInt(parts[1]);
+		int parsedYear = Integer.parseInt(parts[2]);
+
+		return new ConvertorHolder<>( new Date(parsedDay, parsedMonth, parsedYear));
 	}
-	
 	
 	
 }

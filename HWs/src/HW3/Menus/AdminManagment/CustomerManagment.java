@@ -6,6 +6,7 @@ import HW3.DataObjects.Order;
 import HW3.DataObjects.Order.OrderStatus;
 import HW3.DeliveryDataBase.CodedType;
 import HW3.Exceptions.TargetObjectAlreadyExistException;
+import HW3.Exceptions.TargetObjectDoesntExistException;
 import HW3.Menus.UIBase;
 import HW3.Utils.DataChecker;
 import HW3.Utils.DataSelector;
@@ -52,7 +53,13 @@ public class CustomerManagment extends UIBase {
         );
 
         Button addCustomer = UIHelper.createButton("Add New Customer", e -> {
-                	int code = deliveryDataBase.generateCode(CodedType.Customer);
+                	int code;
+					try {
+						code = deliveryDataBase.generateCode(CodedType.Customer);
+					} catch (TargetObjectDoesntExistException e1) {
+						MessageBox.error(e1);
+						return;
+					}
 
                 	InputManager.createCustomer(stage, code, customer -> {
                 	    if (customer != null) {

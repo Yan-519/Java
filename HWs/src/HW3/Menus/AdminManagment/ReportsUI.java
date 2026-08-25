@@ -3,8 +3,6 @@ package HW3.Menus.AdminManagment;
 import HW3.DeliveryDataBase;
 import HW3.Menus.UIBase;
 import javafx.stage.Stage;
-import HW3.DataObjects.Customer;
-import HW3.DataObjects.Order;
 import HW3.DataObjects.PremiumRestaurant;
 import HW3.DataObjects.Restaurant;
 import HW3.DataObjects.Rider;
@@ -18,7 +16,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class ReportsUI extends UIBase {
