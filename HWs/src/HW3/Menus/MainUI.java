@@ -1,7 +1,7 @@
 package HW3.Menus;
 
 import HW3.DeliveryDataBase;
-import HW3.Utils.DataInitializer;
+import HW3.Utils.DataManager;
 import HW3.Utils.DataSelector;
 import HW3.Utils.InputManager;
 import HW3.Utils.UIHelper;
@@ -24,7 +24,7 @@ public class MainUI extends UIBase {
 	}
 
 	public MainUI(Stage stage) {
-		super(stage, DataInitializer.initialDataBase(), () -> {});
+		super(stage, DataManager.initialDataBase(), () -> {});
 		
 		DataSelector.setDeliveryDataBase(deliveryDataBase);
 		InputManager.setDeliveryDataBase(deliveryDataBase);

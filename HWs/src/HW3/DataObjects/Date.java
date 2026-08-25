@@ -2,7 +2,7 @@ package HW3.DataObjects;
 
 import java.util.Objects;
 
-public class Date implements Comparable<Date> {
+public class Date extends StringConverter<Date> implements Comparable<Date> {
 	private int day, month, year;
 
 	public Date(int day, int month, int year) {
@@ -82,6 +82,18 @@ public class Date implements Comparable<Date> {
 	        return 1;
 	    
 	    return -1;
+	}
+
+	@Override
+	public Date convert(String in) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String convert() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

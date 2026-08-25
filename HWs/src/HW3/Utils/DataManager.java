@@ -1,5 +1,14 @@
 package HW3.Utils;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+
 import HW3.DeliveryDataBase;
 import HW3.DataObjects.Admin;
 import HW3.DataObjects.Customer;
@@ -10,9 +19,12 @@ import HW3.DataObjects.PremiumRestaurant;
 import HW3.DataObjects.RestAdmin;
 import HW3.DataObjects.Restaurant;
 import HW3.DataObjects.Rider;
+import HW3.DataObjects.StringConverter;
 import HW3.Exceptions.DeliveryPersonUnavailableException;
+import HW3.Exceptions.TargetObjectDoesntExistException;
 
-public class DataInitializer {
+public class DataManager {
+	private static final String DIR = "src/DataFiles/";
 
 	// initial program values:
 	public static DeliveryDataBase initialDataBase() {
@@ -121,6 +133,45 @@ public class DataInitializer {
 		
 		return new DeliveryDataBase(new Admin("Admin", "admin", "12345"), customers, restaurants, riders, orders, admins);
 	}
+	
+	public static <T extends StringConverter<T>> ArrayList<T> load(Class<T> c) 
+			throws TargetObjectDoesntExistException, InstantiationException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException{
+		String fileName = c.getSimpleName().toUpperCase() + ".txt";
+		String path = DIR + fileName;
+		
+		File file = new File("src/DataFiles"+  fileName);
+		
+		if(!file.exists())
+			throw new TargetObjectDoesntExistException(path);
+		
+		ArrayList<T> res = new ArrayList<T>();
+		
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+		
+		T empty = c.getDeclaredConstructor().newInstance();
+		
+		String line;
+		while ((line = bufferedReader.readLine()) != null)
+			res.add(empty.convert(line));
+		
+		bufferedReader.close();
+		return res;
+	}
 
+	public static <T extends StringConverter<T>> void save(ArrayList<T> arr, Class<T> c) throws IOException {
+		String fileName = c.getSimpleName().toUpperCase() + ".txt";
+		String path = DIR + fileName;
+		
+		File file = new File("src/DataFiles"+  fileName);
+		file.createNewFile();
+		
+		BufferedWriter bufferedWriter = new BufferedWriter( new FileWriter(file));
+		
+		for (T t : arr) 
+			bufferedWriter.write(t.convert() + "\n");
+		
+		bufferedWriter.close();
+	}
 	
 }

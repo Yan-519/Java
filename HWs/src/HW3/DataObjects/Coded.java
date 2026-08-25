@@ -10,7 +10,7 @@ import HW3.Exceptions.RestAdminNotFoundException;
 import HW3.Exceptions.RestaurantNotFoundException;
 import HW3.Exceptions.TargetObjectDoesntExistException;
 
-public abstract class Coded {
+public abstract class Coded<E extends Coded<E>> extends StringConverter<E> {
 	private static final Random random = new Random();
 	
 	protected final int code;
@@ -24,14 +24,14 @@ public abstract class Coded {
 	}
 	
 	// generate a random positive code that isn't in the given list
-	public static <T extends Coded> int generateCode(ArrayList<T> list) {
+	public static <T extends Coded<?>> int generateCode(ArrayList<T> list) {
 		int code;
 		while (isContains(list, code = random.nextInt() & Integer.MAX_VALUE));
 		return code;
 	}
 	
 	// returns if the given code appear in the given list
-	public static <T extends Coded> boolean isContains(ArrayList<T> codeds, int code) {
+	public static <T extends Coded<?>> boolean isContains(ArrayList<T> codeds, int code) {
 		for (T coded : codeds) 
 	        if (coded.getCode() == code) 
 	        	return true;
@@ -40,7 +40,8 @@ public abstract class Coded {
 	}
 	
 	// returns the Coded woth the given code from the given list
-	public static <T extends Coded> T getCoded(ArrayList<T> codeds, int code, Class<T> name) throws CodedNotFoundException, TargetObjectDoesntExistException {
+	public static <T extends Coded<?>> T getCoded(ArrayList<T> codeds, int code, Class<T> name) 
+			throws CodedNotFoundException, TargetObjectDoesntExistException {
 		for (T coded : codeds) {
 	        if (coded.getCode() == code) {
 	        	return coded;
@@ -78,6 +79,4 @@ public abstract class Coded {
 	public String toString() {
 		return "Coded [code=" + code + "]";
 	}
-	
-	
 }

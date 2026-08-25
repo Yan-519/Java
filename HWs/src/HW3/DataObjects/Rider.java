@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import HW3.DataObjects.Order.OrderStatus;
 import HW3.Exceptions.DeliveryPersonUnavailableException;
 
-public class Rider {
+public class Rider extends StringConverter<Rider> {
 	private final String id;
 	private String name, lastName;
 	private String phoneNumber;
@@ -133,5 +133,17 @@ public class Rider {
 	@Override
 	public final int hashCode() {
 		return id.hashCode();
+	}
+
+	@Override
+	public Rider convert(String in) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String convert() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

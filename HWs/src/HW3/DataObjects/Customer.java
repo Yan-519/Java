@@ -3,7 +3,7 @@ package HW3.DataObjects;
 import HW3.Exceptions.InsufficientBalanceException;
 import HW3.Utils.DataChecker;
 
-public class Customer extends Coded implements Comparable<Customer>{
+public class Customer extends Coded<Customer> implements Comparable<Customer>{
 	
 	private String name, lastName;
 	private String street, town, zipCode;
@@ -117,7 +117,20 @@ public class Customer extends Coded implements Comparable<Customer>{
 
 	@Override
 	public int compareTo(Customer o) {
-		return (int)(o.getBalance() - balance);
+		return Double.compare(o.getBalance(), balance);
+	}
+
+
+	@Override
+	public Customer convert(String in) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public String convert() {
+		return joiner(name, lastName, street, town, zipCode, phoneNumber, emain, balance, code);
 	}
 	
 	

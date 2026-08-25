@@ -1,6 +1,6 @@
 package HW3.DataObjects;
 
-public class Restaurant extends Coded {
+public class Restaurant extends Coded<Restaurant> {
     protected String name;
     protected String kitchenType;
     protected double rating;
@@ -69,6 +69,22 @@ public class Restaurant extends Coded {
 
 	public void setBaseDeliveryFee(double baseDeliveryFee) {
 		this.baseDeliveryFee = baseDeliveryFee;
+	}
+
+
+
+	@Override
+	public Restaurant convert(String in) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String convert() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

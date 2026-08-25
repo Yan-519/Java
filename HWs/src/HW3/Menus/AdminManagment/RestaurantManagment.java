@@ -52,7 +52,7 @@ public class RestaurantManagment extends UIBase {
         			Restaurant restaurant = DataSelector.selectRestaurant();
         			if(restaurant == null) return;
         			
-        			double raiting = MessageBox.inputDOUB(null, "Enter new raiting", NumberSign.NOT_NEGATIVE, 5);
+        			double raiting = MessageBox.inputDOUB(null, "Enter new raiting  (0-5)", 5);
         			try {
 						deliveryDataBase.updateRestaurantRaiting(restaurant.getCode(), raiting);
 					} catch (CodedNotFoundException | TargetObjectDoesntExistException e1) {

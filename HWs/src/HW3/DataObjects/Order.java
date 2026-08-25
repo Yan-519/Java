@@ -2,7 +2,7 @@ package HW3.DataObjects;
 
 import HW3.Utils.DataChecker;
 
-public class Order extends Coded {
+public class Order extends Coded<Order> {
 	public enum OrderStatus{ Created, OnTheWay, Delivered }
 	
 	
@@ -128,6 +128,18 @@ public class Order extends Coded {
 				+ ", riderId=" + riderId + ", orderingDate=" + orderingDate + ", deliveringDate=" + deliveringDate
 				+ ", basePrice=" + basePrice + ", finalPrice=" + finalPrice + ", status=" + status + ", code=" + code
 				+ "]";
+	}
+
+	@Override
+	public Order convert(String in) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String convert() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

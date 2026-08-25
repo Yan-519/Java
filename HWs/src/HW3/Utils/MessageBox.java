@@ -134,9 +134,9 @@ public class MessageBox {
 		, "Wronge sign");
 	}
 
-	public static Double inputDOUB(String title, String header, NumberSign inputSign, double max) {
+	public static Double inputDOUB(String title, String header, double max) {
 		return DataSelector.dataFilter(() -> 
-			inputDOUB(title, header, inputSign + " not bigger than " + max),
+			inputDOUB(title, header, NumberSign.NOT_NEGATIVE),
 			d -> d <= max,
 			"Input beyond limit");
 	}

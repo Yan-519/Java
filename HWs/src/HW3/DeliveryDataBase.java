@@ -1,22 +1,14 @@
 package HW3;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
 
 import HW3.DataObjects.*;
 import HW3.DataObjects.Order.OrderStatus;
-import HW3.Exceptions.CodedNotFoundException;
-import HW3.Exceptions.CustomerNotFoundException;
-import HW3.Exceptions.DeliveryPersonUnavailableException;
-import HW3.Exceptions.InsufficientBalanceException;
-import HW3.Exceptions.OrderNotFoundException;
-import HW3.Exceptions.RestAdminNotFoundException;
-import HW3.Exceptions.RestaurantNotFoundException;
-import HW3.Exceptions.RiderNotFoundException;
-import HW3.Exceptions.TargetObjectAlreadyExistException;
-import HW3.Exceptions.TargetObjectDoesntExistException;
+import HW3.Exceptions.*;
 
 public class DeliveryDataBase {
 	
@@ -39,8 +31,8 @@ public class DeliveryDataBase {
 	private Hashtable<Integer, ArrayList<Restaurant>> selectedRestaurantsByCustomer;
 	private HashMap<Integer, Double> totalSpentByCustomer;
 	
-	private final Comparator<Restaurant> restComparator = (r1, r2) -> (int)(r2.getRating() - r1.getRating());
-	private final Comparator<Order> ordComparator = (o1, o2) -> (int)(o2.getFinalPrice() - o1.getFinalPrice()); 
+	private final Comparator<Restaurant> restComparator = (r1, r2) -> Double.compare(r2.getRating(), r1.getRating());
+	private final Comparator<Order> ordComparator = (o1, o2) -> Double.compare(o2.getFinalPrice(), o1.getFinalPrice()); 
 
 	
 	public DeliveryDataBase(Admin systemAdministrator) {
@@ -66,24 +58,13 @@ public class DeliveryDataBase {
 
 		this(systemAdministrator);
 		
-		for (Customer customer : customers)
-			this.customers.add(customer);
-
-		for (Restaurant restaurant : restaurants)
-			this.restaurants.add(restaurant);
-
-		for (Rider rider : riders)
-			this.riders.add(rider);
-
-		for (RestAdmin restAdmin : restAdmins)
-			this.restAdmins.add(restAdmin);
-
-		for (Order order : orders)
-			try {
-				addOrderToCustomer(order.getClientCode(), order);
-			} catch (OrderNotFoundException e) {
-			}
-
+		this.customers = new ArrayList<>(Arrays.asList(customers));
+		this.restaurants = new ArrayList<>(Arrays.asList(restaurants));
+		this.riders = new ArrayList<>(Arrays.asList(riders));
+		this.restAdmins = new ArrayList<>(Arrays.asList(restAdmins));
+		
+		
+		setOrders(new ArrayList<Order>(Arrays.asList(orders)));
 	}
 
 	// add Order To Customer
@@ -449,7 +430,7 @@ public class DeliveryDataBase {
 	}
 
 	public void sortRidersByDeliverdCount() {
-		riders.sort((r1,r2) -> Double.compare(r1.getDeliverdOrders().size(), r2.getDeliverdOrders().size()));
+		riders.sort((r1,r2) -> Integer.compare(r1.getDeliverdOrders().size(), r2.getDeliverdOrders().size()));
 	}
 	
 	public void sortCustomersByName() {
@@ -460,6 +441,17 @@ public class DeliveryDataBase {
 		orders.sort((o1,o2) -> o1.getOrderingDate().compareTo(o2.getOrderingDate()));
 	}
 	
+	public void sortCustomersByBalance() {
+		customers = new ArrayList<Customer>(customers.stream().sorted().toList());
+	}
+	
+	public void sortRestaurantsByRaiting() {
+	    restaurants.sort(restComparator);
+	}
+
+	public void sortOrdersByFinalPrice() {
+	    orders.sort(ordComparator);
+	}
 
 	public ArrayList<RestAdmin> getRestAdmins() {
 		return restAdmins;
@@ -518,7 +510,11 @@ public class DeliveryDataBase {
 	}
 
 	public void setOrders(ArrayList<Order> orders) {
-		this.orders = orders;
+		for (Order order : orders)
+			try {
+				addOrderToCustomer(order.getClientCode(), order);
+			} catch (OrderNotFoundException e) {
+			}
 	}
 
 	public void setOrdersByCustomer(HashMap<Integer, ArrayList<Order>> ordersByCustomer) {

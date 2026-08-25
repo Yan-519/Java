@@ -1,11 +1,11 @@
 package HW3.Menus;
 
+import java.util.ArrayList;
+
 import HW3.DeliveryDataBase;
-import HW3.Menus.AdminManagment.CustomerManagment;
-import HW3.Menus.AdminManagment.OrderManagment;
-import HW3.Menus.AdminManagment.RestAdminManagment;
-import HW3.Menus.AdminManagment.RestaurantManagment;
-import HW3.Menus.AdminManagment.RiderManagment;
+import HW3.DataObjects.*;
+import HW3.Menus.AdminManagment.*;
+import HW3.Utils.DataManager;
 import HW3.Utils.MessageBox;
 import HW3.Utils.UIHelper;
 import javafx.geometry.Insets;
@@ -28,6 +28,8 @@ public class AdminUI extends UIBase {
 	private RestaurantManagment restaurantManagment;
 	private RiderManagment riderManagment;
 	
+	private ReportsUI reportsUI;
+	
 
 	public AdminUI(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
 		super(stage, deliveryDataBase, backF);
@@ -37,6 +39,8 @@ public class AdminUI extends UIBase {
 		restAdminManagment = new RestAdminManagment(stage, deliveryDataBase, this::Main);
 		restaurantManagment = new RestaurantManagment(stage, deliveryDataBase, this::Main);
 		riderManagment = new RiderManagment(stage, deliveryDataBase, this::Main);
+		
+		reportsUI = new ReportsUI(stage, deliveryDataBase, this::Main);
 	}
 
 	@Override
@@ -99,7 +103,7 @@ public class AdminUI extends UIBase {
 
         Button restaurantAdminsButton = UIHelper.createButton("Restaurant Administrator Management", restAdminManagment::Auth);
 
-        Button reportsButton = UIHelper.createButton("Reports and Sorting", this::showReports);
+        Button reportsButton = UIHelper.createButton("Reports and Sorting", reportsUI::Auth);
 
         Button saveButton = UIHelper.createButton("Save Data", this::saveData);
 
@@ -126,13 +130,30 @@ public class AdminUI extends UIBase {
         stage.setScene(new Scene(root, 700, 600));
 
     }
-
-    private void showReports() {
-    }
     
     private void saveData() {
+    	try {
+            DataManager.save(deliveryDataBase.getRestAdmins(), RestAdmin.class);
+            DataManager.save(deliveryDataBase.getRestaurants(), Restaurant.class);
+            DataManager.save(deliveryDataBase.getCustomers(), Customer.class);
+            DataManager.save(deliveryDataBase.getRiders(), Rider.class);
+            DataManager.save(deliveryDataBase.getOrders(), Order.class);
+            MessageBox.Info("Save Data", "Data saved successfully.");
+        } catch (Exception e) {
+            MessageBox.error("Save Error", e);
+        }
     }
 
     private void loadData() {
+        try {
+            deliveryDataBase.setRestAdmins(DataManager.load(RestAdmin.class));
+            deliveryDataBase.setRestaurants(DataManager.load(Restaurant.class));
+            deliveryDataBase.setCustomers(DataManager.load(Customer.class));
+            deliveryDataBase.setRiders(DataManager.load(Rider.class));
+            deliveryDataBase.setOrders(DataManager.load(Order.class));
+            MessageBox.Info("Load Data", "Data loaded successfully.");
+        } catch (Exception e) {
+            MessageBox.error("Load Error", e);
+        }
     }
 }

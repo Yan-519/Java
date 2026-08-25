@@ -3,7 +3,7 @@ package HW3.DataObjects;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class RestAdmin extends Coded {
+public class RestAdmin extends Coded<RestAdmin> {
 	
 	private String name;
 	private String userName;
@@ -76,6 +76,18 @@ public class RestAdmin extends Coded {
 	public String toString() {
 		return "RestAdmin [name=" + name + ", userName=" + userName + ", password=" + password + ", restaurants="
 				+ restaurants + ", code=" + code + "]";
+	}
+
+	@Override
+	public RestAdmin convert(String in) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String convert() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	
