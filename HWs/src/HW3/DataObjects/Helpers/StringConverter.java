@@ -1,27 +1,39 @@
 package HW3.DataObjects.Helpers;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import HW3.DataObjects.Date;
 
 public abstract class StringConverter<T> {
-    public abstract ConvertorHolder<T> convert(String in) throws Exception;
+	public static final String emptyList = "none", nullObject = "null"; 
+	
+	
+    public abstract ConvertorHolder<? extends T> convert(String in) throws Exception;
     public abstract String convert() throws Exception;
     
     protected String joiner(Object...objects) {
     	StringBuilder stringBuilder = new StringBuilder();
     	for (Object object : objects) {
-    		if(object instanceof ArrayList<?> lst)
-    		{
-    			boolean ifF = true;
-    			for(Object obj : lst) {
-    				if(!ifF)
-    					stringBuilder.append(",");
-    				stringBuilder.append(obj);
-    			}
+    		if(object == null) {
+    			stringBuilder.append(nullObject + " ");
+    			continue;
     		}
-    		else if(object instanceof Date)
-    			stringBuilder.append(object.toString() + " ");
+    		
+    		if(object instanceof List<?> lst)
+    		{
+    			if (!lst.isEmpty()) {
+	    			boolean ifF = true;
+	    			for(Object obj : lst) {
+	    				if(!ifF)
+	    					stringBuilder.append(",");
+	    				stringBuilder.append(obj);
+	    			}
+    			}
+    			else stringBuilder.append(emptyList + " ");
+    		}
+    		else if(object instanceof Date d)
+    			stringBuilder.append(d.convert().replace(" ", "_") + " ");
+    		
     		else
     			stringBuilder.append(object.toString().replace(" ", "_") + " ");
     	}

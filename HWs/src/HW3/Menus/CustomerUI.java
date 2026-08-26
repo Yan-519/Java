@@ -1,5 +1,7 @@
 package HW3.Menus;
 
+import java.util.List;
+
 import HW3.DeliveryDataBase;
 import HW3.DataObjects.Customer;
 import HW3.DataObjects.Restaurant;
@@ -12,12 +14,17 @@ import HW3.Utils.InputManager;
 import HW3.Utils.MessageBox;
 import HW3.Utils.MessageBox.NumberSign;
 import HW3.Utils.UIHelper;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -83,7 +90,7 @@ public class CustomerUI extends UIBase  {
 	    Button newOrderButton = UIHelper.createButton("Place New Order", this::placeNewOrder);
 
 	    Button viewOrdersButton = UIHelper.createButton("View Order History", 
-	    		() -> UIHelper.showList(stage, deliveryDataBase.getOrdersOfCustomer(customer), this::Main));
+	    		() -> Tables.order(stage, deliveryDataBase.getOrdersOfCustomer(customer), this::Main));
 	    Button updateDetailsButton = UIHelper.createButton("Update Profile Info", this::updateProfileInfo);
 
 	    Button depositMoneyButton = UIHelper.createButton("Deposit Funds", () -> {
@@ -109,10 +116,10 @@ public class CustomerUI extends UIBase  {
 	    Button viewBalanceButton = UIHelper.createButton("Show Current Balance", 
 	    		() -> MessageBox.Info("Current balance: " + customer.getBalance()));
 	    Button visitedRestaurantsButton = UIHelper.createButton("Show Ordered Restaurants", 
-	    		() -> UIHelper.showList(stage, deliveryDataBase.getRestaurantasBuyCustomer(customer.getCode()), this::Main));
+	    		() -> Tables.restaurant(stage, deliveryDataBase.getRestaurantasBuyCustomer(customer.getCode()), this::Main));
 
 	    Button luxuryRestaurantsButton = UIHelper.createButton("Show Ordered Luxury Restaurants", 
-	    		() -> UIHelper.showList(stage, deliveryDataBase.getPremiumRestaurantsByCustomer(customer), this::Main));
+	    		() -> Tables.restaurant(stage, deliveryDataBase.getPremiumRestaurantsByCustomer(customer), this::Main));
 	    Button searchRestaurantButton = UIHelper.createButton("Search Restaurant by Code", 
 	    		() -> MessageBox.Info(DataSelector.selectRestaurant()));
 
@@ -147,7 +154,7 @@ public class CustomerUI extends UIBase  {
 			return;
 		}
 		
-		Restaurant restaurant = DataSelector.dataFilter(DataSelector::selectRestaurant, r -> r.isOpen(), "The selected restaurant in colse");
+		Restaurant restaurant = DataSelector.dataFilter(DataSelector::selectRestaurant, r -> r.getIsOpen(), "The selected restaurant in colse");
 	
 		Double basePrice = MessageBox.inputDOUB(null, "Enter the base fee (not negative)", NumberSign.NOT_NEGATIVE);
 		if(basePrice == null) return;
@@ -192,4 +199,5 @@ public class CustomerUI extends UIBase  {
 		}
 
 	}
+
 }

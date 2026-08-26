@@ -132,6 +132,9 @@ public class AdminUI extends UIBase {
     }
     
     private void saveData() {
+    	if(!MessageBox.inputBOOL("Save", "Are you shure you want to save", null, false))
+    		return;
+    	
     	try {
             DataManager.save(deliveryDataBase.getRestAdmins(), RestAdmin.class);
             DataManager.save(deliveryDataBase.getRestaurants(), Restaurant.class);
@@ -145,15 +148,17 @@ public class AdminUI extends UIBase {
     }
 
     private void loadData() {
+    	if(!MessageBox.inputBOOL("Load", "Are you shure you want to load", null, false))
+    		return;
         try {
-        	// the sequence is important
             deliveryDataBase.setRestaurants(new ArrayList<>(DataManager.load(Restaurant.class).stream().map(c -> c.output).toList()));
             deliveryDataBase.setCustomers(new ArrayList<>(DataManager.load(Customer.class).stream().map(c -> c.output).toList()));
             
-            
-            deliveryDataBase.loadRestAdmins(DataManager.load(RestAdmin.class));
+            // needs Customers
             deliveryDataBase.setOrders(new ArrayList<>(DataManager.load(Order.class).stream().map(c -> c.output).toList()));
-            deliveryDataBase.loadRiders(DataManager.load(Rider.class));
+            
+            deliveryDataBase.loadRestAdmins(DataManager.load(RestAdmin.class)); // needs Restaurants
+            deliveryDataBase.loadRiders(DataManager.load(Rider.class)); // needs Orders
             MessageBox.Info("Load Data", "Data loaded successfully.");
         } catch (Exception e) {
             MessageBox.error("Load Error", e);

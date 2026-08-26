@@ -3,6 +3,7 @@ package HW3.Menus.AdminManagment;
 import HW3.DeliveryDataBase;
 import HW3.DataObjects.Customer;
 import HW3.DataObjects.Restaurant;
+import HW3.Menus.Tables;
 import HW3.Menus.UIBase;
 import HW3.Utils.DataSelector;
 import HW3.Utils.MessageBox;
@@ -34,7 +35,7 @@ public class OrderManagment extends UIBase {
 	    grid.setAlignment(Pos.CENTER);
 
 	    Button showAllButton = UIHelper.createButton("Show All Orders", () ->{
-	    	UIHelper.showList(stage, deliveryDataBase.getOrders(), this::Main);
+	    	Tables.order(stage, deliveryDataBase.getOrders(), this::Main);
 	    });
 	    Button searchByCodeButton = UIHelper.createButton("Search Order by Code", () ->
 	    	MessageBox.Info(DataSelector.selectOrder())
@@ -43,12 +44,12 @@ public class OrderManagment extends UIBase {
 	    Button filterByCustomerButton = UIHelper.createButton("Show Orders by Customer", () ->{
 	    	Customer customer = DataSelector.selectCustomer();
 	    	if(customer == null) return;
-	    	UIHelper.showList(stage, deliveryDataBase.getOrdersOfCustomer(customer), this::Main);
+	    	Tables.order(stage, deliveryDataBase.getOrdersOfCustomer(customer), this::Main);
 	    });
 	    Button filterByRestaurantButton = UIHelper.createButton("Show Orders by Restaurant", () ->{
 	    	Restaurant restaurant = DataSelector.selectRestaurant();
 	    	if(restaurant == null) return;
-	    	UIHelper.showList(stage, deliveryDataBase.getOrdersByuRestaurant(restaurant.getCode()), this::Main);
+	    	Tables.order(stage, deliveryDataBase.getOrdersByuRestaurant(restaurant.getCode()), this::Main);
 	    });
 
 	    Button highestPriceButton = UIHelper.createButton("Show Highest Price Order", () ->
@@ -71,4 +72,6 @@ public class OrderManagment extends UIBase {
 
 	    stage.setScene(new Scene(root, 700, 600));
 	}
+	
+	
 }

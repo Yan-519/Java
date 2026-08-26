@@ -152,12 +152,12 @@ public class Order extends Coded<Order> {
 	@Override
 	public String convert() {
 		return joiner(
-			getCode(),
+			code,
 			clientCode,
 			restaurantCode,
-			riderId == null ? "null" : riderId,
+			riderId,
 			orderingDate.convert(),
-			deliveringDate == null ? "null" : deliveringDate.convert(),
+			deliveringDate,
 			basePrice,
 			finalPrice,
 			status.name()

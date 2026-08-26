@@ -1,18 +1,25 @@
 package HW3.Menus;
 
+import java.util.List;
+
 import HW3.DeliveryDataBase;
 import HW3.DataObjects.Order.OrderStatus;
-import HW3.DataObjects.Rider;
+import HW3.DataObjects.*;
 import HW3.Exceptions.*;
 import HW3.Utils.InputManager;
 import HW3.Utils.MessageBox;
 import HW3.Utils.UIHelper;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -73,7 +80,7 @@ public class RiderUI extends UIBase  {
 	    grid.setAlignment(Pos.CENTER);
 
 	    Button viewAssignedOrdersButton = UIHelper.createButton("View Assigned Orders", 
-	    		() -> UIHelper.showList(stage, rider.getDeliverdOrders(), this::Main, rider.getCurrentOrder()));
+	    		() -> Tables.order(stage, rider.getDeliverdOrders(), this::Main, rider.getCurrentOrder()));
 	    Button viewActiveOrderButton = UIHelper.createButton("View Active Order", 
 	    		() ->{
 	    			if (rider.getCurrentOrder() != null) {
@@ -87,7 +94,7 @@ public class RiderUI extends UIBase  {
 	    Button updateToDeliveredButton = UIHelper.createButton("Update Status to 'Delivered'", this::updateStatusToDelivered);
 
 	    Button viewHistoryButton = UIHelper.createButton("View Delivery History", 
-	    		() -> UIHelper.showList(stage, rider.getDeliverdOrders(), this::Main));
+	    		() -> Tables.order(stage, rider.getDeliverdOrders(), this::Main));
 	    Button viewTotalCountButton = UIHelper.createButton("Show Total Deliveries Count", 
 	    		() -> MessageBox.Info("Total Deliveries", "You have completed " + rider.getDeliverdOrders().size() + " deliveries."));
 
@@ -153,7 +160,5 @@ public class RiderUI extends UIBase  {
 	        Main();
 	    });
 	}
-
-	
 	
 }

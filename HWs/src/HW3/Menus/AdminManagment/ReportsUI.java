@@ -1,6 +1,7 @@
 package HW3.Menus.AdminManagment;
 
 import HW3.DeliveryDataBase;
+import HW3.Menus.Tables;
 import HW3.Menus.UIBase;
 import javafx.stage.Stage;
 import HW3.DataObjects.PremiumRestaurant;
@@ -40,52 +41,49 @@ public class ReportsUI extends UIBase {
         Button sortCustomersByBalanceButton = UIHelper.createButton("Sort Customers by Balance", 
             () -> {
                 deliveryDataBase.sortCustomersByBalance();
-                UIHelper.showList(stage, deliveryDataBase.getCustomers(), this::Main);
+                Tables.customer(stage, deliveryDataBase.getCustomers(), this::Main);
             });
 
         Button sortCustomersByNameButton = UIHelper.createButton("Sort Customers by First Name", 
             () -> {
                 deliveryDataBase.sortCustomersByName();
-                UIHelper.showList(stage, deliveryDataBase.getCustomers(), this::Main);
+                Tables.customer(stage, deliveryDataBase.getCustomers(), this::Main);
             });
         
         Button sortRestaurantsByRatingButton = UIHelper.createButton("Sort Restaurants by Rating", 
             () -> {
                 deliveryDataBase.sortRestaurantsByRaiting();
-                UIHelper.showList(stage, deliveryDataBase.getRestaurants(), this::Main);
+                Tables.restaurant(stage, deliveryDataBase.getRestaurants(), this::Main);
             });
 
         Button sortOrdersByPriceButton = UIHelper.createButton("Sort Orders by Final Price", 
             () -> {
                 deliveryDataBase.sortOrdersByFinalPrice();
-                UIHelper.showList(stage, deliveryDataBase.getOrders(), this::Main);
+                Tables.order(stage, deliveryDataBase.getOrders(), this::Main);
             });
         
         Button sortOrdersByDateButton = UIHelper.createButton("Sort Orders by Date", 
             () -> {
                 deliveryDataBase.sortOrdersByDate();
-                UIHelper.showList(stage, deliveryDataBase.getOrders(), this::Main);
+                Tables.order(stage, deliveryDataBase.getOrders(), this::Main);
             });
 
         Button sortRidersByDeliveriesButton = UIHelper.createButton("Sort Riders by Delivery Count", 
             () -> {
                 deliveryDataBase.sortRidersByDeliverdCount();
-                UIHelper.showList(stage, deliveryDataBase.getRiders(), this::Main);
+                Tables.rider(stage, deliveryDataBase.getRiders(), this::Main);
             });
         
         Button showOpenRestaurantsButton = UIHelper.createButton("Show Open Restaurants", 
-        		() -> UIHelper.showList(stage, deliveryDataBase.getRestaurants().stream()
-                        .filter(Restaurant::isOpen)
-                        .collect(Collectors.toList()), this::Main));
+        		() -> Tables.restaurant(stage, deliveryDataBase.getRestaurants().stream()
+                        .filter(Restaurant::getIsOpen).toList(), this::Main));
         Button showPremiumRestaurantsButton = UIHelper.createButton("Show Premium Restaurants", 
-        		() -> UIHelper.showList(stage, deliveryDataBase.getRestaurants().stream()
-                        .filter(r -> r instanceof PremiumRestaurant)
-                        .collect(Collectors.toList()), this::Main));
+        		() -> Tables.restaurant(stage, deliveryDataBase.getRestaurants().stream()
+                        .filter(r -> r instanceof PremiumRestaurant).toList(), this::Main));
         
         Button showAvailableRidersButton = UIHelper.createButton("Show Available Riders", 
-        		() -> UIHelper.showList(stage,  deliveryDataBase.getRiders().stream()
-                        .filter(Rider::isAvailable)
-                        .collect(Collectors.toList()), this::Main));
+        		() -> Tables.rider(stage,  deliveryDataBase.getRiders().stream()
+                        .filter(Rider::getIsAvailable).toList(), this::Main));
         Button showTotalPaymentsButton = UIHelper.createButton("Show Total Payments", 
         		() -> MessageBox.Info("Total System Payments", "Total payments collected in the system: " + deliveryDataBase.getTotalSpentByCustomer().values().stream()
                         .mapToDouble(Double::doubleValue)

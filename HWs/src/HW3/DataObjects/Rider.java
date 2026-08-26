@@ -107,7 +107,7 @@ public class Rider extends StringConverter<Rider> {
 		return vehicle;
 	}
 
-	public boolean isAvailable() {
+	public boolean getIsAvailable() {
 		return isAvailable;
 	}
 
@@ -161,7 +161,7 @@ public class Rider extends StringConverter<Rider> {
 			lastName,
 			phoneNumber,
 			vehicle,
-			orderCodes.isEmpty() ? "none" : orderCodes,
+			orderCodes,
 			currentOrder == null ? "null" : currentOrder.getCode()
 		);
 	}
@@ -190,14 +190,13 @@ public class Rider extends StringConverter<Rider> {
 					parsedDeliveredOrders.add(Integer.parseInt(codeStr));
 
 
-		Order parsedCurrentOrder = null;
+		Integer parsedCurrentOrder = null;
 		if (!parts[6].equals("null")) 
-			parsedCurrentOrder = (new Order(0, 0, null, null, 0)).convert(parts[7]).output;
+			parsedCurrentOrder = Integer.valueOf(parts[6]);
 		
 
 		Rider rider = new Rider(parsedId, parsedName, parsedLastName, parsedPhoneNumber, parsedVehicle);
-		rider.setCurrentOrder(parsedCurrentOrder);
 
-		return new ConvertorHolder<>( rider, parsedDeliveredOrders);
+		return new ConvertorHolder<>( rider, parsedDeliveredOrders, parsedCurrentOrder);
 	}
 }

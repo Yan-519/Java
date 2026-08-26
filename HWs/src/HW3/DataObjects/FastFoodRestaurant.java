@@ -15,6 +15,14 @@ public class FastFoodRestaurant extends Restaurant {
 	}
 
 	
+	
+	public FastFoodRestaurant() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
+
 	@Override
 	public String toString() {
 		return "FastFoodRestaurant [averagePreparingTimeInMinutes=" + averagePreparingTimeInMinutes
@@ -45,7 +53,7 @@ public class FastFoodRestaurant extends Restaurant {
 	@Override
 	public String convert() {
 		return joiner(
-			getCode(),
+			code,
 			name,
 			kitchenType,
 			rating,
@@ -57,7 +65,7 @@ public class FastFoodRestaurant extends Restaurant {
 	}
 
 	@Override
-	public ConvertorHolder convert(String in) {
+	public ConvertorHolder<FastFoodRestaurant> convert(String in) {
 		if (in == null || in.trim().isEmpty()) {
 			return null;
 		}

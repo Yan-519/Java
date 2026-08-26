@@ -10,6 +10,7 @@ import HW3.DataObjects.RestAdmin;
 import HW3.DataObjects.Restaurant;
 import HW3.Exceptions.CodedNotFoundException;
 import HW3.Exceptions.TargetObjectDoesntExistException;
+import HW3.Menus.Tables;
 import HW3.Menus.UIBase;
 import HW3.Utils.DataSelector;
 import HW3.Utils.MessageBox;
@@ -48,7 +49,7 @@ public class RestAdminManagment extends UIBase {
 	    grid.setAlignment(Pos.CENTER);
 
 	    Button showAllButton = UIHelper.createButton("Show All Restaurant Admins", 
-	    		() -> UIHelper.showList(stage, deliveryDataBase.getRestAdmins(), this::Main));
+	    		() -> Tables.restAdmin(stage, deliveryDataBase.getRestAdmins(), this::Main));
 	    Button addAdminButton = UIHelper.createButton("Add Restaurant Admin to a restaurant", this::addRestaurantAdmin);
 
 	    Button searchAdminButton = UIHelper.createButton("Search Restaurant Admin", 

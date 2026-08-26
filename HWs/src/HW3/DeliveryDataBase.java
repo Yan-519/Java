@@ -189,7 +189,7 @@ public class DeliveryDataBase {
 	public ArrayList<Restaurant> getOpenRestaurants(String kitchenType) {
 		ArrayList<Restaurant> openRestaurants = new ArrayList<>();
 		for (Restaurant restaurant : restaurants) {
-			if (restaurant.isOpen() && restaurant.getKitchenType().equalsIgnoreCase(kitchenType)) {
+			if (restaurant.getIsOpen() && restaurant.getKitchenType().equalsIgnoreCase(kitchenType)) {
 				openRestaurants.add(restaurant);
 			}
 		}
@@ -346,7 +346,7 @@ public class DeliveryDataBase {
 
 		Rider rider = getRider(riderId);
 		
-		if (!rider.isAvailable())
+		if (!rider.getIsAvailable())
 			throw new DeliveryPersonUnavailableException(rider.getName(), rider.getLastName());
 
 		if (order.getRiderId() != null) 
@@ -404,7 +404,7 @@ public class DeliveryDataBase {
 	public ArrayList<Restaurant> getOpenRestaurants(){
 		ArrayList<Restaurant> res = new ArrayList<Restaurant>();
 		for(Restaurant restaurant: restaurants)
-			if(restaurant.isOpen())
+			if(restaurant.getIsOpen())
 				res.add(restaurant);
 		return res;
 	}
@@ -428,7 +428,7 @@ public class DeliveryDataBase {
 	// switch between open and close restaurant by code
 	public void changeRestaurantStatus(int code) throws CodedNotFoundException, TargetObjectDoesntExistException {
 		Restaurant restaurant = getRestaurant(code);
-		restaurant.setOpen(!restaurant.isOpen());
+		restaurant.setOpen(!restaurant.getIsOpen());
 	}
 
 	public void sortRidersByDeliverdCount() {
@@ -499,8 +499,8 @@ public class DeliveryDataBase {
 		this.restAdmins = restAdmins;
 	}
 	
-	public void loadRestAdmins(ArrayList<ConvertorHolder<RestAdmin>> restAdmins) throws CodedNotFoundException, TargetObjectDoesntExistException {
-		for(ConvertorHolder<RestAdmin> convertorHolder : restAdmins) {
+	public void loadRestAdmins(ArrayList<ConvertorHolder<? extends RestAdmin>> restAdmins) throws CodedNotFoundException, TargetObjectDoesntExistException {
+		for(ConvertorHolder<? extends  RestAdmin> convertorHolder : restAdmins) {
 			RestAdmin restAdmin = convertorHolder.output;
 			for(Integer code : convertorHolder.codes)
 				restAdmin.addRestaurant(getRestaurant(code));
@@ -521,11 +521,15 @@ public class DeliveryDataBase {
 		this.riders = riders;
 	}
 	
-	public void loadRiders(ArrayList<ConvertorHolder<Rider>> riders) throws TargetObjectDoesntExistException, TargetObjectAlreadyExistException, CodedNotFoundException {
-		for(ConvertorHolder<Rider> convertorHolder : riders) {
+	public void loadRiders(ArrayList<ConvertorHolder<? extends  Rider>> riders)
+			throws TargetObjectDoesntExistException, TargetObjectAlreadyExistException, CodedNotFoundException, DeliveryPersonUnavailableException {
+		for(ConvertorHolder<? extends Rider> convertorHolder : riders) {
 			Rider rider = convertorHolder.output;
 			for(Integer code : convertorHolder.codes)
 				rider.addDeliverdOrder(getOrder(code));
+			
+			if(convertorHolder.additional != null)
+				rider.setCurrentOrder(getOrder(convertorHolder.additional));
 			
 			this.riders.add(rider);
 		}

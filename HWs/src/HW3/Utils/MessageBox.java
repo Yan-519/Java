@@ -27,7 +27,7 @@ public class MessageBox {
 	}
 	
 	public static void error(String title, Exception header) {
-		show(AlertType.ERROR, title, header.getMessage(), null);
+		show(AlertType.ERROR, title, header.getMessage(), header.getClass().getSimpleName());
 	}
 	
 

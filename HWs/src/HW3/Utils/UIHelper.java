@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import HW3.DataObjects.Customer;
 import HW3.DataObjects.Order;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,6 +20,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class UIHelper {
 
@@ -85,37 +89,5 @@ public class UIHelper {
         grid.setHgap(10);
         grid.setVgap(10);
         return grid;
-    }
-    
-    public static void showList(Stage stage, Stream<?> lst, Runnable backF) {
-    	ObservableList<String> observables = 
-    			FXCollections.observableArrayList(lst.map(Object::toString).toList());
-    	
-    	if(observables.isEmpty()) {
-    		MessageBox.Info("No values found");
-    		return;
-    	}
-
-    	ListView<String> listView = new ListView<>(observables);
-    	
-    	Button backButton = UIHelper.createButton("Back", e -> backF.run());
-    	
-    	VBox root = UIHelper.createVRoot();
-    	
-    	root.getChildren().addAll(listView, backButton);
-    	
-    	stage.setScene(new Scene(root, 300, 250));
-    }
-    
-    public static void showList(Stage stage, List<?> lst, Runnable backF) {
-    	showList(stage, lst.stream(), backF);
-    }
-    
-    public static void showList(Stage stage, List<Order> lst, Runnable backF, Order additional) {
-    	ArrayList<Order> orders = new ArrayList<Order>(lst);
-    	if(additional != null)
-    		orders.add(additional);
-    	
-    	showList(stage, orders.stream(), backF);
     }
 }

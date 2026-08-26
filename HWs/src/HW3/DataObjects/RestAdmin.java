@@ -5,6 +5,7 @@ import java.util.Set;
 
 import HW3.DataObjects.Helpers.Coded;
 import HW3.DataObjects.Helpers.ConvertorHolder;
+import HW3.Utils.MessageBox;
 
 public class RestAdmin extends Coded<RestAdmin> {
 	
@@ -56,7 +57,7 @@ public class RestAdmin extends Coded<RestAdmin> {
 	
 	// get all open restaurants
 	public ArrayList<Restaurant> getOpenRestaurants(){
-		return new ArrayList<Restaurant>(restaurants.stream().filter(r -> r.isOpen()).toList());
+		return new ArrayList<Restaurant>(restaurants.stream().filter(r -> r.getIsOpen()).toList());
 	}
 
 
@@ -96,14 +97,14 @@ public class RestAdmin extends Coded<RestAdmin> {
 
 	@Override
 	public String convert() {
-		ArrayList<Integer> orderCodes = new ArrayList<>(restaurants.stream().map(r -> r.getCode()).toList());
+		ArrayList<Integer> restCodes = new ArrayList<>(restaurants.stream().map(r -> r.getCode()).toList());
 
 		return joiner(
-			getCode(),
+			code,
 			name,
 			userName,
 			password,
-			orderCodes.isEmpty() ? "none" : orderCodes
+			restCodes
 		);
 	}
 

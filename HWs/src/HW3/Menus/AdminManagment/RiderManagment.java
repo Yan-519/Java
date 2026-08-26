@@ -8,6 +8,7 @@ import HW3.Exceptions.RiderNotFoundException;
 import HW3.Exceptions.TargetObjectAlreadyExistException;
 import HW3.Exceptions.TargetObjectDoesntExistException;
 import HW3.Menus.UIBase;
+import HW3.Menus.Tables;
 import javafx.stage.Stage;
 import HW3.Utils.DataSelector;
 import HW3.Utils.InputManager;
@@ -39,7 +40,7 @@ public class RiderManagment extends UIBase {
 	    grid.setAlignment(Pos.CENTER);
 
 	    Button showAllButton = UIHelper.createButton("Show All Riders", 
-	    		() -> UIHelper.showList(stage, deliveryDataBase.getRiders(), this::Main));
+	    		() -> Tables.rider(stage, deliveryDataBase.getRiders(), this::Main));
 	    Button addRiderButton = UIHelper.createButton("Add New Rider",  e -> {
                 	InputManager.createRider(stage, customer -> {
                 	    if (customer != null) {
@@ -61,13 +62,13 @@ public class RiderManagment extends UIBase {
 	    Button riderOrdersButton = UIHelper.createButton("Show Rider Orders", () ->{
 	    	Rider rider = DataSelector.selectRider();
 	    	if(rider == null) return;
-	    	UIHelper.showList(stage, rider.getDeliverdOrders(), this::Main, rider.getCurrentOrder());
+	    	Tables.order(stage, rider.getDeliverdOrders(), this::Main, rider.getCurrentOrder());
 	    });
 
 	    Button updateStatusButton = UIHelper.createButton("Update Order Status", () ->{
 	    	Rider rider = DataSelector.selectRider();
 	    	if(rider == null) return;
-	    	if(!rider.isAvailable())
+	    	if(!rider.getIsAvailable())
 	    	{
 	    		MessageBox.Info("The selected rider has no active order");
 	    		return;

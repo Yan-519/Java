@@ -134,7 +134,7 @@ public class DataManager {
 		return new DeliveryDataBase(new Admin("Admin", "admin", "12345"), customers, restaurants, riders, orders, admins);
 	}
 	
-	public static <T extends StringConverter<T>> ArrayList<ConvertorHolder<T>> load(Class<T> c) 
+	public static <T extends StringConverter<T>> ArrayList<ConvertorHolder<? extends T>> load(Class<T> c) 
 			throws Exception{
 		String fileName = c.getSimpleName().toUpperCase() + ".txt";
 		
@@ -143,7 +143,7 @@ public class DataManager {
 		if(!file.exists())
 			throw new TargetObjectDoesntExistException(file.getPath());
 		
-		ArrayList<ConvertorHolder<T>> res = new ArrayList<>();
+		ArrayList<ConvertorHolder<? extends T>> res = new ArrayList<>();
 		
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 				
@@ -151,7 +151,7 @@ public class DataManager {
 		
 		String line;
 		while ((line = bufferedReader.readLine()) != null) {
-			ConvertorHolder<T> t = empty.convert(line);
+			ConvertorHolder<? extends T> t = empty.convert(line);
 			if(t == null)
 				throw new TargetObjectDoesntExistException(line);
 			res.add(t);

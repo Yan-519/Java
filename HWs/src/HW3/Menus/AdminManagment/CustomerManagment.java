@@ -7,6 +7,7 @@ import HW3.DataObjects.Order.OrderStatus;
 import HW3.DeliveryDataBase.CodedType;
 import HW3.Exceptions.TargetObjectAlreadyExistException;
 import HW3.Exceptions.TargetObjectDoesntExistException;
+import HW3.Menus.Tables;
 import HW3.Menus.UIBase;
 import HW3.Utils.DataChecker;
 import HW3.Utils.DataSelector;
@@ -44,7 +45,7 @@ public class CustomerManagment extends UIBase {
 
         Button showCustomers = UIHelper.createButton(
                 "Show All Customers",
-                () -> UIHelper.showList(stage, deliveryDataBase.getCustomers(), this::Main)
+                () -> Tables.customer(stage, deliveryDataBase.getCustomers(), this::Main)
         );
 
         Button searchCustomer = UIHelper.createButton(
@@ -87,7 +88,7 @@ public class CustomerManagment extends UIBase {
                 	if(customer == null)
                 		Main();
                 	
-                	else UIHelper.showList(stage, deliveryDataBase.getOrdersOfCustomer(customer), this::Main);
+                	else Tables.order(stage, deliveryDataBase.getOrdersOfCustomer(customer), this::Main);
                 }
         );
 
@@ -103,7 +104,7 @@ public class CustomerManagment extends UIBase {
                 	if(customer == null)
                 		Main();
                 	
-                	else UIHelper.showList(stage, deliveryDataBase.getRestaurantasBuyCustomer(customer.getCode()), this::Main);
+                	else Tables.restaurant(stage, deliveryDataBase.getRestaurantasBuyCustomer(customer.getCode()), this::Main);
                 }
         );
 
@@ -114,7 +115,7 @@ public class CustomerManagment extends UIBase {
                 	if(customer == null)
                 		Main();
                 	
-                	else UIHelper.showList(stage, deliveryDataBase.getPremiumRestaurantsByCustomer(customer), this::Main);
+                	else Tables.restaurant(stage, deliveryDataBase.getPremiumRestaurantsByCustomer(customer), this::Main);
                 }
 
         );

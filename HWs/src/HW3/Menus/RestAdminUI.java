@@ -88,7 +88,7 @@ public class RestAdminUI extends UIBase  {
 	    grid.setAlignment(Pos.CENTER);
 
 	    Button viewRestaurantsButton = UIHelper.createButton("View My Restaurants", 
-	    		() -> UIHelper.showList(stage, restAdmin.getRestaurants(), this::Main));
+	    		() -> Tables.restaurant(stage, restAdmin.getRestaurants(), this::Main));
 	    Button addCustomerButton = UIHelper.createButton("Add New Customer", this::addNewCustomer);
 
 	    Button addOrderButton = UIHelper.createButton("Add New Order", this::addNewOrder);
@@ -151,7 +151,7 @@ public class RestAdminUI extends UIBase  {
 	    }
 
 	    Restaurant restaurant = DataSelector.dataFilter(DataSelector::selectRestaurant, 
-	            r -> restAdmin.containsRestaurant(r.getCode()) && r.isOpen(), 
+	            r -> restAdmin.containsRestaurant(r.getCode()) && r.getIsOpen(), 
 	            "Please select an open restaurant under your management.");
 	    if (restaurant == null) return;
 
@@ -175,7 +175,7 @@ public class RestAdminUI extends UIBase  {
 	}
 
 	private void assignRiderToOrder() {
-	    Rider rider = DataSelector.dataFilter(DataSelector::selectRider, Rider::isAvailable, "Please select an available rider.");
+	    Rider rider = DataSelector.dataFilter(DataSelector::selectRider, Rider::getIsAvailable, "Please select an available rider.");
 	    if (rider == null) return;
 
 	    Order order = DataSelector.dataFilter(DataSelector::selectOrder, 
@@ -202,7 +202,7 @@ public class RestAdminUI extends UIBase  {
 	            "Please select a restaurant under your management.");
 	    if (rest == null) return;
 
-	    UIHelper.showList(stage, deliveryDataBase.getOrdersByuRestaurant(rest.getCode()), this::Main);
+	    Tables.order(stage, deliveryDataBase.getOrdersByuRestaurant(rest.getCode()), this::Main);
 	}
 
 	private void showOpenRestaurantsByKitchen() {
@@ -216,7 +216,7 @@ public class RestAdminUI extends UIBase  {
 	    if (filtered.isEmpty()) {
 	        MessageBox.Info("Notice", "No open matching restaurants found under your management.");
 	    } else {
-	        UIHelper.showList(stage, filtered, this::Main);
+	    	Tables.restaurant(stage, filtered, this::Main);
 	    }
 	}
 
@@ -243,13 +243,13 @@ public class RestAdminUI extends UIBase  {
 	            "Please select a restaurant under your management.");
 	    if (restaurant == null) return;
 
-	    boolean currentStatus = restaurant.isOpen();
+	    boolean currentStatus = restaurant.getIsOpen();
 	    boolean change = MessageBox.inputBOOL(null, "Restaurant is currently " + (currentStatus ? "OPEN" : "CLOSED") + ". Toggle status?", null, false);
 	    
 	    if (change) {
 	        try {
 	            deliveryDataBase.changeRestaurantStatus(restaurant.getCode());
-	            MessageBox.Info("Success", "Restaurant status changed to " + (restaurant.isOpen() ? "OPEN" : "CLOSED"));
+	            MessageBox.Info("Success", "Restaurant status changed to " + (restaurant.getIsOpen() ? "OPEN" : "CLOSED"));
 	        } catch (Exception e) {
 	            MessageBox.error(e);
 	        }

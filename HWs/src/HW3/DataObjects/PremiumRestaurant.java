@@ -13,12 +13,20 @@ public class PremiumRestaurant extends Restaurant {
 		this.minimumOrderCost = minimumOrderCost;
 		this.additionalCommissionPercentagePerOrder = Math.max(additionalCommissionPercentagePerOrder, 0);
 	}
+	
+	
 
 	
+	public PremiumRestaurant() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
 	@Override
 	public String toString() {
 		return "PremiumRestaurant [minimumOrderCost=" + minimumOrderCost + ", additionalCommissionPercentagePerOrder="
-				+ additionalCommissionPercentagePerOrder + ", code=" + getCode() + ", name=" + name + ", kitchenType="
+				+ additionalCommissionPercentagePerOrder + ", code=" + code + ", name=" + name + ", kitchenType="
 				+ kitchenType + ", rating=" + rating + ", isOpen=" + isOpen + ", baseDeliveryFee=" + baseDeliveryFee
 				+ "]";
 	}
@@ -44,7 +52,7 @@ public class PremiumRestaurant extends Restaurant {
 	@Override
 	public String convert() {
 		return joiner(
-			getCode(),
+			code,
 			name,
 			kitchenType,
 			rating,
@@ -56,7 +64,7 @@ public class PremiumRestaurant extends Restaurant {
 	}
 
 	@Override
-	public ConvertorHolder convert(String in) {
+	public ConvertorHolder<PremiumRestaurant> convert(String in) {
 		if (in == null || in.trim().isEmpty()) {
 			return null;
 		}

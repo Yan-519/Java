@@ -41,7 +41,7 @@ public class Restaurant extends Coded<Restaurant> {
 		return rating;
 	}
 	
-	public boolean isOpen() {
+	public boolean getIsOpen() {
 		return isOpen;
 	}
 	
@@ -78,17 +78,24 @@ public class Restaurant extends Coded<Restaurant> {
 	@Override
 	public String convert() {
 		return joiner(
-			getCode(),
+			code,
 			name,
 			kitchenType,
 			rating,
 			isOpen,
 			baseDeliveryFee
-		).trim();
+		);
 	}
 
 	@Override
-	public ConvertorHolder<Restaurant> convert(String in) {
+	public ConvertorHolder<? extends Restaurant> convert(String in) {
+		try {
+			if(!in.trim().split(" ")[6].contains("."))
+				return (new FastFoodRestaurant()).convert(in);
+			return (new PremiumRestaurant()).convert(in);
+		} catch (Exception e) {
+		}
+		
 		if (in == null || in.trim().isEmpty()) {
 			return null;
 		}

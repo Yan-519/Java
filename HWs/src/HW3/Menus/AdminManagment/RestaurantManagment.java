@@ -6,6 +6,7 @@ import HW3.DataObjects.Restaurant;
 import HW3.Exceptions.CodedNotFoundException;
 import HW3.Exceptions.TargetObjectAlreadyExistException;
 import HW3.Exceptions.TargetObjectDoesntExistException;
+import HW3.Menus.Tables;
 import HW3.Menus.UIBase;
 import HW3.Utils.DataSelector;
 import HW3.Utils.InputManager;
@@ -40,7 +41,7 @@ public class RestaurantManagment extends UIBase {
         grid.setAlignment(Pos.CENTER);
 
         Button showAllButton = UIHelper.createButton("Show All Restaurants", e -> {
-        	UIHelper.showList(stage, deliveryDataBase.getRestaurants(), this::Main);
+        	Tables.restaurant(stage, deliveryDataBase.getRestaurants(), this::Main);
         });
         Button searchByCodeButton = UIHelper.createButton("Search Restaurant by Code", 
         		() -> MessageBox.Info(DataSelector.selectRestaurant()));
@@ -60,12 +61,12 @@ public class RestaurantManagment extends UIBase {
         		});
         
         Button openRestaurantButton = UIHelper.createButton("Open Restaurant", () ->{
-        	Restaurant restaurant = DataSelector.dataFilter(DataSelector::selectRestaurant, r -> !r.isOpen(), "Select a close restaurant");
+        	Restaurant restaurant = DataSelector.dataFilter(DataSelector::selectRestaurant, r -> !r.getIsOpen(), "Select a close restaurant");
         	if(restaurant == null) return;
         	restaurant.setOpen(true);
         });
         Button closeRestaurantButton = UIHelper.createButton("Close Restaurant", () ->{
-        	Restaurant restaurant = DataSelector.dataFilter(DataSelector::selectRestaurant, r -> r.isOpen(), "Select an open restaurant");
+        	Restaurant restaurant = DataSelector.dataFilter(DataSelector::selectRestaurant, r -> r.getIsOpen(), "Select an open restaurant");
         	if(restaurant == null) return;
         	restaurant.setOpen(false);
         });
@@ -73,11 +74,11 @@ public class RestaurantManagment extends UIBase {
         Button filterByTypeButton = UIHelper.createButton("Show Restaurants by Type", () -> {
 			String type = MessageBox.inputSTR(null, "Enter restauran kitchen type", null);
 			if(type == null) return;
-			UIHelper.showList(stage,
-					deliveryDataBase.getRestaurants().stream().filter(r -> r.getKitchenType().equalsIgnoreCase(type)), this::Main);
+			Tables.restaurant(stage,
+					deliveryDataBase.getRestaurants().stream().filter(r -> r.getKitchenType().equalsIgnoreCase(type)).toList(), this::Main);
 		});
         Button filterOpenOnlyButton = UIHelper.createButton("Show Open Restaurants Only", () ->
-        	UIHelper.showList(stage, deliveryDataBase.getRestaurants().stream().filter(r -> r.isOpen()), this::Main)
+        Tables.restaurant(stage, deliveryDataBase.getRestaurants().stream().filter(r -> r.getIsOpen()).toList(), this::Main)
         );
 
         Button backButton = UIHelper.createButton("Back", backF);
