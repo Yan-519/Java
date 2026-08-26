@@ -145,6 +145,7 @@ public class CustomerUI extends UIBase  {
 		}
 		
 		Restaurant restaurant = DataSelector.dataFilter(DataSelector::selectRestaurant, r -> r.getIsOpen(), "The selected restaurant in colse");
+		if(restaurant == null) return;
 	
 		Double basePrice = MessageBox.inputDOUB(null, "Enter the base fee (not negative)", NumberSign.NOT_NEGATIVE);
 		if(basePrice == null) return;

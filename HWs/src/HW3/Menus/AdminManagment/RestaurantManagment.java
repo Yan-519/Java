@@ -52,7 +52,8 @@ public class RestaurantManagment extends UIBase {
         			Restaurant restaurant = DataSelector.selectRestaurant();
         			if(restaurant == null) return;
         			
-        			double raiting = MessageBox.inputDOUB(null, "Enter new raiting  (0-5)", 5);
+        			Double raiting = MessageBox.inputDOUB(null, "Enter new raiting  (0-5)", 5);
+        			if(raiting == null) return;
         			try {
 						deliveryDataBase.updateRestaurantRaiting(restaurant.getCode(), raiting);
 					} catch (CodedNotFoundException | TargetObjectDoesntExistException e1) {
@@ -111,10 +112,13 @@ public class RestaurantManagment extends UIBase {
 			MessageBox.error(e);
 			return;
 		}
-    	
-    	switch (MessageBox.inputSelect("Regular", "Fast food", "Primium")) {
-		case "Regular": 
-	    	InputManager.createRestaurant(stage, code, rest -> {
+		
+		String type = MessageBox.inputSelect("Regular", "Fast food", "Primium");
+		if(type == null) return;
+		
+		
+		else if(type.equals("Regular")) {
+			InputManager.createRestaurant(stage, code, rest -> {
 	    	    if (rest != null) {
 	    	    	try {
 	        	        deliveryDataBase.add(rest);
@@ -125,37 +129,33 @@ public class RestaurantManagment extends UIBase {
 	    	    }
 	    	    Main();
 	    	});
-
-		case "Fast food": 
-	    	InputManager.createFastFoodRestaurant(stage, code, rest -> {
-	    	    if (rest != null) {
-	    	    	try {
-	        	        deliveryDataBase.add(rest);
-	        	        MessageBox.Info("The customer code is " + code);
-	        	    } catch (TargetObjectAlreadyExistException ex) {
-	        	        MessageBox.error(ex);
-	        	    }
-	    	    }
-	    	    Main();
-	    	});
-
-		case "Primium": 
-	    	InputManager.createPremiumRestaurant(stage, code, rest -> {
-	    	    if (rest != null) {
-	    	    	try {
-	        	        deliveryDataBase.add(rest);
-	        	        MessageBox.Info("The customer code is " + code);
-	        	    } catch (TargetObjectAlreadyExistException ex) {
-	        	        MessageBox.error(ex);
-	        	    }
-	    	    }
-	    	    Main();
-	    	});
-			
-		default: return;
 		}
-    	
-
+		else if(type.equals("Fast food")) {
+			InputManager.createFastFoodRestaurant(stage, code, rest -> {
+	    	    if (rest != null) {
+	    	    	try {
+	        	        deliveryDataBase.add(rest);
+	        	        MessageBox.Info("The customer code is " + code);
+	        	    } catch (TargetObjectAlreadyExistException ex) {
+	        	        MessageBox.error(ex);
+	        	    }
+	    	    }
+	    	    Main();
+	    	});
+		}
+		else if(type.equals("Primium")) {
+			InputManager.createPremiumRestaurant(stage, code, rest -> {
+	    	    if (rest != null) {
+	    	    	try {
+	        	        deliveryDataBase.add(rest);
+	        	        MessageBox.Info("The customer code is " + code);
+	        	    } catch (TargetObjectAlreadyExistException ex) {
+	        	        MessageBox.error(ex);
+	        	    }
+	    	    }
+	    	    Main();
+	    	});
+		}
     }
 
 }
