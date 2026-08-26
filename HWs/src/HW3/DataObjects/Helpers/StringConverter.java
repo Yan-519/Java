@@ -7,10 +7,11 @@ import HW3.DataObjects.Date;
 public abstract class StringConverter<T> {
 	public static final String emptyList = "none", nullObject = "null"; 
 	
-	
+	// converting object to string and from it
     public abstract ConvertorHolder<? extends T> convert(String in) throws Exception;
     public abstract String convert() throws Exception;
     
+    // joining object values into string
     protected String joiner(Object...objects) {
     	StringBuilder stringBuilder = new StringBuilder();
     	for (Object object : objects) {

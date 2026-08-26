@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
 	@Override
-    public void start(Stage stage) {
+    public void start(@SuppressWarnings("exports") Stage stage) {
         MainUI menuManager;
 		try {
 			menuManager = new MainUI(stage);

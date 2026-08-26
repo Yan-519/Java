@@ -5,7 +5,6 @@ import java.util.Set;
 
 import HW3.DataObjects.Helpers.Coded;
 import HW3.DataObjects.Helpers.ConvertorHolder;
-import HW3.Utils.MessageBox;
 
 public class RestAdmin extends Coded<RestAdmin> {
 	
@@ -47,6 +46,7 @@ public class RestAdmin extends Coded<RestAdmin> {
 		return Coded.isContains(restaurants, code);
 	}
 	
+	// remove restaurant from list
 	public void removeRestaurants(Set<Integer> codes) {
 		restaurants = new ArrayList<Restaurant>(restaurants.stream().filter(r -> !codes.contains(r.getCode())).toList());
 	}

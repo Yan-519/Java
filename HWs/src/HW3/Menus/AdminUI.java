@@ -43,39 +43,39 @@ public class AdminUI extends UIBase {
 		reportsUI = new ReportsUI(stage, deliveryDataBase, this::Main);
 	}
 
-//	@Override
-//	public void Auth() {
-//        VBox root = UIHelper.createVRoot();
-//
-//        Label title = new Label("System Administrator Login");
-//
-//        TextField username = new TextField();
-//        username.setPromptText("Username");
-//        username.setMaxWidth(300);
-//
-//        PasswordField password = new PasswordField();
-//        password.setPromptText("Password");
-//        password.setMaxWidth(300);
-//
-//        Button loginButton = UIHelper.createButton("Login", () -> {
-//        	if (deliveryDataBase.logIntoAdmin(username.getText(), password.getText())) 
-//                Main();
-//            
-//            else MessageBox.error("Login Error", "Incorrect username or password.");
-//        });
-//        
-//        Button backButton = UIHelper.createButton("Back", backF);
-//        
-//        root.getChildren().addAll(
-//                title,
-//                username,
-//                password,
-//                loginButton,
-//                backButton
-//        );
-//
-//        stage.setScene(new Scene(root, 500, 400));
-//	}
+	@Override
+	public void Auth() {
+        VBox root = UIHelper.createVRoot();
+
+        Label title = new Label("System Administrator Login");
+
+        TextField username = new TextField();
+        username.setPromptText("Username");
+        username.setMaxWidth(300);
+
+        PasswordField password = new PasswordField();
+        password.setPromptText("Password");
+        password.setMaxWidth(300);
+
+        Button loginButton = UIHelper.createButton("Login", () -> {
+        	if (deliveryDataBase.logIntoAdmin(username.getText(), password.getText())) 
+                Main();
+            
+            else MessageBox.error("Login Error", "Incorrect username or password.");
+        });
+        
+        Button backButton = UIHelper.createButton("Back", backF);
+        
+        root.getChildren().addAll(
+                title,
+                username,
+                password,
+                loginButton,
+                backButton
+        );
+
+        stage.setScene(new Scene(root, 500, 400));
+	}
 	
 
 	@Override
@@ -131,6 +131,7 @@ public class AdminUI extends UIBase {
 
     }
     
+	// save action
     private void saveData() {
     	if(!MessageBox.inputBOOL("Save", "Are you shure you want to save", null, false))
     		return;
@@ -146,7 +147,8 @@ public class AdminUI extends UIBase {
             MessageBox.error("Save Error", e);
         }
     }
-
+    
+    // load action
     private void loadData() {
     	if(!MessageBox.inputBOOL("Load", "Are you shure you want to load", null, false))
     		return;

@@ -1,12 +1,9 @@
 package HW3.Menus;
 
-import java.util.List;
-
 import HW3.DeliveryDataBase;
 import HW3.DataObjects.Customer;
 import HW3.DataObjects.Restaurant;
 import HW3.Exceptions.CodedNotFoundException;
-import HW3.Exceptions.InsufficientBalanceException;
 import HW3.Exceptions.TargetObjectDoesntExistException;
 import HW3.Utils.DataChecker;
 import HW3.Utils.DataSelector;
@@ -14,17 +11,12 @@ import HW3.Utils.InputManager;
 import HW3.Utils.MessageBox;
 import HW3.Utils.MessageBox.NumberSign;
 import HW3.Utils.UIHelper;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -47,10 +39,7 @@ public class CustomerUI extends UIBase  {
         TextField code = new TextField();
         code.setPromptText("Customer Code");
 
-        Button loginButton = UIHelper.createButton("Login");
-        Button backButton = UIHelper.createButton("Back");
-
-        loginButton.setOnAction(e -> {
+        Button loginButton = UIHelper.createButton("Login", e -> {
         	try {
         		customer = deliveryDataBase.getCustomer(Integer.valueOf(code.getText()));
 				Main();
@@ -60,6 +49,7 @@ public class CustomerUI extends UIBase  {
 				MessageBox.error("Code must be a number", ex);
 			}
         });
+        Button backButton = UIHelper.createButton("Back", e -> backF.run());
 
         backButton.setOnAction( e -> backF.run());
 

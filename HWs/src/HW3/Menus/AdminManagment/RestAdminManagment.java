@@ -106,10 +106,8 @@ public class RestAdminManagment extends UIBase {
 
 	
 	private static VBox createCodedSelectionView(List<Restaurant> items, Consumer<HashSet<Integer>> onFinish) {
-        // Track selected items using their toString representation
 		HashSet<Integer> selected = new HashSet<>();
 
-        // Setup ListView with custom cells
         ListView<Restaurant> listView = new ListView<>(FXCollections.observableArrayList(items));
         listView.setCellFactory(param -> new ListCell<>() {
             private final CheckBox checkBox = new CheckBox();

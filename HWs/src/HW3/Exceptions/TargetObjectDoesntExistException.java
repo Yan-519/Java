@@ -1,5 +1,6 @@
 package HW3.Exceptions;
 
+@SuppressWarnings("serial")
 public class TargetObjectDoesntExistException extends Exception {
 	
 	public TargetObjectDoesntExistException(String auth) {

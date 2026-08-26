@@ -1,7 +1,5 @@
 package HW3.Menus;
 
-import java.util.List;
-
 import HW3.DeliveryDataBase;
 import HW3.DataObjects.Order.OrderStatus;
 import HW3.DataObjects.*;
@@ -9,17 +7,12 @@ import HW3.Exceptions.*;
 import HW3.Utils.InputManager;
 import HW3.Utils.MessageBox;
 import HW3.Utils.UIHelper;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -42,10 +35,7 @@ public class RiderUI extends UIBase  {
         TextField code = new TextField();
         code.setPromptText("Rider ID");
 
-        Button loginButton = UIHelper.createButton("Login");
-        Button backButton = UIHelper.createButton("Back");
-
-        loginButton.setOnAction(e -> {
+        Button loginButton = UIHelper.createButton("Login", e -> {
         	try {
 				rider = deliveryDataBase.getRider(code.getText());
 				Main();
@@ -53,8 +43,8 @@ public class RiderUI extends UIBase  {
 				MessageBox.error(e1);
 			}
         });
-
-        backButton.setOnAction( e -> backF.run());
+        
+        Button backButton = UIHelper.createButton("Back", e -> backF.run());
 
         root.getChildren().addAll(
                 title,
@@ -128,7 +118,6 @@ public class RiderUI extends UIBase  {
 	    }
 	    
 	    try {
-	        // Passing null for date when changing from Created to OnTheWay[cite: 1]
 	        deliveryDataBase.updateDeliveryStatus(rider.getId(), null);
 	        MessageBox.Info("Success", "Order status updated to 'On the Way'.");
 	    } catch (RiderNotFoundException | TargetObjectDoesntExistException e) {
@@ -147,7 +136,6 @@ public class RiderUI extends UIBase  {
 	        return;
 	    }
 	    
-	    // Request a delivery date that is after the ordering date[cite: 1]
 	    InputManager.createDateAfterDate(stage, rider.getCurrentOrder().getOrderingDate(), date -> {
 	        if (date != null) {
 	            try {

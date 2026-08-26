@@ -19,7 +19,6 @@ public class PremiumRestaurant extends Restaurant {
 	
 	public PremiumRestaurant() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 

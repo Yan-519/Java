@@ -18,7 +18,6 @@ public class FastFoodRestaurant extends Restaurant {
 	
 	public FastFoodRestaurant() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 

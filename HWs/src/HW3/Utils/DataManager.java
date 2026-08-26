@@ -134,6 +134,7 @@ public class DataManager {
 		return new DeliveryDataBase(new Admin("Admin", "admin", "12345"), customers, restaurants, riders, orders, admins);
 	}
 	
+	// Load class c from memory
 	public static <T extends StringConverter<T>> ArrayList<ConvertorHolder<? extends T>> load(Class<T> c) 
 			throws Exception{
 		String fileName = c.getSimpleName().toUpperCase() + ".txt";
@@ -162,6 +163,7 @@ public class DataManager {
 		return res;
 	}
 
+	// save class c (arr) to memory
 	public static <T extends StringConverter<T>> void save(ArrayList<T> arr, Class<T> c) throws Exception {
 		String fileName = c.getSimpleName().toUpperCase() + ".txt";
 		

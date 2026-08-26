@@ -3,8 +3,11 @@ package HW3.DataObjects.Helpers;
 import java.util.ArrayList;
 
 public class ConvertorHolder<T> {
+	// the output object
 	public final T output;
+	// the codes it depends on
 	public final ArrayList<Integer> codes;
+	// for rider current order code
 	public final Integer additional;
 	
 	public ConvertorHolder(T outpu, ArrayList<Integer> codes) {

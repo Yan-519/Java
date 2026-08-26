@@ -70,10 +70,12 @@ public class MessageBox {
 		return DataSelector.dataFilter( () -> baseString(title, header, text), s -> !s.isEmpty(), "Invalide text input (empty or blanck)");
 	}
 	
+	// input a string the is a valid string
 	public static String inputSTR(String title, String header, boolean isName) {
 		return DataSelector.dataFilter(() -> inputSTR(header, header, "Only letters and spaces"), s -> DataChecker.isValidName(s), "Not valide name"); 
 	}
 	
+	// input int
 	public static Integer inputINT(String title, String header, String text) {
 
 		String n = DataSelector.dataFilter(() -> inputSTR(title, header, text + "[Integer]"), 
@@ -91,7 +93,7 @@ public class MessageBox {
 		return Integer.valueOf(n);
 	}
 	
-
+	// input in with sign check
 	public static Integer inputINT(String title, String header, NumberSign inputSign) {
 		
 		return DataSelector.dataFilter(() -> inputINT(title, header, inputSign.toString()) ,
@@ -103,6 +105,7 @@ public class MessageBox {
 		, "Wronge sign");
 	}
 	
+	// double input
 	public static Double inputDOUB(String title, String header, String text) {
 		String n = DataSelector.dataFilter(() -> inputSTR(title, header, text + "[Double]"), 
 				str -> {
@@ -119,7 +122,7 @@ public class MessageBox {
 		return Double.valueOf(n);
 	}
 	
-
+	// double input with sign check
 	public static Double inputDOUB(String title, String header, NumberSign inputSign) {
 		return DataSelector.dataFilter(() -> inputDOUB(title, header, inputSign.toString()) ,
 				n -> {
@@ -130,6 +133,7 @@ public class MessageBox {
 		, "Wronge sign");
 	}
 
+	// not negative double input with max check
 	public static Double inputDOUB(String title, String header, double max) {
 		return DataSelector.dataFilter(() -> 
 			inputDOUB(title, header, NumberSign.NOT_NEGATIVE),
@@ -137,7 +141,7 @@ public class MessageBox {
 			"Input beyond limit");
 	}
 	
-
+	// ask user yes/no Q (boolean isNull if user cancld action checks between output null and false)
 	public static Boolean inputBOOL(String title, String header, String taxt, boolean isNull) {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		if(title != null)
@@ -157,14 +161,12 @@ public class MessageBox {
 		return false;
 	}
 	
-	public static Boolean inputBOOL(String header, boolean isNull) {
-		return inputBOOL(null, header, null, isNull);
-	}
-	
-	public static Boolean inputBOOL(String header) {
+	// yes/no Q that gives boolean not Boolean
+	public static boolean inputBOOL(String header) {
 		return inputBOOL(null, header, null, false);
 	}
 	
+	// user select one option of the given
 	public static String inputSelect(String... options) {
 		if(options.length == 0) return null;
 		

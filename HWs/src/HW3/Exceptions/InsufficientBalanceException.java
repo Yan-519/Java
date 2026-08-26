@@ -1,5 +1,6 @@
 package HW3.Exceptions;
 
+@SuppressWarnings("serial")
 public class InsufficientBalanceException extends Exception {
 
 	public InsufficientBalanceException(double balance, double cost) {

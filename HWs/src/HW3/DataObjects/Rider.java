@@ -33,7 +33,8 @@ public class Rider extends StringConverter<Rider> {
 	
 
 	public Rider() {id = "";}
-
+	
+	// adding a delivered order (for loading from memo)
 	public void addDeliverdOrder(Order order) throws TargetObjectDoesntExistException, TargetObjectAlreadyExistException {
 		if(order == null)
 			throw new TargetObjectDoesntExistException("Deliverd order");

@@ -2,6 +2,7 @@ package HW3.Exceptions;
 
 import HW3.DataObjects.RestAdmin;
 
+@SuppressWarnings("serial")
 public class RestAdminNotFoundException extends CodedNotFoundException {
 
 	public RestAdminNotFoundException(int code) {

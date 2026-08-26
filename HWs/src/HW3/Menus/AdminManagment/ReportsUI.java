@@ -17,8 +17,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
-import java.util.stream.Collectors;
-
 public class ReportsUI extends UIBase {
 
 	public ReportsUI(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
@@ -91,7 +89,6 @@ public class ReportsUI extends UIBase {
 
         Button backButton = UIHelper.createButton("Back", backF);
 
-        // Adding to grid
         grid.add(sortCustomersByBalanceButton, 0, 0);
         grid.add(sortCustomersByNameButton, 1, 0);
 

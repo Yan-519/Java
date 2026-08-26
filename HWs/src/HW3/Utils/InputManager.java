@@ -172,41 +172,6 @@ public class InputManager {
         stage.show();
     }
 
-    // Creates a new RestAdmin
-    public static void createRestAdmin(Stage stage, int code, Consumer<RestAdmin> callback) {
-        GridPane grid = createGrid();
-
-        TextField nameField = new TextField();
-        TextField usernameField = new TextField();
-        PasswordField passwordField = new PasswordField();
-
-        grid.add(new Label("Name:"), 0, 0); grid.add(nameField, 1, 0);
-        grid.add(new Label("Username:"), 0, 1); grid.add(usernameField, 1, 1);
-        grid.add(new Label("Password (Numeric):"), 0, 2); grid.add(passwordField, 1, 2);
-
-        VBox root = createBaseFormLayout("Create Restaurant Admin", grid, () -> {
-            String name = nameField.getText().trim();
-            String username = usernameField.getText().trim();
-            String passStr = passwordField.getText().trim();
-
-            if (name.isEmpty() || username.isEmpty()) {
-                MessageBox.error("Validation Error", "Name and Username are required.");
-                return;
-            }
-
-            try {
-                callback.accept(new RestAdmin(code, name, username, passStr));
-            } catch (NumberFormatException e) {
-                MessageBox.error("Validation Error", "Password must be a numeric integer.");
-            }
-        }, () -> callback.accept(null));
-
-        stage.setOnCloseRequest(e -> callback.accept(null));
-        stage.setScene(new Scene(root, 400, 250));
-        stage.setTitle("Create Rest Admin");
-        stage.show();
-    }
-
     // Creates a new Restaurant
     public static void createRestaurant(Stage stage, int code, Consumer<Restaurant> callback) {
         GridPane grid = createGrid();

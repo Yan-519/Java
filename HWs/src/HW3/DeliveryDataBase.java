@@ -261,15 +261,6 @@ public class DeliveryDataBase {
 		return ordersByCustomer.getOrDefault(customer.getCode(), new ArrayList<>());
 	}
 	
-	// get Orders Of RestAdmin
-	public ArrayList<Order> getOrdersOfRestAdmin(int code) throws CodedNotFoundException, TargetObjectDoesntExistException{
-		RestAdmin restAdmin = Coded.getCoded(restAdmins, code, RestAdmin.class);
-		ArrayList<Order> ords = new ArrayList<>();
-		for(Restaurant restaurant : restAdmin.getRestaurants())
-			ords.addAll(getOrdersByuRestaurant(restaurant.getCode()));
-
-		return ords;
-	}
 	
 	// adds a Customer (if exists -> throws exception)
 	public void add(Customer customer) throws TargetObjectAlreadyExistException {
@@ -282,16 +273,6 @@ public class DeliveryDataBase {
 	    customers.add(customer);
 	}
 
-	// adds a RestAdmin (if exists -> throws exception)
-	public void add(RestAdmin admin) throws TargetObjectAlreadyExistException {
-	    if (admin == null)
-	    	throw new NullPointerException("Added object cant be null");
-
-	    if (restAdmins.contains(admin))
-	        throw new TargetObjectAlreadyExistException(admin.toString());
-
-	    restAdmins.add(admin);
-	}
 
 	// adds a Restaurant (if exists -> throws exception)
 	public void add(Restaurant restaurant) throws TargetObjectAlreadyExistException {
@@ -304,7 +285,7 @@ public class DeliveryDataBase {
 	    restaurants.add(restaurant);
 	}
 	
-	
+	// add s Rider (if exists -> throws exception)
 	public void add(Rider rider) throws TargetObjectAlreadyExistException {
 		if (rider == null)
 	    	throw new NullPointerException("Added object cant be null");
@@ -395,6 +376,7 @@ public class DeliveryDataBase {
 		getCustomer(code).setBalance(balance);
 	}
 	
+	// Updating the raiting of a restaurant by code
 	public void updateRestaurantRaiting(int code, double reiting) throws CodedNotFoundException, TargetObjectDoesntExistException {
 		Restaurant restaurant = getRestaurant(code);
 		restaurant.setRating(reiting);
@@ -499,6 +481,7 @@ public class DeliveryDataBase {
 		this.restAdmins = restAdmins;
 	}
 	
+	// Loads RestAdmins from memory with their restaurants
 	public void loadRestAdmins(ArrayList<ConvertorHolder<? extends RestAdmin>> restAdmins) throws CodedNotFoundException, TargetObjectDoesntExistException {
 		for(ConvertorHolder<? extends  RestAdmin> convertorHolder : restAdmins) {
 			RestAdmin restAdmin = convertorHolder.output;
@@ -521,6 +504,7 @@ public class DeliveryDataBase {
 		this.riders = riders;
 	}
 	
+	// Loads Riders from memo with their orders
 	public void loadRiders(ArrayList<ConvertorHolder<? extends  Rider>> riders)
 			throws TargetObjectDoesntExistException, TargetObjectAlreadyExistException, CodedNotFoundException, DeliveryPersonUnavailableException {
 		for(ConvertorHolder<? extends Rider> convertorHolder : riders) {

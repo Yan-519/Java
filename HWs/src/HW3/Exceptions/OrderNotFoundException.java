@@ -2,6 +2,7 @@ package HW3.Exceptions;
 
 import HW3.DataObjects.Order;
 
+@SuppressWarnings("serial")
 public class OrderNotFoundException extends CodedNotFoundException {
 
 	public OrderNotFoundException(int code) {

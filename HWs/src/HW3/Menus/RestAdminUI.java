@@ -258,16 +258,6 @@ public class RestAdminUI extends UIBase  {
 
 	private void viewBasicReports() {
 		// TODO
-	    // Shows a simple summary report for the admin's managed restaurants
-	    int totalRestaurants = restAdmin.getRestaurants().size();
-	    long openCount = restAdmin.getOpenRestaurants().size();
-	    
-	    StringBuilder report = new StringBuilder();
-	    report.append("Total Restaurants: ").append(totalRestaurants).append("\n");
-	    report.append("Currently Open: ").append(openCount).append("\n");
-	    report.append("Currently Closed: ").append(totalRestaurants - openCount).append("\n");
-	    
-	    MessageBox.Info("Basic Report", report.toString());
 	}
 
 }

@@ -1,5 +1,6 @@
 package HW3.Exceptions;
 
+@SuppressWarnings("serial")
 public abstract class CodedNotFoundException extends Exception {
 
 	public CodedNotFoundException(String message) {

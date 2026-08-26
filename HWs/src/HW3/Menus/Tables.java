@@ -21,7 +21,10 @@ import HW3.Utils.MessageBox;
 import HW3.Utils.UIHelper;
 
 public class Tables {
+	
+	// all functions are creating tables to show the given values
 
+	@SuppressWarnings("unchecked")
 	public static void customer(Stage stage, List<Customer> lst, Runnable backF) {
         if (lst.isEmpty()) {
             MessageBox.Info("No values found");
@@ -31,7 +34,6 @@ public class Tables {
         ObservableList<Customer> observables = FXCollections.observableArrayList(lst);
         TableView<Customer> tableView = new TableView<>(observables);
 
-        // Define Columns (Field name strings must match getter methods, e.g., getName(), getLastName())
         TableColumn<Customer, String> colFirstName = new TableColumn<>("First Name");
         colFirstName.setCellValueFactory(new PropertyValueFactory<>("name"));
 
@@ -50,9 +52,8 @@ public class Tables {
         TableColumn<Customer, Double> colBalance = new TableColumn<>("Balance");
         colBalance.setCellValueFactory(new PropertyValueFactory<>("balance"));
 
-        // Add columns to TableView
         tableView.getColumns().addAll(colFirstName, colLastName, colPhone, colEmail, colTown, colBalance);
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
         Button backButton = UIHelper.createButton("Back", e -> backF.run());
 
@@ -62,6 +63,7 @@ public class Tables {
         stage.setScene(new Scene(root, 700, 400));
     }
 	
+	@SuppressWarnings("unchecked")
 	public static void order(Stage stage, List<Order> lst, Runnable backF) {
         if (lst == null || lst.isEmpty()) {
             MessageBox.Info("No values found");
@@ -71,7 +73,6 @@ public class Tables {
         ObservableList<Order> observables = FXCollections.observableArrayList(lst);
         TableView<Order> tableView = new TableView<>(observables);
 
-        // Columns setup matching Order properties
         TableColumn<Order, Integer> colClientCode = new TableColumn<>("Client Code");
         colClientCode.setCellValueFactory(new PropertyValueFactory<>("clientCode"));
 
@@ -102,7 +103,7 @@ public class Tables {
             colBasePrice, colFinalPrice, colStatus
         );
 
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
         Button backButton = UIHelper.createButton("Back", e -> backF.run());
 
@@ -112,8 +113,8 @@ public class Tables {
         stage.setScene(new Scene(root, 800, 450));
     }
 	
+	@SuppressWarnings("unchecked")
 	public static void order(Stage stage, List<Order> deliveredOrders, Runnable backF, Order currentOrder) {
-        // Combine current order and delivered orders if present
         List<Order> allOrders = new ArrayList<>();
         
         if (currentOrder != null) {
@@ -132,7 +133,6 @@ public class Tables {
         ObservableList<Order> observables = FXCollections.observableArrayList(allOrders);
         TableView<Order> tableView = new TableView<>(observables);
 
-        // Columns setup matching Order properties
         TableColumn<Order, Integer> colClientCode = new TableColumn<>("Client Code");
         colClientCode.setCellValueFactory(new PropertyValueFactory<>("clientCode"));
 
@@ -163,7 +163,7 @@ public class Tables {
             colBasePrice, colFinalPrice, colStatus
         );
 
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
         Button backButton = UIHelper.createButton("Back", e -> backF.run());
 
@@ -180,6 +180,7 @@ public class Tables {
         stage.setScene(new Scene(root, 850, 450));
     }
 	
+	@SuppressWarnings("unchecked")
 	public static void restaurant(Stage stage, List<? extends Restaurant> lst, Runnable backF) {
         if (lst == null || lst.isEmpty()) {
             MessageBox.Info("No values found");
@@ -189,7 +190,6 @@ public class Tables {
         ObservableList<Restaurant> observables = FXCollections.observableArrayList(lst);
         TableView<Restaurant> tableView = new TableView<>(observables);
 
-        // Base Restaurant Columns
         TableColumn<Restaurant, String> colName = new TableColumn<>("Name");
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
 
@@ -205,7 +205,6 @@ public class Tables {
         TableColumn<Restaurant, Double> colBaseFee = new TableColumn<>("Base Fee");
         colBaseFee.setCellValueFactory(new PropertyValueFactory<>("baseDeliveryFee"));
 
-        // Subclass Specific Columns (Custom Cell Value Factories to handle inheritance safely)
         TableColumn<Restaurant, String> colPrepTime = new TableColumn<>("Prep Time (min)");
         colPrepTime.setCellValueFactory(cell -> {
             if (cell.getValue() instanceof FastFoodRestaurant fastFood) {
@@ -243,7 +242,7 @@ public class Tables {
             colPrepTime, colExpressCost, colMinOrder, colCommission
         );
 
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
         Button backButton = UIHelper.createButton("Back", e -> backF.run());
 
@@ -253,6 +252,7 @@ public class Tables {
         stage.setScene(new Scene(root, 950, 450));
     }
 	
+	@SuppressWarnings("unchecked")
 	public static void rider(Stage stage, List<Rider> lst, Runnable backF) {
 	    if (lst == null || lst.isEmpty()) {
 	        MessageBox.Info("No values found");
@@ -262,7 +262,6 @@ public class Tables {
 	    ObservableList<Rider> observables = FXCollections.observableArrayList(lst);
 	    TableView<Rider> tableView = new TableView<>(observables);
 
-	    // Direct Property Columns
 	    TableColumn<Rider, String> colId = new TableColumn<>("ID");
 	    colId.setCellValueFactory(new PropertyValueFactory<>("id"));
 
@@ -298,7 +297,7 @@ public class Tables {
 	        colVehicle, colAvailable, colDeliveredCount, colCurrentOrder
 	    );
 
-	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
 	    Button backButton = UIHelper.createButton("Back", e -> backF.run());
 
@@ -308,6 +307,7 @@ public class Tables {
 	    stage.setScene(new Scene(root, 900, 450));
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static void restAdmin(Stage stage, List<RestAdmin> lst, Runnable backF) {
 	    if (lst == null || lst.isEmpty()) {
 	        MessageBox.Info("No values found");
@@ -317,18 +317,15 @@ public class Tables {
 	    ObservableList<RestAdmin> observables = FXCollections.observableArrayList(lst);
 	    TableView<RestAdmin> tableView = new TableView<>(observables);
 
-	    // Direct String Properties
 	    TableColumn<RestAdmin, String> colName = new TableColumn<>("Name");
 	    colName.setCellValueFactory(new PropertyValueFactory<>("name"));
 
 	    TableColumn<RestAdmin, String> colUsername = new TableColumn<>("Username");
 	    colUsername.setCellValueFactory(new PropertyValueFactory<>("userName"));
 
-	    // Password Property (Masked for privacy/security)
 	    TableColumn<RestAdmin, String> colPassword = new TableColumn<>("Password");
 	    colPassword.setCellValueFactory(new PropertyValueFactory<>("password"));
 
-	    // Complex List Property: Formats the ArrayList<Restaurant> into a count & names summary
 	    TableColumn<RestAdmin, String> colRestaurants = new TableColumn<>("Managed Restaurants");
 	    colRestaurants.setCellValueFactory(cell -> {
 	        List<Restaurant> restList = cell.getValue().getRestaurants();
@@ -338,7 +335,7 @@ public class Tables {
 	    });
 
 	    tableView.getColumns().addAll(colName, colUsername, colPassword, colRestaurants);
-	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
 	    Button backButton = UIHelper.createButton("Back", e -> backF.run());
 

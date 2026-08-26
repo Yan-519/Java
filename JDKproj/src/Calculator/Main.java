@@ -26,7 +26,7 @@ public class Main extends Application {
 	private BiFunction<Double, Double, Double> function = (a,b) -> 0.0;
 	
 	@Override
-	public void start(Stage stage) throws Exception {
+	public void start(@SuppressWarnings("exports") Stage stage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("view.fxml"));
 		
 		Scene scene = new Scene(root);
@@ -40,7 +40,7 @@ public class Main extends Application {
 	
 	
 	@FXML
-	public void numberPress(ActionEvent event) {
+	public void numberPress(@SuppressWarnings("exports") ActionEvent event) {
 		if(isForClear) clearPress(null);
 		String digit = ((Button) event.getSource()).getText();
 		mainEntry.appendText(digit);
@@ -53,7 +53,7 @@ public class Main extends Application {
 	}
 	
 	@FXML
-	public void operationPress(ActionEvent event) {
+	public void operationPress(@SuppressWarnings("exports") ActionEvent event) {
 		if(isForClear) clearPress(null);
 		if(input1.isEmpty() || isApliedOperator) return;
 		String op = ((Button) event.getSource()).getText();
@@ -80,7 +80,7 @@ public class Main extends Application {
 	}
 	
 	@FXML
-	public void equalsPress(ActionEvent event) {
+	public void equalsPress(@SuppressWarnings("exports") ActionEvent event) {
     	if(!isApliedOperator || input1.isEmpty() || input2.isEmpty())return;
     	
     	try {
@@ -95,7 +95,7 @@ public class Main extends Application {
     	
 	}
 	@FXML
-	public void clearPress(ActionEvent event) {
+	public void clearPress(@SuppressWarnings("exports") ActionEvent event) {
 		if (mainEntry != null) 
 	        mainEntry.setText("");
 

@@ -18,6 +18,7 @@ public class DataSelector {
 		DataSelector.deliveryDataBase = deliveryDataBase;
 	}
 	
+	// filter input and gives explanation message
 	public static <T> T dataFilter(Supplier<T> inFunction, Predicate<T> ifPredicate, Function<T, String> message){
 		T val = inFunction.get();
 		if(val == null) return null;
@@ -28,7 +29,8 @@ public class DataSelector {
 		}
 		return val;
 	}
-	
+
+	// filter input and gives explanation message
 	public static <T> T dataFilter(Supplier<T> inFunction, Predicate<T> ifPredicate, String message){
 		return dataFilter(inFunction, ifPredicate, o -> message);
 	}

@@ -539,7 +539,6 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		// to use the 0.1 format for double input
 		InputManager.inScanner.useLocale(Locale.US);
 		
