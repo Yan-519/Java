@@ -100,7 +100,11 @@ public class RestAdminUI extends UIBase  {
 	    Button updateRatingButton = UIHelper.createButton("Update Restaurant Rating", this::updateRestaurantRating);
 	    Button toggleStatusButton = UIHelper.createButton("Open/Close Restaurant", this::toggleRestaurantStatus);
 
-	    Button viewReportsButton = UIHelper.createButton("View Basic Reports", this::viewBasicReports);
+	    Button viewReportsButton = UIHelper.createButton("View Basic Reports", () ->{
+	    	ArrayList<Restaurant> restaurants = restAdmin.getRestaurants();
+			restaurants.sort(deliveryDataBase.restComparator);
+			Tables.restaurant(stage, restaurants, this::Main);
+	    });
 	    Button backButton = UIHelper.createButton("Back", backF);
 
 	    grid.add(viewRestaurantsButton, 0, 0);
@@ -255,9 +259,4 @@ public class RestAdminUI extends UIBase  {
 	        }
 	    }
 	}
-
-	private void viewBasicReports() {
-		// TODO
-	}
-
 }

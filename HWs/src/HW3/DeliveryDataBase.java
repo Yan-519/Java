@@ -33,7 +33,7 @@ public class DeliveryDataBase {
 	private Hashtable<Integer, ArrayList<Restaurant>> selectedRestaurantsByCustomer;
 	private HashMap<Integer, Double> totalSpentByCustomer;
 	
-	private final Comparator<Restaurant> restComparator = (r1, r2) -> Double.compare(r2.getRating(), r1.getRating());
+	public final Comparator<Restaurant> restComparator = (r1, r2) -> Double.compare(r2.getRating(), r1.getRating());
 	private final Comparator<Order> ordComparator = (o1, o2) -> Double.compare(o2.getFinalPrice(), o1.getFinalPrice()); 
 
 	
