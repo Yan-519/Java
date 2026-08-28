@@ -66,10 +66,7 @@ public class InputManager {
         }, () -> callback.accept(null));
         
         
-
-//        stage.setOnCloseRequest(e -> callback.accept(null));
         MenuManager.goTo(new Scene(root, 400, 320));
-//        stage.setTitle("Create Rider");
     }
 
     // Creates a new Customer
@@ -138,9 +135,7 @@ public class InputManager {
             }
         }, () -> callback.accept(null));
 
-//        stage.setOnCloseRequest(e -> callback.accept(null));
-        MenuManager.goTo(new Scene(root, 400, 420));
-//        stage.setTitle("Create Customer");
+        MenuManager.goTo(new Scene(root, 400, 450));
     }
 
     // Creates a new Restaurant
@@ -186,9 +181,7 @@ public class InputManager {
             }
         }, () -> callback.accept(null));
 
-//        stage.setOnCloseRequest(e -> callback.accept(null));
         MenuManager.goTo(new Scene(root, 400, 320));
-//        stage.setTitle("Create Restaurant");
     }
 
     // Creates a new FastFoodRestaurant
@@ -241,9 +234,7 @@ public class InputManager {
             }
         }, () -> callback.accept(null));
 
-//        stage.setOnCloseRequest(e -> callback.accept(null));
-        MenuManager.goTo(new Scene(root, 400, 380));
-//        stage.setTitle("Create Fast Food Restaurant");
+        MenuManager.goTo(new Scene(root, 400, 400));
     }
 
     // Creates a new PremiumRestaurant
@@ -296,10 +287,7 @@ public class InputManager {
             }
         }, () -> callback.accept(null));
 
-//        stage.setOnCloseRequest(e -> callback.accept(null));
-        MenuManager.goTo(new Scene(root, 400, 380));
-//        stage.setTitle("Create Premium Restaurant");
-//        MenuManager.goTo
+        MenuManager.goTo(new Scene(root, 400, 400));
     }
 
     // Creates a new Date
@@ -340,10 +328,7 @@ public class InputManager {
             }
         }, () -> callback.accept(null));
 
-//        stage.setOnCloseRequest(e -> callback.accept(null));
         MenuManager.goTo(new Scene(root, 350, 250));
-//        stage.setTitle("Create Date");
-//        
     }
 
     // Creates a Date after a given Date

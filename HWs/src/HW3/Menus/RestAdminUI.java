@@ -72,7 +72,7 @@ public class RestAdminUI extends UIBase  {
                 backButton
         );
 
-        MenuManager.goTo(new Scene(root, 500, 400));
+        MenuManager.goTo(new Scene(root, 400, 300));
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public class RestAdminUI extends UIBase  {
 
 	    root.setCenter(grid);
 
-	    MenuManager.goTo(new Scene(root, 750, 650));
+	    MenuManager.goTo(new Scene(root, 500, 400));
 	}
 
 	private void addNewCustomer() {

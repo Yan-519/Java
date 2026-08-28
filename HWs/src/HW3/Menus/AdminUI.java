@@ -76,7 +76,7 @@ public class AdminUI extends UIBase {
                 backButton
         );
 
-        MenuManager.goTo(new Scene(root, 500, 400));
+        MenuManager.goTo(new Scene(root, 400, 300));
 	}
 	
 
@@ -129,7 +129,7 @@ public class AdminUI extends UIBase {
 
         root.setCenter(grid);
 
-        MenuManager.goTo(new Scene(root, 700, 600));
+        MenuManager.goTo(new Scene(root, 500, 400));
 
     }
     

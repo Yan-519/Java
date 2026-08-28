@@ -121,7 +121,7 @@ public class RiderManagment extends UIBase {
 
 	    root.setCenter(grid);
 
-	    MenuManager.goTo(new Scene(root, 700, 600));
+	    MenuManager.goTo(new Scene(root, 400, 350));
 	}
 
 }

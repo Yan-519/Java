@@ -62,7 +62,7 @@ public class MainUI extends UIBase {
                 exitButton
         );
 
-        MenuManager.goTo(new Scene(root, 500, 400));
+        MenuManager.goTo(new Scene(root, 400, 300));
 	}
     
     private void showUserTypeScreen() {
@@ -95,6 +95,6 @@ public class MainUI extends UIBase {
                 backButton
         );
 
-        MenuManager.goTo(new Scene(root, 500, 500));
+        MenuManager.goTo(new Scene(root, 400, 300));
     }
 }

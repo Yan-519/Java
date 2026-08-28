@@ -30,7 +30,7 @@ public class RiderUI extends UIBase  {
 	public void Auth() {
         VBox root = UIHelper.createVRoot();
 
-        Label title = new Label("Rider Login");
+        Label title = new Label("Rider Login, Enter ID:");
 
         TextField code = new TextField();
         code.setPromptText("Rider ID");
@@ -53,7 +53,7 @@ public class RiderUI extends UIBase  {
                 backButton
         );
 
-        MenuManager.goTo(new Scene(root, 500, 400));
+        MenuManager.goTo(new Scene(root, 400, 300));
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class RiderUI extends UIBase  {
 
 	    root.setCenter(grid);
 
-	    MenuManager.goTo(new Scene(root, 700, 600));
+        MenuManager.goTo(new Scene(root, 500, 400));
 	}
 
 	private void updateStatusToOnWay() {

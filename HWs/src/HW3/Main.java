@@ -11,6 +11,7 @@ public class Main extends Application {
 
 	@Override
     public void start(@SuppressWarnings("exports") Stage stage) {
+		stage.setResizable(false);
 		MenuManager.setStage(stage);
 		
         MainUI menuManager;

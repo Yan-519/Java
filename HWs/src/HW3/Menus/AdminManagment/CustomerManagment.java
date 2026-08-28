@@ -141,7 +141,7 @@ public class CustomerManagment extends UIBase {
 
         root.setCenter(grid);
         
-        MenuManager.goTo(new Scene(root, 800, 650));
+        MenuManager.goTo(new Scene(root, 500, 400));
     }
 
 

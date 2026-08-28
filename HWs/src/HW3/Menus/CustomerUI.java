@@ -34,7 +34,7 @@ public class CustomerUI extends UIBase  {
 	public void Auth() {
         VBox root = UIHelper.createVRoot();
 
-        Label title = new Label("Customer Login");
+        Label title = new Label("Customer Login, Enter Code:");
 
         TextField code = new TextField();
         code.setPromptText("Customer Code");
@@ -46,7 +46,7 @@ public class CustomerUI extends UIBase  {
 			} catch ( CodedNotFoundException | TargetObjectDoesntExistException e1) {
 				MessageBox.error(e1);
 			}catch (NumberFormatException ex) {
-				MessageBox.error("Code must be a number", ex);
+				MessageBox.error(null, "Code must be a number");
 			}
         });
         Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
@@ -58,14 +58,14 @@ public class CustomerUI extends UIBase  {
                 backButton
         );
 
-        MenuManager.goTo(new Scene(root, 500, 400));
+        MenuManager.goTo(new Scene(root, 400, 300));
 	}
 
 	@Override
 	protected void Main() {
 	    BorderPane root = new BorderPane();
 
-	    VBox header = UIHelper.createVRoot("Customer Management");
+	    VBox header = UIHelper.createVRoot("Customer Menu");
 	    root.setTop(header);
 
 	    GridPane grid = new GridPane();
@@ -132,7 +132,7 @@ public class CustomerUI extends UIBase  {
 
 	    root.setCenter(grid);
 
-	    MenuManager.goTo(new Scene(root, 700, 600));
+        MenuManager.goTo(new Scene(root, 500, 500));
 	}
 
 

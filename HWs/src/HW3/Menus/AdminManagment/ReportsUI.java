@@ -109,6 +109,6 @@ public class ReportsUI extends UIBase {
 
         root.setCenter(grid);
 
-        MenuManager.goTo(new Scene(root, 750, 650));
+        MenuManager.goTo(new Scene(root, 500, 500));
     }
 }

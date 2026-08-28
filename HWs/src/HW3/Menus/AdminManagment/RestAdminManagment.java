@@ -60,7 +60,7 @@ public class RestAdminManagment extends UIBase {
 
 	    root.setCenter(grid);
 	    
-	    MenuManager.goTo(new Scene(root, 700, 600));
+	    MenuManager.goTo(new Scene(root, 500, 300));
 	}
 
 	private void addRestaurantAdmin() {
