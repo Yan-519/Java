@@ -12,6 +12,7 @@ import HW3.Menus.UIBase;
 import HW3.Utils.DataChecker;
 import HW3.Utils.DataSelector;
 import HW3.Utils.InputManager;
+import HW3.Utils.MenuManager;
 import HW3.Utils.MessageBox;
 import HW3.Utils.UIHelper;
 import javafx.geometry.Insets;
@@ -21,12 +22,11 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 public class CustomerManagment extends UIBase {
-
-	public CustomerManagment(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
-		super(stage, deliveryDataBase, backF);
+	
+	public CustomerManagment(DeliveryDataBase deliveryDataBase) {
+		super(deliveryDataBase);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class CustomerManagment extends UIBase {
 
         Button showCustomers = UIHelper.createButton(
                 "Show All Customers",
-                () -> Tables.customer(stage, deliveryDataBase.getCustomers(), this::Main)
+                () -> Tables.customer(deliveryDataBase.getCustomers())
         );
 
         Button searchCustomer = UIHelper.createButton(
@@ -62,7 +62,7 @@ public class CustomerManagment extends UIBase {
 						return;
 					}
 
-                	InputManager.createCustomer(stage, code, customer -> {
+                	InputManager.createCustomer(code, customer -> {
                 	    if (customer != null) {
                 	    	try {
 	                	        deliveryDataBase.add(customer); 
@@ -71,7 +71,7 @@ public class CustomerManagment extends UIBase {
 	                	        MessageBox.error(ex);
 	                	    }
                 	    }
-                	    Main();
+                	    MenuManager.goBack();
                 	});
                 }
         );
@@ -86,9 +86,9 @@ public class CustomerManagment extends UIBase {
                 e -> {
                 	Customer customer = DataSelector.selectCustomer();
                 	if(customer == null)
-                		Main();
+                		MenuManager.goBack();
                 	
-                	else Tables.order(stage, deliveryDataBase.getOrdersOfCustomer(customer), this::Main);
+                	else Tables.order(deliveryDataBase.getOrdersOfCustomer(customer));
                 }
         );
 
@@ -102,9 +102,9 @@ public class CustomerManagment extends UIBase {
                 e -> {
                 	Customer customer = DataSelector.selectCustomer();
                 	if(customer == null)
-                		Main();
+                		MenuManager.goBack();
                 	
-                	else Tables.restaurant(stage, deliveryDataBase.getRestaurantasBuyCustomer(customer.getCode()), this::Main);
+                	else Tables.restaurant(deliveryDataBase.getRestaurantasBuyCustomer(customer.getCode()));
                 }
         );
 
@@ -113,16 +113,16 @@ public class CustomerManagment extends UIBase {
                 e -> {
                 	Customer customer = DataSelector.selectCustomer();
                 	if(customer == null)
-                		Main();
+                		MenuManager.goBack();
                 	
-                	else Tables.restaurant(stage, deliveryDataBase.getPremiumRestaurantsByCustomer(customer), this::Main);
+                	else Tables.restaurant(deliveryDataBase.getPremiumRestaurantsByCustomer(customer));
                 }
 
         );
 
         Button logout = UIHelper.createButton(
                 "Back",
-                backF
+                MenuManager::goBack
         );
 
         grid.add(showCustomers, 0, 0);
@@ -140,8 +140,8 @@ public class CustomerManagment extends UIBase {
         grid.add(logout, 0, 4, 2, 1);
 
         root.setCenter(grid);
-
-    	stage.setScene(new Scene(root, 800, 650));
+        
+        MenuManager.goTo(new Scene(root, 800, 650));
     }
 
 
@@ -178,7 +178,7 @@ public class CustomerManagment extends UIBase {
     private void cancelOrder() {
     	if(!deliveryDataBase.getOrders().stream().anyMatch(o -> o.getStatus() != OrderStatus.Delivered)) {
     		MessageBox.Info(null, "No cancelable orders found");
-    		Main();
+    		MenuManager.goBack();
     		return;
     	}
     	

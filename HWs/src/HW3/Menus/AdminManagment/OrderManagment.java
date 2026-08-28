@@ -6,6 +6,7 @@ import HW3.DataObjects.Restaurant;
 import HW3.Menus.Tables;
 import HW3.Menus.UIBase;
 import HW3.Utils.DataSelector;
+import HW3.Utils.MenuManager;
 import HW3.Utils.MessageBox;
 import HW3.Utils.UIHelper;
 import javafx.geometry.Insets;
@@ -13,12 +14,11 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
-import javafx.stage.Stage;
 
 public class OrderManagment extends UIBase {
 
-	public OrderManagment(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
-		super(stage, deliveryDataBase, backF);
+	public OrderManagment(DeliveryDataBase deliveryDataBase) {
+		super(deliveryDataBase);
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class OrderManagment extends UIBase {
 	    grid.setAlignment(Pos.CENTER);
 
 	    Button showAllButton = UIHelper.createButton("Show All Orders", () ->{
-	    	Tables.order(stage, deliveryDataBase.getOrders(), this::Main);
+	    	Tables.order( deliveryDataBase.getOrders());
 	    });
 	    Button searchByCodeButton = UIHelper.createButton("Search Order by Code", () ->
 	    	MessageBox.Info(DataSelector.selectOrder())
@@ -44,19 +44,19 @@ public class OrderManagment extends UIBase {
 	    Button filterByCustomerButton = UIHelper.createButton("Show Orders by Customer", () ->{
 	    	Customer customer = DataSelector.selectCustomer();
 	    	if(customer == null) return;
-	    	Tables.order(stage, deliveryDataBase.getOrdersOfCustomer(customer), this::Main);
+	    	Tables.order( deliveryDataBase.getOrdersOfCustomer(customer));
 	    });
 	    Button filterByRestaurantButton = UIHelper.createButton("Show Orders by Restaurant", () ->{
 	    	Restaurant restaurant = DataSelector.selectRestaurant();
 	    	if(restaurant == null) return;
-	    	Tables.order(stage, deliveryDataBase.getOrdersByuRestaurant(restaurant.getCode()), this::Main);
+	    	Tables.order( deliveryDataBase.getOrdersByuRestaurant(restaurant.getCode()));
 	    });
 
 	    Button highestPriceButton = UIHelper.createButton("Show Highest Price Order", () ->
 	    	MessageBox.Info(deliveryDataBase.getOrders().stream().max((o1, o2) -> Double.compare(o1.getFinalPrice(), o2.getFinalPrice())).get())
 	    );
 
-	    Button backButton = UIHelper.createButton("Back", backF);
+	    Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
 
 	    grid.add(showAllButton, 0, 0);
 	    grid.add(searchByCodeButton, 1, 0);
@@ -70,7 +70,7 @@ public class OrderManagment extends UIBase {
 
 	    root.setCenter(grid);
 
-	    stage.setScene(new Scene(root, 700, 600));
+	    MenuManager.goTo(new Scene(root, 700, 600));
 	}
 	
 	

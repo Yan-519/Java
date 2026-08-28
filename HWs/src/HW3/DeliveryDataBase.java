@@ -1,7 +1,7 @@
 package HW3;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -55,24 +55,25 @@ public class DeliveryDataBase {
 		this(new Admin("admin", "admin", "12345"));
 	}
 
-	public DeliveryDataBase(Admin systemAdministrator, Customer[] customers, Restaurant[] restaurants, Rider[] riders,
-			Order[] orders, RestAdmin[] restAdmins) throws OrderNotFoundException {
-
-		this(systemAdministrator);
-		
-		this.customers = new ArrayList<>(Arrays.asList(customers));
-		this.restaurants = new ArrayList<>(Arrays.asList(restaurants));
-		this.riders = new ArrayList<>(Arrays.asList(riders));
-		this.restAdmins = new ArrayList<>(Arrays.asList(restAdmins));
-		
-		
-		setOrders(new ArrayList<Order>(Arrays.asList(orders)));
-	}
+//	public DeliveryDataBase(Admin systemAdministrator, Customer[] customers, Restaurant[] restaurants, Rider[] riders,
+//			Order[] orders, RestAdmin[] restAdmins) throws TargetObjectAlreadyExistException {
+//
+//		this(systemAdministrator);
+//		
+//		this.customers = new ArrayList<>(Arrays.asList(customers));
+//		this.restaurants = new ArrayList<>(Arrays.asList(restaurants));
+//		this.riders = new ArrayList<>(Arrays.asList(riders));
+//		this.restAdmins = new ArrayList<>(Arrays.asList(restAdmins));
+//		
+//		
+//		setOrders(new ArrayList<Order>(Arrays.asList(orders)));
+//	}
 
 	// add Order To Customer
-	public void addOrderToCustomer(int customerCode, Order order) throws OrderNotFoundException {
-	    if (order == null || orders.contains(order)) 
-	    	throw new OrderNotFoundException();
+	public void addOrderToCustomer(int customerCode, Order order) throws TargetObjectAlreadyExistException {
+	    if (order == null) return;
+	    if (orders.contains(order)) 
+	    	throw new TargetObjectAlreadyExistException(order.toString());
 	    orders.add(order);
 
 	    ordersByCustomer.putIfAbsent(customerCode, new ArrayList<>());
@@ -305,9 +306,9 @@ public class DeliveryDataBase {
 		int code = generateCode(CodedType.Order);
 		Order order = new Order(code, customerCode, restaurant, date, basePrice);
 		
-		customer.buy(order.getFinalPrice());
 		
 		addOrderToCustomer(order.getClientCode(), order);
+		customer.buy(order.getFinalPrice());
 		return code;
 	}
 
@@ -519,7 +520,7 @@ public class DeliveryDataBase {
 		}
 	}
 
-	public void setOrders(ArrayList<Order> orders) throws OrderNotFoundException {
+	public void setOrders(ArrayList<Order> orders) throws TargetObjectAlreadyExistException {
 		for (Order order : orders)
 			addOrderToCustomer(order.getClientCode(), order);
 	}

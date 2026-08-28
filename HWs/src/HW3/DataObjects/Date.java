@@ -66,13 +66,10 @@ public class Date extends StringConverter<Date> implements Comparable<Date> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Date other = (Date) obj;
+		return obj instanceof Date other && equals(other);
+	}
+	
+	public boolean equals(Date other) {
 		return day == other.day && month == other.month && year == other.year;
 	}
 

@@ -94,7 +94,7 @@ public class Order extends Coded<Order> {
 	}
 	
 	public void setDeliveringDate(Date deliveringDate) {
-		if(deliveringDate.isAfter(orderingDate))
+		if(deliveringDate.isAfter(orderingDate) || deliveringDate.equals(orderingDate))
 			this.deliveringDate = deliveringDate;
 	}
 

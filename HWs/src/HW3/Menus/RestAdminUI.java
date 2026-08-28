@@ -11,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import HW3.DataObjects.Customer;
@@ -24,6 +23,7 @@ import HW3.Exceptions.TargetObjectAlreadyExistException;
 import HW3.Exceptions.TargetObjectDoesntExistException;
 import HW3.Utils.DataSelector;
 import HW3.Utils.InputManager;
+import HW3.Utils.MenuManager;
 import HW3.Utils.MessageBox.NumberSign;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -34,8 +34,9 @@ public class RestAdminUI extends UIBase  {
 	
 	private RestAdmin restAdmin;
 
-	public RestAdminUI(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
-		super(stage, deliveryDataBase, backF);
+
+	public RestAdminUI(DeliveryDataBase deliveryDataBase) {
+		super(deliveryDataBase);
 	}
 
 	@Override
@@ -55,13 +56,13 @@ public class RestAdminUI extends UIBase  {
         Button loginButton = UIHelper.createButton("Login", () -> {
         	try {
         		restAdmin = deliveryDataBase.getRestAdmin(username.getText(), password.getText());
-	            Main();
+        		Main();
 			} catch (RestAdminNotFoundException e) {
 				MessageBox.error(e);
 			}
         });
         
-        Button backButton = UIHelper.createButton("Back", backF);
+        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
         
         root.getChildren().addAll(
                 title,
@@ -71,7 +72,7 @@ public class RestAdminUI extends UIBase  {
                 backButton
         );
 
-        stage.setScene(new Scene(root, 500, 400));
+        MenuManager.goTo(new Scene(root, 500, 400));
 	}
 
 	@Override
@@ -88,7 +89,7 @@ public class RestAdminUI extends UIBase  {
 	    grid.setAlignment(Pos.CENTER);
 
 	    Button viewRestaurantsButton = UIHelper.createButton("View My Restaurants", 
-	    		() -> Tables.restaurant(stage, restAdmin.getRestaurants(), this::Main));
+	    		() -> Tables.restaurant( restAdmin.getRestaurants()));
 	    Button addCustomerButton = UIHelper.createButton("Add New Customer", this::addNewCustomer);
 
 	    Button addOrderButton = UIHelper.createButton("Add New Order", this::addNewOrder);
@@ -103,9 +104,9 @@ public class RestAdminUI extends UIBase  {
 	    Button viewReportsButton = UIHelper.createButton("View Basic Reports", () ->{
 	    	ArrayList<Restaurant> restaurants = restAdmin.getRestaurants();
 			restaurants.sort(deliveryDataBase.restComparator);
-			Tables.restaurant(stage, restaurants, this::Main);
+			Tables.restaurant( restaurants);
 	    });
-	    Button backButton = UIHelper.createButton("Back", backF);
+	    Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
 
 	    grid.add(viewRestaurantsButton, 0, 0);
 	    grid.add(addCustomerButton, 1, 0);
@@ -124,7 +125,7 @@ public class RestAdminUI extends UIBase  {
 
 	    root.setCenter(grid);
 
-	    stage.setScene(new Scene(root, 750, 650));
+	    MenuManager.goTo(new Scene(root, 750, 650));
 	}
 
 	private void addNewCustomer() {
@@ -135,7 +136,7 @@ public class RestAdminUI extends UIBase  {
 			MessageBox.error(e);
 			return;
 		}
-	    InputManager.createCustomer(stage, code, customer -> {
+	    InputManager.createCustomer( code, customer -> {
 	        if (customer != null) {
 	            try {
 	                deliveryDataBase.add(customer);
@@ -144,7 +145,7 @@ public class RestAdminUI extends UIBase  {
 	                MessageBox.error(ex);
 	            }
 	        }
-	        Main();
+	        MenuManager.goBack();
 	    });
 	}
 
@@ -165,7 +166,7 @@ public class RestAdminUI extends UIBase  {
 	    Double basePrice = MessageBox.inputDOUB(null, "Enter the base fee (not negative)", NumberSign.NOT_NEGATIVE);
 	    if (basePrice == null) return;
 
-	    InputManager.createDate(stage, date -> {
+	    InputManager.createDate( date -> {
 	        if (date != null) {
 	            try {
 	                int orderCode = deliveryDataBase.addOrder(restaurant.getCode(), customer.getCode(), basePrice, date);
@@ -174,7 +175,7 @@ public class RestAdminUI extends UIBase  {
 	                MessageBox.error(e);
 	            }
 	        }
-	        Main();
+	        MenuManager.goBack();
 	    });
 	}
 
@@ -206,7 +207,7 @@ public class RestAdminUI extends UIBase  {
 	            "Please select a restaurant under your management.");
 	    if (rest == null) return;
 
-	    Tables.order(stage, deliveryDataBase.getOrdersByuRestaurant(rest.getCode()), this::Main);
+	    Tables.order( deliveryDataBase.getOrdersByuRestaurant(rest.getCode()));
 	}
 
 	private void showOpenRestaurantsByKitchen() {
@@ -220,7 +221,7 @@ public class RestAdminUI extends UIBase  {
 	    if (filtered.isEmpty()) {
 	        MessageBox.Info("Notice", "No open matching restaurants found under your management.");
 	    } else {
-	    	Tables.restaurant(stage, filtered, this::Main);
+	    	Tables.restaurant( filtered);
 	    }
 	}
 

@@ -2,14 +2,10 @@ package HW3.Utils;
 
 import HW3.DeliveryDataBase;
 import HW3.DataObjects.*;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.util.function.Consumer;
 
@@ -21,35 +17,10 @@ public class InputManager {
         deliveryDataBase = db;
     }
 
-    // Helper method to setup a uniform form layout with Submit and Back buttons
-    private static VBox createBaseFormLayout(String titleText, GridPane grid, Runnable onSubmit, Runnable onBack) {
-        Label titleLabel = new Label(titleText);
-        titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-
-        Button submitBtn = new Button("Submit");
-        Button backBtn = new Button("Back");
-
-        submitBtn.setOnAction(e -> onSubmit.run());
-        backBtn.setOnAction(e -> onBack.run());
-
-        HBox buttonBox = new HBox(15, submitBtn, backBtn);
-        buttonBox.setAlignment(Pos.CENTER_RIGHT);
-
-        VBox root = new VBox(20, titleLabel, grid, buttonBox);
-        root.setPadding(new Insets(20));
-        return root;
-    }
-
-    private static GridPane createGrid() {
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        return grid;
-    }
 
     // Creates a new Rider
-    public static void createRider(Stage stage, Consumer<Rider> callback) {
-        GridPane grid = createGrid();
+    public static void createRider(Consumer<Rider> callback) {
+        GridPane grid = UIHelper.createGrid();
 
         TextField idField = new TextField();
         TextField phoneField = new TextField();
@@ -63,7 +34,7 @@ public class InputManager {
         grid.add(new Label("Last Name:"), 0, 3); grid.add(lastNameField, 1, 3);
         grid.add(new Label("Vehicle:"), 0, 4); grid.add(vehicleField, 1, 4);
 
-        VBox root = createBaseFormLayout("Create Rider", grid, () -> {
+        VBox root = UIHelper.createBaseFormLayout("Create Rider", grid, () -> {
             String id = idField.getText().trim();
             String phone = phoneField.getText().trim();
             String firstName = firstNameField.getText().trim();
@@ -93,16 +64,17 @@ public class InputManager {
 
             callback.accept(new Rider(id, firstName, lastName, phone, vehicle));
         }, () -> callback.accept(null));
+        
+        
 
-        stage.setOnCloseRequest(e -> callback.accept(null));
-        stage.setScene(new Scene(root, 400, 320));
-        stage.setTitle("Create Rider");
-        stage.show();
+//        stage.setOnCloseRequest(e -> callback.accept(null));
+        MenuManager.goTo(new Scene(root, 400, 320));
+//        stage.setTitle("Create Rider");
     }
 
     // Creates a new Customer
-    public static void createCustomer(Stage stage, int code, Consumer<Customer> callback) {
-        GridPane grid = createGrid();
+    public static void createCustomer(int code, Consumer<Customer> callback) {
+        GridPane grid = UIHelper.createGrid();
 
         TextField phoneField = new TextField();
         TextField firstNameField = new TextField();
@@ -122,7 +94,7 @@ public class InputManager {
         grid.add(new Label("Email:"), 0, 6); grid.add(emailField, 1, 6);
         grid.add(new Label("Balance:"), 0, 7); grid.add(balanceField, 1, 7);
 
-        VBox root = createBaseFormLayout("Create Customer", grid, () -> {
+        VBox root = UIHelper.createBaseFormLayout("Create Customer", grid, () -> {
             String phone = phoneField.getText().trim();
             String firstName = firstNameField.getText().trim();
             String lastName = lastNameField.getText().trim();
@@ -166,15 +138,14 @@ public class InputManager {
             }
         }, () -> callback.accept(null));
 
-        stage.setOnCloseRequest(e -> callback.accept(null));
-        stage.setScene(new Scene(root, 400, 420));
-        stage.setTitle("Create Customer");
-        stage.show();
+//        stage.setOnCloseRequest(e -> callback.accept(null));
+        MenuManager.goTo(new Scene(root, 400, 420));
+//        stage.setTitle("Create Customer");
     }
 
     // Creates a new Restaurant
-    public static void createRestaurant(Stage stage, int code, Consumer<Restaurant> callback) {
-        GridPane grid = createGrid();
+    public static void createRestaurant(int code, Consumer<Restaurant> callback) {
+        GridPane grid = UIHelper.createGrid();
 
         TextField nameField = new TextField();
         TextField kitchenField = new TextField();
@@ -188,7 +159,7 @@ public class InputManager {
         grid.add(new Label("Delivery Fee:"), 0, 3); grid.add(feeField, 1, 3);
         grid.add(new Label("Is Open:"), 0, 4); grid.add(isOpenBox, 1, 4);
 
-        VBox root = createBaseFormLayout("Create Restaurant", grid, () -> {
+        VBox root = UIHelper.createBaseFormLayout("Create Restaurant", grid, () -> {
             String name = nameField.getText().trim();
             String kitchen = kitchenField.getText().trim();
 
@@ -215,15 +186,14 @@ public class InputManager {
             }
         }, () -> callback.accept(null));
 
-        stage.setOnCloseRequest(e -> callback.accept(null));
-        stage.setScene(new Scene(root, 400, 320));
-        stage.setTitle("Create Restaurant");
-        stage.show();
+//        stage.setOnCloseRequest(e -> callback.accept(null));
+        MenuManager.goTo(new Scene(root, 400, 320));
+//        stage.setTitle("Create Restaurant");
     }
 
     // Creates a new FastFoodRestaurant
-    public static void createFastFoodRestaurant(Stage stage, int code, Consumer<FastFoodRestaurant> callback) {
-        GridPane grid = createGrid();
+    public static void createFastFoodRestaurant(int code, Consumer<FastFoodRestaurant> callback) {
+        GridPane grid = UIHelper.createGrid();
 
         TextField nameField = new TextField();
         TextField kitchenField = new TextField();
@@ -241,7 +211,7 @@ public class InputManager {
         grid.add(new Label("Express Cost:"), 0, 5); grid.add(expressCostField, 1, 5);
         grid.add(new Label("Is Open:"), 0, 6); grid.add(isOpenBox, 1, 6);
 
-        VBox root = createBaseFormLayout("Create Fast Food Restaurant", grid, () -> {
+        VBox root = UIHelper.createBaseFormLayout("Create Fast Food Restaurant", grid, () -> {
             String name = nameField.getText().trim();
             String kitchen = kitchenField.getText().trim();
 
@@ -271,15 +241,14 @@ public class InputManager {
             }
         }, () -> callback.accept(null));
 
-        stage.setOnCloseRequest(e -> callback.accept(null));
-        stage.setScene(new Scene(root, 400, 380));
-        stage.setTitle("Create Fast Food Restaurant");
-        stage.show();
+//        stage.setOnCloseRequest(e -> callback.accept(null));
+        MenuManager.goTo(new Scene(root, 400, 380));
+//        stage.setTitle("Create Fast Food Restaurant");
     }
 
     // Creates a new PremiumRestaurant
-    public static void createPremiumRestaurant(Stage stage, int code, Consumer<PremiumRestaurant> callback) {
-        GridPane grid = createGrid();
+    public static void createPremiumRestaurant(int code, Consumer<PremiumRestaurant> callback) {
+        GridPane grid = UIHelper.createGrid();
 
         TextField nameField = new TextField();
         TextField kitchenField = new TextField();
@@ -297,7 +266,7 @@ public class InputManager {
         grid.add(new Label("Commission %:"), 0, 5); grid.add(commissionField, 1, 5);
         grid.add(new Label("Is Open:"), 0, 6); grid.add(isOpenBox, 1, 6);
 
-        VBox root = createBaseFormLayout("Create Premium Restaurant", grid, () -> {
+        VBox root = UIHelper.createBaseFormLayout("Create Premium Restaurant", grid, () -> {
             String name = nameField.getText().trim();
             String kitchen = kitchenField.getText().trim();
 
@@ -327,15 +296,15 @@ public class InputManager {
             }
         }, () -> callback.accept(null));
 
-        stage.setOnCloseRequest(e -> callback.accept(null));
-        stage.setScene(new Scene(root, 400, 380));
-        stage.setTitle("Create Premium Restaurant");
-        stage.show();
+//        stage.setOnCloseRequest(e -> callback.accept(null));
+        MenuManager.goTo(new Scene(root, 400, 380));
+//        stage.setTitle("Create Premium Restaurant");
+//        MenuManager.goTo
     }
 
     // Creates a new Date
-    public static void createDate(Stage stage, Consumer<Date> callback) {
-        GridPane grid = createGrid();
+    public static void createDate(Consumer<Date> callback) {
+        GridPane grid = UIHelper.createGrid();
 
         TextField yearField = new TextField();
         TextField monthField = new TextField();
@@ -345,7 +314,7 @@ public class InputManager {
         grid.add(new Label("Month (1-12):"), 0, 1); grid.add(monthField, 1, 1);
         grid.add(new Label("Day:"), 0, 2); grid.add(dayField, 1, 2);
 
-        VBox root = createBaseFormLayout("Create Date", grid, () -> {
+        VBox root = UIHelper.createBaseFormLayout("Create Date", grid, () -> {
             try {
                 int year = Integer.parseInt(yearField.getText().trim());
                 int month = Integer.parseInt(monthField.getText().trim());
@@ -371,20 +340,20 @@ public class InputManager {
             }
         }, () -> callback.accept(null));
 
-        stage.setOnCloseRequest(e -> callback.accept(null));
-        stage.setScene(new Scene(root, 350, 250));
-        stage.setTitle("Create Date");
-        stage.show();
+//        stage.setOnCloseRequest(e -> callback.accept(null));
+        MenuManager.goTo(new Scene(root, 350, 250));
+//        stage.setTitle("Create Date");
+//        
     }
 
     // Creates a Date after a given Date
-    public static void createDateAfterDate(Stage stage, Date before, Consumer<Date> callback) {
-        createDate(stage, d ->{
+    public static void createDateAfterDate(Date before, Consumer<Date> callback) {
+        createDate( d ->{
         	if(d == null) callback.accept(null);
-        	else if(!d.isAfter(before))
+        	else if(!d.isAfter(before) && !d.equals(before))
         	{
         		MessageBox.error("Validation Error", "The delivery date must be after the order creation date.");
-        		createDateAfterDate(stage, before, callback);
+        		createDateAfterDate(before, callback);
         	}
         	else callback.accept(d);
         } );

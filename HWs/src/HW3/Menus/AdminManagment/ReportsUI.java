@@ -3,10 +3,10 @@ package HW3.Menus.AdminManagment;
 import HW3.DeliveryDataBase;
 import HW3.Menus.Tables;
 import HW3.Menus.UIBase;
-import javafx.stage.Stage;
 import HW3.DataObjects.PremiumRestaurant;
 import HW3.DataObjects.Restaurant;
 import HW3.DataObjects.Rider;
+import HW3.Utils.MenuManager;
 import HW3.Utils.MessageBox;
 import HW3.Utils.UIHelper;
 import javafx.geometry.Insets;
@@ -19,8 +19,9 @@ import javafx.scene.layout.VBox;
 
 public class ReportsUI extends UIBase {
 
-	public ReportsUI(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
-		super(stage, deliveryDataBase, backF);
+
+	public ReportsUI(DeliveryDataBase deliveryDataBase) {
+		super(deliveryDataBase);
 	}
 
 	@Override
@@ -39,55 +40,55 @@ public class ReportsUI extends UIBase {
         Button sortCustomersByBalanceButton = UIHelper.createButton("Sort Customers by Balance", 
             () -> {
                 deliveryDataBase.sortCustomersByBalance();
-                Tables.customer(stage, deliveryDataBase.getCustomers(), this::Main);
+                Tables.customer( deliveryDataBase.getCustomers());
             });
 
         Button sortCustomersByNameButton = UIHelper.createButton("Sort Customers by First Name", 
             () -> {
                 deliveryDataBase.sortCustomersByName();
-                Tables.customer(stage, deliveryDataBase.getCustomers(), this::Main);
+                Tables.customer( deliveryDataBase.getCustomers());
             });
         
         Button sortRestaurantsByRatingButton = UIHelper.createButton("Sort Restaurants by Rating", 
             () -> {
                 deliveryDataBase.sortRestaurantsByRaiting();
-                Tables.restaurant(stage, deliveryDataBase.getRestaurants(), this::Main);
+                Tables.restaurant( deliveryDataBase.getRestaurants());
             });
 
         Button sortOrdersByPriceButton = UIHelper.createButton("Sort Orders by Final Price", 
             () -> {
                 deliveryDataBase.sortOrdersByFinalPrice();
-                Tables.order(stage, deliveryDataBase.getOrders(), this::Main);
+                Tables.order( deliveryDataBase.getOrders());
             });
         
         Button sortOrdersByDateButton = UIHelper.createButton("Sort Orders by Date", 
             () -> {
                 deliveryDataBase.sortOrdersByDate();
-                Tables.order(stage, deliveryDataBase.getOrders(), this::Main);
+                Tables.order( deliveryDataBase.getOrders());
             });
 
         Button sortRidersByDeliveriesButton = UIHelper.createButton("Sort Riders by Delivery Count", 
             () -> {
                 deliveryDataBase.sortRidersByDeliverdCount();
-                Tables.rider(stage, deliveryDataBase.getRiders(), this::Main);
+                Tables.rider( deliveryDataBase.getRiders());
             });
         
         Button showOpenRestaurantsButton = UIHelper.createButton("Show Open Restaurants", 
-        		() -> Tables.restaurant(stage, deliveryDataBase.getRestaurants().stream()
-                        .filter(Restaurant::getIsOpen).toList(), this::Main));
+        		() -> Tables.restaurant( deliveryDataBase.getRestaurants().stream()
+                        .filter(Restaurant::getIsOpen).toList()));
         Button showPremiumRestaurantsButton = UIHelper.createButton("Show Premium Restaurants", 
-        		() -> Tables.restaurant(stage, deliveryDataBase.getRestaurants().stream()
-                        .filter(r -> r instanceof PremiumRestaurant).toList(), this::Main));
+        		() -> Tables.restaurant( deliveryDataBase.getRestaurants().stream()
+                        .filter(r -> r instanceof PremiumRestaurant).toList()));
         
         Button showAvailableRidersButton = UIHelper.createButton("Show Available Riders", 
-        		() -> Tables.rider(stage,  deliveryDataBase.getRiders().stream()
-                        .filter(Rider::getIsAvailable).toList(), this::Main));
+        		() -> Tables.rider(  deliveryDataBase.getRiders().stream()
+                        .filter(Rider::getIsAvailable).toList()));
         Button showTotalPaymentsButton = UIHelper.createButton("Show Total Payments", 
         		() -> MessageBox.Info("Total System Payments", "Total payments collected in the system: " + deliveryDataBase.getTotalSpentByCustomer().values().stream()
                         .mapToDouble(Double::doubleValue)
                         .sum()));
 
-        Button backButton = UIHelper.createButton("Back", backF);
+        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
 
         grid.add(sortCustomersByBalanceButton, 0, 0);
         grid.add(sortCustomersByNameButton, 1, 0);
@@ -108,6 +109,6 @@ public class ReportsUI extends UIBase {
 
         root.setCenter(grid);
 
-        stage.setScene(new Scene(root, 750, 650));
+        MenuManager.goTo(new Scene(root, 750, 650));
     }
 }

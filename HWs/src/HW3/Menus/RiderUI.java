@@ -5,6 +5,7 @@ import HW3.DataObjects.Order.OrderStatus;
 import HW3.DataObjects.*;
 import HW3.Exceptions.*;
 import HW3.Utils.InputManager;
+import HW3.Utils.MenuManager;
 import HW3.Utils.MessageBox;
 import HW3.Utils.UIHelper;
 import javafx.geometry.Insets;
@@ -16,14 +17,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 public class RiderUI extends UIBase  {
 	
 	private Rider rider;
 
-	public RiderUI(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
-		super(stage, deliveryDataBase, backF);
+	public RiderUI(DeliveryDataBase deliveryDataBase) {
+		super(deliveryDataBase);
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class RiderUI extends UIBase  {
 			}
         });
         
-        Button backButton = UIHelper.createButton("Back", e -> backF.run());
+        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
 
         root.getChildren().addAll(
                 title,
@@ -53,7 +53,7 @@ public class RiderUI extends UIBase  {
                 backButton
         );
 
-    	stage.setScene(new Scene(root, 500, 400));
+        MenuManager.goTo(new Scene(root, 500, 400));
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class RiderUI extends UIBase  {
 	    grid.setAlignment(Pos.CENTER);
 
 	    Button viewAssignedOrdersButton = UIHelper.createButton("View Assigned Orders", 
-	    		() -> Tables.order(stage, rider.getDeliverdOrders(), this::Main, rider.getCurrentOrder()));
+	    		() -> Tables.order( rider.getDeliverdOrders(), rider.getCurrentOrder()));
 	    Button viewActiveOrderButton = UIHelper.createButton("View Active Order", 
 	    		() ->{
 	    			if (rider.getCurrentOrder() != null) {
@@ -84,11 +84,11 @@ public class RiderUI extends UIBase  {
 	    Button updateToDeliveredButton = UIHelper.createButton("Update Status to 'Delivered'", this::updateStatusToDelivered);
 
 	    Button viewHistoryButton = UIHelper.createButton("View Delivery History", 
-	    		() -> Tables.order(stage, rider.getDeliverdOrders(), this::Main));
+	    		() -> Tables.order( rider.getDeliverdOrders()));
 	    Button viewTotalCountButton = UIHelper.createButton("Show Total Deliveries Count", 
 	    		() -> MessageBox.Info("Total Deliveries", "You have completed " + rider.getDeliverdOrders().size() + " deliveries."));
 
-	    Button backButton = UIHelper.createButton("Back", backF);
+	    Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
 
 	    grid.add(viewAssignedOrdersButton, 0, 0);
 	    grid.add(viewActiveOrderButton, 1, 0);
@@ -103,7 +103,7 @@ public class RiderUI extends UIBase  {
 
 	    root.setCenter(grid);
 
-	    stage.setScene(new Scene(root, 700, 600));
+	    MenuManager.goTo(new Scene(root, 700, 600));
 	}
 
 	private void updateStatusToOnWay() {
@@ -136,7 +136,7 @@ public class RiderUI extends UIBase  {
 	        return;
 	    }
 	    
-	    InputManager.createDateAfterDate(stage, rider.getCurrentOrder().getOrderingDate(), date -> {
+	    InputManager.createDateAfterDate( rider.getCurrentOrder().getOrderingDate(), date -> {
 	        if (date != null) {
 	            try {
 	                deliveryDataBase.updateDeliveryStatus(rider.getId(), date);
@@ -145,7 +145,7 @@ public class RiderUI extends UIBase  {
 	                MessageBox.error(e);
 	            }
 	        }
-	        Main();
+	        MenuManager.goBack();
 	    });
 	}
 	

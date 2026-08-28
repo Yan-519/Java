@@ -9,9 +9,9 @@ import HW3.Exceptions.TargetObjectAlreadyExistException;
 import HW3.Exceptions.TargetObjectDoesntExistException;
 import HW3.Menus.UIBase;
 import HW3.Menus.Tables;
-import javafx.stage.Stage;
 import HW3.Utils.DataSelector;
 import HW3.Utils.InputManager;
+import HW3.Utils.MenuManager;
 import HW3.Utils.MessageBox;
 import HW3.Utils.UIHelper;
 import javafx.geometry.Insets;
@@ -22,8 +22,9 @@ import javafx.scene.layout.*;
 
 public class RiderManagment extends UIBase {
 
-	public RiderManagment(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
-		super(stage, deliveryDataBase, backF);
+
+	public RiderManagment(DeliveryDataBase deliveryDataBase) {
+		super(deliveryDataBase);
 	}
 
 	@Override
@@ -40,9 +41,9 @@ public class RiderManagment extends UIBase {
 	    grid.setAlignment(Pos.CENTER);
 
 	    Button showAllButton = UIHelper.createButton("Show All Riders", 
-	    		() -> Tables.rider(stage, deliveryDataBase.getRiders(), this::Main));
+	    		() -> Tables.rider( deliveryDataBase.getRiders()));
 	    Button addRiderButton = UIHelper.createButton("Add New Rider",  e -> {
-                	InputManager.createRider(stage, customer -> {
+                	InputManager.createRider( customer -> {
                 	    if (customer != null) {
                 	    	try {
 	                	        deliveryDataBase.add(customer);
@@ -51,7 +52,7 @@ public class RiderManagment extends UIBase {
 	                	        MessageBox.error(ex);
 	                	    }
                 	    }
-                	    Main();
+                	    MenuManager.goBack();
                 	});
                 }
 );
@@ -62,7 +63,7 @@ public class RiderManagment extends UIBase {
 	    Button riderOrdersButton = UIHelper.createButton("Show Rider Orders", () ->{
 	    	Rider rider = DataSelector.selectRider();
 	    	if(rider == null) return;
-	    	Tables.order(stage, rider.getDeliverdOrders(), this::Main, rider.getCurrentOrder());
+	    	Tables.order( rider.getDeliverdOrders(), rider.getCurrentOrder());
 	    });
 
 	    Button updateStatusButton = UIHelper.createButton("Update Order Status", () ->{
@@ -84,7 +85,7 @@ public class RiderManagment extends UIBase {
 			
 			
 			if(order.getStatus() == OrderStatus.OnTheWay) {
-				InputManager.createDateAfterDate(stage, order.getOrderingDate(), d ->{
+				InputManager.createDateAfterDate( order.getOrderingDate(), d ->{
 					try {
 						deliveryDataBase.updateDeliveryStatus(rider.getId(), d);
 					} catch (RiderNotFoundException | TargetObjectDoesntExistException e) {
@@ -105,7 +106,7 @@ public class RiderManagment extends UIBase {
 	    	MessageBox.Info(rider.toString() + " ( count: " + rider.getDeliverdOrders().size() + ")" );
 	    });
 	    
-	    Button backButton = UIHelper.createButton("Back", backF);
+	    Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
 
 	    grid.add(showAllButton, 0, 0);
 	    grid.add(addRiderButton, 1, 0);
@@ -120,7 +121,7 @@ public class RiderManagment extends UIBase {
 
 	    root.setCenter(grid);
 
-	    stage.setScene(new Scene(root, 700, 600));
+	    MenuManager.goTo(new Scene(root, 700, 600));
 	}
 
 }

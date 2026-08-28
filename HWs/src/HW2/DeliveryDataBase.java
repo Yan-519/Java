@@ -166,7 +166,7 @@ public class DeliveryDataBase {
 			int customerCode = customer.getCode();
 			int orderCount = getNumberOfOrdersForCustomer(customerCode);
 
-			if (orderCount >= maxOrders) {
+			if (orderCount >= maxOrders || customerWithMostOrders == null) {
 				maxOrders = orderCount;
 				customerWithMostOrders = customer;
 			}
@@ -183,7 +183,7 @@ public class DeliveryDataBase {
 		for (Rider rider : riders) {
 			int orderCount = rider.getDeliverdOrders().size();
 
-			if (orderCount >= maxOrders) {
+			if (orderCount >= maxOrders || riderWithMostOrders == null) {
 				maxOrders = orderCount;
 				riderWithMostOrders = rider;
 			}

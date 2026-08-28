@@ -6,6 +6,7 @@ import HW3.DeliveryDataBase;
 import HW3.DataObjects.*;
 import HW3.Menus.AdminManagment.*;
 import HW3.Utils.DataManager;
+import HW3.Utils.MenuManager;
 import HW3.Utils.MessageBox;
 import HW3.Utils.UIHelper;
 import javafx.geometry.Insets;
@@ -18,7 +19,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 public class AdminUI extends UIBase {
 	
@@ -30,17 +30,19 @@ public class AdminUI extends UIBase {
 	
 	private ReportsUI reportsUI;
 	
+	
+	
 
-	public AdminUI(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
-		super(stage, deliveryDataBase, backF);
+	public AdminUI(DeliveryDataBase deliveryDataBase) {
+		super(deliveryDataBase);
 		
-		customerManagment = new CustomerManagment(stage, deliveryDataBase, this::Main);
-		orderManagment = new OrderManagment(stage, deliveryDataBase, this::Main);
-		restAdminManagment = new RestAdminManagment(stage, deliveryDataBase, this::Main);
-		restaurantManagment = new RestaurantManagment(stage, deliveryDataBase, this::Main);
-		riderManagment = new RiderManagment(stage, deliveryDataBase, this::Main);
+		customerManagment = new CustomerManagment(deliveryDataBase);
+		orderManagment = new OrderManagment(deliveryDataBase);
+		restAdminManagment = new RestAdminManagment(deliveryDataBase);
+		restaurantManagment = new RestaurantManagment(deliveryDataBase);
+		riderManagment = new RiderManagment(deliveryDataBase);
 		
-		reportsUI = new ReportsUI(stage, deliveryDataBase, this::Main);
+		reportsUI = new ReportsUI(deliveryDataBase);
 	}
 
 	@Override
@@ -59,12 +61,12 @@ public class AdminUI extends UIBase {
 
         Button loginButton = UIHelper.createButton("Login", () -> {
         	if (deliveryDataBase.logIntoAdmin(username.getText(), password.getText())) 
-                Main();
+        		Main();
             
             else MessageBox.error("Login Error", "Incorrect username or password.");
         });
         
-        Button backButton = UIHelper.createButton("Back", backF);
+        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
         
         root.getChildren().addAll(
                 title,
@@ -74,7 +76,7 @@ public class AdminUI extends UIBase {
                 backButton
         );
 
-        stage.setScene(new Scene(root, 500, 400));
+        MenuManager.goTo(new Scene(root, 500, 400));
 	}
 	
 
@@ -109,7 +111,7 @@ public class AdminUI extends UIBase {
 
         Button loadButton = UIHelper.createButton("Load Data", this::loadData);
 
-        Button exitButton = UIHelper.createButton("Exit", backF);
+        Button exitButton = UIHelper.createButton("Exit", MenuManager::goBack);
 
         grid.add(customersButton, 0, 0);
         grid.add(restaurantsButton, 1, 0);
@@ -127,7 +129,7 @@ public class AdminUI extends UIBase {
 
         root.setCenter(grid);
 
-        stage.setScene(new Scene(root, 700, 600));
+        MenuManager.goTo(new Scene(root, 700, 600));
 
     }
     

@@ -8,6 +8,7 @@ import HW3.Exceptions.TargetObjectDoesntExistException;
 import HW3.Utils.DataChecker;
 import HW3.Utils.DataSelector;
 import HW3.Utils.InputManager;
+import HW3.Utils.MenuManager;
 import HW3.Utils.MessageBox;
 import HW3.Utils.MessageBox.NumberSign;
 import HW3.Utils.UIHelper;
@@ -20,14 +21,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 public class CustomerUI extends UIBase  {
 	
 	private Customer customer;
 
-	public CustomerUI(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
-		super(stage, deliveryDataBase, backF);
+	public CustomerUI(DeliveryDataBase deliveryDataBase) {
+		super(deliveryDataBase);
 	}
 
 	@Override
@@ -42,16 +42,14 @@ public class CustomerUI extends UIBase  {
         Button loginButton = UIHelper.createButton("Login", e -> {
         	try {
         		customer = deliveryDataBase.getCustomer(Integer.valueOf(code.getText()));
-				Main();
+        		Main();
 			} catch ( CodedNotFoundException | TargetObjectDoesntExistException e1) {
 				MessageBox.error(e1);
 			}catch (NumberFormatException ex) {
 				MessageBox.error("Code must be a number", ex);
 			}
         });
-        Button backButton = UIHelper.createButton("Back", e -> backF.run());
-
-        backButton.setOnAction( e -> backF.run());
+        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
 
         root.getChildren().addAll(
                 title,
@@ -60,7 +58,7 @@ public class CustomerUI extends UIBase  {
                 backButton
         );
 
-    	stage.setScene(new Scene(root, 500, 400));
+        MenuManager.goTo(new Scene(root, 500, 400));
 	}
 
 	@Override
@@ -80,7 +78,7 @@ public class CustomerUI extends UIBase  {
 	    Button newOrderButton = UIHelper.createButton("Place New Order", this::placeNewOrder);
 
 	    Button viewOrdersButton = UIHelper.createButton("View Order History", 
-	    		() -> Tables.order(stage, deliveryDataBase.getOrdersOfCustomer(customer), this::Main));
+	    		() -> Tables.order(deliveryDataBase.getOrdersOfCustomer(customer)));
 	    Button updateDetailsButton = UIHelper.createButton("Update Profile Info", this::updateProfileInfo);
 
 	    Button depositMoneyButton = UIHelper.createButton("Deposit Funds", () -> {
@@ -106,14 +104,14 @@ public class CustomerUI extends UIBase  {
 	    Button viewBalanceButton = UIHelper.createButton("Show Current Balance", 
 	    		() -> MessageBox.Info("Current balance: " + customer.getBalance()));
 	    Button visitedRestaurantsButton = UIHelper.createButton("Show Ordered Restaurants", 
-	    		() -> Tables.restaurant(stage, deliveryDataBase.getRestaurantasBuyCustomer(customer.getCode()), this::Main));
+	    		() -> Tables.restaurant( deliveryDataBase.getRestaurantasBuyCustomer(customer.getCode())));
 
 	    Button luxuryRestaurantsButton = UIHelper.createButton("Show Ordered Luxury Restaurants", 
-	    		() -> Tables.restaurant(stage, deliveryDataBase.getPremiumRestaurantsByCustomer(customer), this::Main));
+	    		() -> Tables.restaurant( deliveryDataBase.getPremiumRestaurantsByCustomer(customer)));
 	    Button searchRestaurantButton = UIHelper.createButton("Search Restaurant by Code", 
 	    		() -> MessageBox.Info(DataSelector.selectRestaurant()));
 
-	    Button backButton = UIHelper.createButton("Back", backF);
+	    Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
 
 	    grid.add(viewProfileButton, 0, 0);
 	    grid.add(newOrderButton, 1, 0);
@@ -134,7 +132,7 @@ public class CustomerUI extends UIBase  {
 
 	    root.setCenter(grid);
 
-	    stage.setScene(new Scene(root, 700, 600));
+	    MenuManager.goTo(new Scene(root, 700, 600));
 	}
 
 
@@ -150,7 +148,7 @@ public class CustomerUI extends UIBase  {
 		Double basePrice = MessageBox.inputDOUB(null, "Enter the base fee (not negative)", NumberSign.NOT_NEGATIVE);
 		if(basePrice == null) return;
 		
-		InputManager.createDate(stage, d ->{
+		InputManager.createDate( d ->{
 			if(d != null)
 				try {
 					MessageBox.Info("New code", deliveryDataBase.addOrder(restaurant.getCode(), customer.getCode(), basePrice, d));
@@ -158,7 +156,7 @@ public class CustomerUI extends UIBase  {
 					MessageBox.error(e);
 				}
 			
-			Main();
+			MenuManager.goBack();
 		});
 
 	}

@@ -10,6 +10,7 @@ import HW3.Menus.Tables;
 import HW3.Menus.UIBase;
 import HW3.Utils.DataSelector;
 import HW3.Utils.InputManager;
+import HW3.Utils.MenuManager;
 import HW3.Utils.MessageBox;
 import HW3.Utils.UIHelper;
 import javafx.geometry.Insets;
@@ -19,12 +20,12 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 public class RestaurantManagment extends UIBase {
 
-	public RestaurantManagment(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
-		super(stage, deliveryDataBase, backF);
+
+	public RestaurantManagment(DeliveryDataBase deliveryDataBase) {
+		super(deliveryDataBase);
 	}
 
 	@Override
@@ -41,7 +42,7 @@ public class RestaurantManagment extends UIBase {
         grid.setAlignment(Pos.CENTER);
 
         Button showAllButton = UIHelper.createButton("Show All Restaurants", e -> {
-        	Tables.restaurant(stage, deliveryDataBase.getRestaurants(), this::Main);
+        	Tables.restaurant( deliveryDataBase.getRestaurants());
         });
         Button searchByCodeButton = UIHelper.createButton("Search Restaurant by Code", 
         		() -> MessageBox.Info(DataSelector.selectRestaurant()));
@@ -75,14 +76,14 @@ public class RestaurantManagment extends UIBase {
         Button filterByTypeButton = UIHelper.createButton("Show Restaurants by Type", () -> {
 			String type = MessageBox.inputSTR(null, "Enter restauran kitchen type", null);
 			if(type == null) return;
-			Tables.restaurant(stage,
-					deliveryDataBase.getRestaurants().stream().filter(r -> r.getKitchenType().equalsIgnoreCase(type)).toList(), this::Main);
+			Tables.restaurant(
+					deliveryDataBase.getRestaurants().stream().filter(r -> r.getKitchenType().equalsIgnoreCase(type)).toList());
 		});
         Button filterOpenOnlyButton = UIHelper.createButton("Show Open Restaurants Only", () ->
-        Tables.restaurant(stage, deliveryDataBase.getRestaurants().stream().filter(r -> r.getIsOpen()).toList(), this::Main)
+        Tables.restaurant( deliveryDataBase.getRestaurants().stream().filter(r -> r.getIsOpen()).toList())
         );
 
-        Button backButton = UIHelper.createButton("Back", backF);
+        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
 
         grid.add(showAllButton, 0, 0);
         grid.add(searchByCodeButton, 1, 0);
@@ -100,7 +101,7 @@ public class RestaurantManagment extends UIBase {
 
         root.setCenter(grid);
 
-        stage.setScene(new Scene(root, 700, 600));
+        MenuManager.goTo(new Scene(root, 700, 600));
     }
 
     private void addNewRestaurant() {
@@ -118,7 +119,7 @@ public class RestaurantManagment extends UIBase {
 		
 		
 		else if(type.equals("Regular")) {
-			InputManager.createRestaurant(stage, code, rest -> {
+			InputManager.createRestaurant( code, rest -> {
 	    	    if (rest != null) {
 	    	    	try {
 	        	        deliveryDataBase.add(rest);
@@ -127,11 +128,11 @@ public class RestaurantManagment extends UIBase {
 	        	        MessageBox.error(ex);
 	        	    }
 	    	    }
-	    	    Main();
+	    	    MenuManager.goBack();
 	    	});
 		}
 		else if(type.equals("Fast food")) {
-			InputManager.createFastFoodRestaurant(stage, code, rest -> {
+			InputManager.createFastFoodRestaurant( code, rest -> {
 	    	    if (rest != null) {
 	    	    	try {
 	        	        deliveryDataBase.add(rest);
@@ -140,11 +141,11 @@ public class RestaurantManagment extends UIBase {
 	        	        MessageBox.error(ex);
 	        	    }
 	    	    }
-	    	    Main();
+	    	    MenuManager.goBack();
 	    	});
 		}
 		else if(type.equals("Primium")) {
-			InputManager.createPremiumRestaurant(stage, code, rest -> {
+			InputManager.createPremiumRestaurant( code, rest -> {
 	    	    if (rest != null) {
 	    	    	try {
 	        	        deliveryDataBase.add(rest);
@@ -153,7 +154,7 @@ public class RestaurantManagment extends UIBase {
 	        	        MessageBox.error(ex);
 	        	    }
 	    	    }
-	    	    Main();
+	    	    MenuManager.goBack();
 	    	});
 		}
     }

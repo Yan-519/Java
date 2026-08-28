@@ -39,9 +39,36 @@ public class MessageBox {
 		show(AlertType.INFORMATION, title, header.toString(), null);
 	}
 	
-	public static void Info(Object header) {
+	public static void Info(String header) {
 		if(header == null) return;
 		show(AlertType.INFORMATION, "Noitice", header.toString(), null);
+	}
+	
+	public static void Info(Object header) {
+		if(header == null) return;
+		
+		String str = header.toString();
+		if(str.contains("[")) 
+			str = str.substring(str.indexOf("[") + 1);
+		if(str.contains("]"))
+			str = str.substring(0, str.lastIndexOf("]") - 1);
+		
+		if(str.contains(", ")) {
+			StringBuilder stringBuilder = new StringBuilder();
+			
+			int size = 0;
+			for (String part : str.split(", ")) {
+				if( 75 <= size ) {
+					stringBuilder.append('\n');
+					size = 0;
+				}
+				size += part.length();
+				stringBuilder.append(part + ", ");
+			}
+			str = stringBuilder.toString();
+		}
+		
+		show(AlertType.INFORMATION, "Noitice", str, null);
 	}
 	
 	

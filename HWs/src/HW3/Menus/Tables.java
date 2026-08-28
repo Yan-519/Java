@@ -1,22 +1,27 @@
 package HW3.Menus;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import HW3.DataObjects.*;
+import HW3.Utils.MenuManager;
 import HW3.Utils.MessageBox;
 import HW3.Utils.UIHelper;
 
@@ -25,7 +30,7 @@ public class Tables {
 	// all functions are creating tables to show the given values
 
 	@SuppressWarnings("unchecked")
-	public static void customer(Stage stage, List<Customer> lst, Runnable backF) {
+	public static void customer(List<Customer> lst) {
         if (lst.isEmpty()) {
             MessageBox.Info("No values found");
             return;
@@ -55,16 +60,16 @@ public class Tables {
         tableView.getColumns().addAll(colFirstName, colLastName, colPhone, colEmail, colTown, colBalance);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
-        Button backButton = UIHelper.createButton("Back", e -> backF.run());
+        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
 
         VBox root = UIHelper.createVRoot();
         root.getChildren().addAll(tableView, backButton);
 
-        stage.setScene(new Scene(root, 700, 400));
+        MenuManager.goTo(new Scene(root, 700, 400));
     }
 	
 	@SuppressWarnings("unchecked")
-	public static void order(Stage stage, List<Order> lst, Runnable backF) {
+	public static void order(List<Order> lst) {
         if (lst == null || lst.isEmpty()) {
             MessageBox.Info("No values found");
             return;
@@ -105,16 +110,16 @@ public class Tables {
 
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
-        Button backButton = UIHelper.createButton("Back", e -> backF.run());
+        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
 
         VBox root = UIHelper.createVRoot();
         root.getChildren().addAll(tableView, backButton);
 
-        stage.setScene(new Scene(root, 800, 450));
+        MenuManager.goTo(new Scene(root, 800, 450));
     }
 	
 	@SuppressWarnings("unchecked")
-	public static void order(Stage stage, List<Order> deliveredOrders, Runnable backF, Order currentOrder) {
+	public static void order(List<Order> deliveredOrders, Order currentOrder) {
         List<Order> allOrders = new ArrayList<>();
         
         if (currentOrder != null) {
@@ -165,7 +170,7 @@ public class Tables {
 
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
-        Button backButton = UIHelper.createButton("Back", e -> backF.run());
+        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
 
         VBox root = UIHelper.createVRoot();
         
@@ -177,11 +182,11 @@ public class Tables {
             root.getChildren().addAll(tableView, backButton);
         }
 
-        stage.setScene(new Scene(root, 850, 450));
+        MenuManager.goTo(new Scene(root, 850, 450));
     }
 	
 	@SuppressWarnings("unchecked")
-	public static void restaurant(Stage stage, List<? extends Restaurant> lst, Runnable backF) {
+	public static void restaurant(List<? extends Restaurant> lst) {
         if (lst == null || lst.isEmpty()) {
             MessageBox.Info("No values found");
             return;
@@ -207,33 +212,29 @@ public class Tables {
 
         TableColumn<Restaurant, String> colPrepTime = new TableColumn<>("Prep Time (min)");
         colPrepTime.setCellValueFactory(cell -> {
-            if (cell.getValue() instanceof FastFoodRestaurant fastFood) {
+            if (cell.getValue() instanceof FastFoodRestaurant fastFood) 
                 return new SimpleStringProperty(String.valueOf(fastFood.getAveragePreparingTimeInMinutes()));
-            }
             return new SimpleStringProperty("-");
         });
 
         TableColumn<Restaurant, String> colExpressCost = new TableColumn<>("Express Delivery Fee");
         colExpressCost.setCellValueFactory(cell -> {
-            if (cell.getValue() instanceof FastFoodRestaurant fastFood) {
+            if (cell.getValue() instanceof FastFoodRestaurant fastFood) 
                 return new SimpleStringProperty(String.valueOf(fastFood.getAdditionalCostForExpressDelivery()));
-            }
             return new SimpleStringProperty("-");
         });
 
         TableColumn<Restaurant, String> colMinOrder = new TableColumn<>("Min Order");
         colMinOrder.setCellValueFactory(cell -> {
-            if (cell.getValue() instanceof PremiumRestaurant premium) {
+            if (cell.getValue() instanceof PremiumRestaurant premium) 
                 return new SimpleStringProperty(String.valueOf( premium.getMinimumOrderCost()));
-            }
             return new SimpleStringProperty("-");
         });
 
         TableColumn<Restaurant, String> colCommission = new TableColumn<>("Commission (%)");
         colCommission.setCellValueFactory(cell -> {
-            if (cell.getValue() instanceof PremiumRestaurant premium) {
+            if (cell.getValue() instanceof PremiumRestaurant premium) 
                 return new SimpleStringProperty(String.valueOf( premium.getAdditionalCommissionPercentagePerOrder()));
-            }
             return new SimpleStringProperty("-");
         });
 
@@ -244,16 +245,16 @@ public class Tables {
 
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
-        Button backButton = UIHelper.createButton("Back", e -> backF.run());
+        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
 
         VBox root = UIHelper.createVRoot();
         root.getChildren().addAll(tableView, backButton);
 
-        stage.setScene(new Scene(root, 950, 450));
+        MenuManager.goTo(new Scene(root, 950, 450));
     }
 	
 	@SuppressWarnings("unchecked")
-	public static void rider(Stage stage, List<Rider> lst, Runnable backF) {
+	public static void rider(List<Rider> lst) {
 	    if (lst == null || lst.isEmpty()) {
 	        MessageBox.Info("No values found");
 	        return;
@@ -299,16 +300,16 @@ public class Tables {
 
 	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
-	    Button backButton = UIHelper.createButton("Back", e -> backF.run());
+	    Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
 
 	    VBox root = UIHelper.createVRoot();
 	    root.getChildren().addAll(tableView, backButton);
 
-	    stage.setScene(new Scene(root, 900, 450));
+	    MenuManager.goTo(new Scene(root, 900, 450));
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void restAdmin(Stage stage, List<RestAdmin> lst, Runnable backF) {
+	public static void restAdmin(List<RestAdmin> lst) {
 	    if (lst == null || lst.isEmpty()) {
 	        MessageBox.Info("No values found");
 	        return;
@@ -331,18 +332,120 @@ public class Tables {
 	        List<Restaurant> restList = cell.getValue().getRestaurants();
 	        if (restList == null || restList.isEmpty()) 
 	            return new SimpleStringProperty("None");
-	        return new SimpleStringProperty(restList.stream().map(Restaurant::getName).collect(Collectors.joining(", ")));
+	        return new SimpleStringProperty(restList.stream().map( r -> r.getName() + "(" + r.getCode() + ")").collect(Collectors.joining(", ")));
 	    });
 
 	    tableView.getColumns().addAll(colName, colUsername, colPassword, colRestaurants);
 	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
-	    Button backButton = UIHelper.createButton("Back", e -> backF.run());
+	    Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
 
 	    VBox root = UIHelper.createVRoot();
 	    root.getChildren().addAll(tableView, backButton);
 
-	    stage.setScene(new Scene(root, 750, 400));
+	    MenuManager.goTo(new Scene(root, 750, 400));
 	}
+	
+	// select restaurants
+	@SuppressWarnings("unchecked")
+	public static void createCodedSelectionView(List<? extends Restaurant> items, Consumer<HashSet<Integer>> onFinish) {
+	    if (items == null || items.isEmpty()) {
+	        MessageBox.Info("No values found");
+	        return;
+	    }
+
+	    HashSet<Integer> selected = new HashSet<>();
+	    ObservableList<Restaurant> observables = FXCollections.observableArrayList(items);
+	    TableView<Restaurant> tableView = new TableView<>(observables);
+
+	    TableColumn<Restaurant, Boolean> colSelect = new TableColumn<>("Select");
+	    colSelect.setCellValueFactory(cell -> new SimpleBooleanProperty(selected.contains(cell.getValue().getCode())));
+	    colSelect.setCellFactory(col -> new TableCell<>() {
+	        private final CheckBox checkBox = new CheckBox();
+
+	        {
+	            checkBox.setOnAction(e -> {
+	                Restaurant currentItem = getTableView().getItems().get(getIndex());
+	                if (currentItem != null) {
+	                    if (checkBox.isSelected()) {
+	                        selected.add(currentItem.getCode());
+	                    } else {
+	                        selected.remove(currentItem.getCode());
+	                    }
+	                }
+	            });
+	        }
+
+	        @Override
+	        protected void updateItem(Boolean item, boolean empty) {
+	            super.updateItem(item, empty);
+	            if (empty || getTableRow() == null || getTableRow().getItem() == null) {
+	                setGraphic(null);
+	            } else {
+	                Restaurant currentItem = getTableView().getItems().get(getIndex());
+	                checkBox.setSelected(selected.contains(currentItem.getCode()));
+	                setGraphic(checkBox);
+	            }
+	        }
+	    });
+
+	    TableColumn<Restaurant, String> colName = new TableColumn<>("Name");
+	    colName.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+	    TableColumn<Restaurant, String> colKitchen = new TableColumn<>("Kitchen Type");
+	    colKitchen.setCellValueFactory(new PropertyValueFactory<>("kitchenType"));
+
+	    TableColumn<Restaurant, Double> colRating = new TableColumn<>("Rating");
+	    colRating.setCellValueFactory(new PropertyValueFactory<>("rating"));
+
+	    TableColumn<Restaurant, Boolean> colIsOpen = new TableColumn<>("Open");
+	    colIsOpen.setCellValueFactory(new PropertyValueFactory<>("isOpen"));
+
+	    TableColumn<Restaurant, Double> colBaseFee = new TableColumn<>("Base Fee");
+	    colBaseFee.setCellValueFactory(new PropertyValueFactory<>("baseDeliveryFee"));
+
+	    TableColumn<Restaurant, String> colPrepTime = new TableColumn<>("Prep Time (min)");
+	    colPrepTime.setCellValueFactory(cell -> {
+	        if (cell.getValue() instanceof FastFoodRestaurant fastFood) 
+	            return new SimpleStringProperty(String.valueOf(fastFood.getAveragePreparingTimeInMinutes()));
+	        return new SimpleStringProperty("-");
+	    });
+
+	    TableColumn<Restaurant, String> colExpressCost = new TableColumn<>("Express Delivery Fee");
+	    colExpressCost.setCellValueFactory(cell -> {
+	        if (cell.getValue() instanceof FastFoodRestaurant fastFood) 
+	            return new SimpleStringProperty(String.valueOf(fastFood.getAdditionalCostForExpressDelivery()));
+	        return new SimpleStringProperty("-");
+	    });
+
+	    TableColumn<Restaurant, String> colMinOrder = new TableColumn<>("Min Order");
+	    colMinOrder.setCellValueFactory(cell -> {
+	        if (cell.getValue() instanceof PremiumRestaurant premium) 
+	            return new SimpleStringProperty(String.valueOf(premium.getMinimumOrderCost()));
+	        return new SimpleStringProperty("-");
+	    });
+
+	    TableColumn<Restaurant, String> colCommission = new TableColumn<>("Commission (%)");
+	    colCommission.setCellValueFactory(cell -> {
+	        if (cell.getValue() instanceof PremiumRestaurant premium) 
+	            return new SimpleStringProperty(String.valueOf(premium.getAdditionalCommissionPercentagePerOrder()));
+	        return new SimpleStringProperty("-");
+	    });
+
+	    tableView.getColumns().addAll(
+	        colSelect, colName, colKitchen, colRating, colIsOpen, colBaseFee,
+	        colPrepTime, colExpressCost, colMinOrder, colCommission
+	    );
+
+	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+
+	    Button finishButton = UIHelper.createButton("Finish", () -> onFinish.accept(selected));
+
+	    VBox root = UIHelper.createVRoot();
+	    root.getChildren().addAll(tableView, finishButton);
+	    
+	    MenuManager.goTo(new Scene(root, 900, 450));
+	}
+
 	
 }

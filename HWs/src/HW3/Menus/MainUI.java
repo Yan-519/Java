@@ -4,6 +4,7 @@ import HW3.DeliveryDataBase;
 import HW3.Exceptions.OrderNotFoundException;
 import HW3.Utils.DataSelector;
 import HW3.Utils.InputManager;
+import HW3.Utils.MenuManager;
 import HW3.Utils.UIHelper;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -19,21 +20,18 @@ public class MainUI extends UIBase {
 	private RiderUI riderUI;
 	
 
-    private MainUI(Stage stage, DeliveryDataBase deliveryDataBase, Runnable backF) {
-		super(stage, deliveryDataBase, backF);
-	}
 
 	public MainUI(Stage stage) throws OrderNotFoundException {
-		super(stage, new DeliveryDataBase(), () -> {});
+		super(new DeliveryDataBase());
 		
 		DataSelector.setDeliveryDataBase(deliveryDataBase);
 		InputManager.setDeliveryDataBase(deliveryDataBase);
 		
         stage.setTitle("Delivery System");
-        adminUI = new AdminUI(stage, deliveryDataBase, this::Auth);
-        customerUI = new CustomerUI(stage, deliveryDataBase, this::showUserTypeScreen);
-        restAdminUI = new RestAdminUI(stage, deliveryDataBase, this::showUserTypeScreen);
-        riderUI = new RiderUI(stage, deliveryDataBase, this::showUserTypeScreen);
+        adminUI = new AdminUI(deliveryDataBase);
+        customerUI = new CustomerUI(deliveryDataBase);
+        restAdminUI = new RestAdminUI(deliveryDataBase);
+        riderUI = new RiderUI(deliveryDataBase);
     }
 	
 
@@ -54,7 +52,7 @@ public class MainUI extends UIBase {
 
         Button exitButton = UIHelper.createButton(
                 "Exit",
-                e -> stage.close()
+                MenuManager::goBack
         );
 
         root.getChildren().addAll(
@@ -64,7 +62,7 @@ public class MainUI extends UIBase {
                 exitButton
         );
 
-    	stage.setScene(new Scene(root, 500, 400));
+        MenuManager.goTo(new Scene(root, 500, 400));
 	}
     
     private void showUserTypeScreen() {
@@ -97,6 +95,6 @@ public class MainUI extends UIBase {
                 backButton
         );
 
-    	stage.setScene(new Scene(root, 500, 500));
+        MenuManager.goTo(new Scene(root, 500, 500));
     }
 }
