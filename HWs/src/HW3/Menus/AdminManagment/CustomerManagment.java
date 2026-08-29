@@ -173,7 +173,6 @@ public class CustomerManagment extends UIBase {
     private void cancelOrder() {
     	if(!deliveryDataBase.getOrders().stream().anyMatch(o -> o.getStatus() != OrderStatus.Delivered)) {
     		MessageBox.Info(null, "No cancelable orders found");
-    		MenuManager.goBack();
     		return;
     	}
     	
