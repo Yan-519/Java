@@ -43,13 +43,13 @@ public class OrderManagment extends UIBase {
 
 	    Button filterByCustomerButton = UIHelper.createButton("Show Orders by Customer", () ->{
 	    	Customer customer = DataSelector.selectCustomer();
-	    	if(customer == null) return;
-	    	Tables.order( deliveryDataBase.getOrdersOfCustomer(customer));
+	    	if(customer != null)
+	    		Tables.order( deliveryDataBase.getOrdersOfCustomer(customer));
 	    });
 	    Button filterByRestaurantButton = UIHelper.createButton("Show Orders by Restaurant", () ->{
 	    	Restaurant restaurant = DataSelector.selectRestaurant();
-	    	if(restaurant == null) return;
-	    	Tables.order( deliveryDataBase.getOrdersByuRestaurant(restaurant.getCode()));
+	    	if(restaurant != null)
+	    		Tables.order( deliveryDataBase.getOrdersByuRestaurant(restaurant.getCode()));
 	    });
 
 	    Button highestPriceButton = UIHelper.createButton("Show Highest Price Order", () ->

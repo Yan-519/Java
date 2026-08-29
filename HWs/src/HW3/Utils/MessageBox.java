@@ -165,7 +165,7 @@ public class MessageBox {
 		return DataSelector.dataFilter(() -> 
 			inputDOUB(title, header, NumberSign.NOT_NEGATIVE),
 			d -> d <= max,
-			"Input beyond limit");
+			"Input beyond limit ("+ max + ")");
 	}
 	
 	// ask user yes/no Q (boolean isNull if user cancld action checks between output null and false)

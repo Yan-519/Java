@@ -62,14 +62,14 @@ public class RiderManagment extends UIBase {
 	    );
 	    Button riderOrdersButton = UIHelper.createButton("Show Rider Orders", () ->{
 	    	Rider rider = DataSelector.selectRider();
-	    	if(rider == null) return;
-	    	Tables.order( rider.getDeliverdOrders(), rider.getCurrentOrder());
+	    	if(rider != null)
+	    		Tables.order( rider.getDeliverdOrders(), rider.getCurrentOrder());
 	    });
 
 	    Button updateStatusButton = UIHelper.createButton("Update Order Status", () ->{
 	    	Rider rider = DataSelector.selectRider();
 	    	if(rider == null) return;
-	    	if(!rider.getIsAvailable())
+	    	if(rider.getIsAvailable())
 	    	{
 	    		MessageBox.Info("The selected rider has no active order");
 	    		return;
@@ -77,7 +77,6 @@ public class RiderManagment extends UIBase {
 
 			Order order = rider.getCurrentOrder();
 			
-			System.out.println("The status of the current order is " + order.getStatus());
 			boolean isUpdate = MessageBox.inputBOOL( null, 
 					"Do you want to update the status of the order (The status of the current order is " + order.getStatus(),
 					"(created->on the way->delivered)", false);

@@ -205,9 +205,8 @@ public class RestAdminUI extends UIBase  {
 	    Restaurant rest = DataSelector.dataFilter(DataSelector::selectRestaurant, 
 	            r -> restAdmin.containsRestaurant(r.getCode()), 
 	            "Please select a restaurant under your management.");
-	    if (rest == null) return;
-
-	    Tables.order( deliveryDataBase.getOrdersByuRestaurant(rest.getCode()));
+	    if (rest != null)
+	    	Tables.order( deliveryDataBase.getOrdersByuRestaurant(rest.getCode()));
 	}
 
 	private void showOpenRestaurantsByKitchen() {

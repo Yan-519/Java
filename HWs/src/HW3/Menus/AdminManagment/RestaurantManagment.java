@@ -64,19 +64,19 @@ public class RestaurantManagment extends UIBase {
         
         Button openRestaurantButton = UIHelper.createButton("Open Restaurant", () ->{
         	Restaurant restaurant = DataSelector.dataFilter(DataSelector::selectRestaurant, r -> !r.getIsOpen(), "Select a close restaurant");
-        	if(restaurant == null) return;
-        	restaurant.setOpen(true);
+        	if(restaurant != null) 
+        		restaurant.setOpen(true);
         });
         Button closeRestaurantButton = UIHelper.createButton("Close Restaurant", () ->{
         	Restaurant restaurant = DataSelector.dataFilter(DataSelector::selectRestaurant, r -> r.getIsOpen(), "Select an open restaurant");
-        	if(restaurant == null) return;
-        	restaurant.setOpen(false);
+        	if(restaurant != null) 
+        		restaurant.setOpen(false);
         });
         
         Button filterByTypeButton = UIHelper.createButton("Show Restaurants by Type", () -> {
 			String type = MessageBox.inputSTR(null, "Enter restauran kitchen type", null);
-			if(type == null) return;
-			Tables.restaurant(
+			if(type != null)
+				Tables.restaurant(
 					deliveryDataBase.getRestaurants().stream().filter(r -> r.getKitchenType().equalsIgnoreCase(type)).toList());
 		});
         Button filterOpenOnlyButton = UIHelper.createButton("Show Open Restaurants Only", () ->

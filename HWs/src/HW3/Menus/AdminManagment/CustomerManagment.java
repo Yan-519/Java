@@ -85,10 +85,8 @@ public class CustomerManagment extends UIBase {
                 "Show Customer Orders",
                 e -> {
                 	Customer customer = DataSelector.selectCustomer();
-                	if(customer == null)
-                		MenuManager.goBack();
-                	
-                	else Tables.order(deliveryDataBase.getOrdersOfCustomer(customer));
+                	if(customer != null)
+	                	Tables.order(deliveryDataBase.getOrdersOfCustomer(customer));
                 }
         );
 
@@ -101,10 +99,8 @@ public class CustomerManagment extends UIBase {
                 "Show Ordered Restaurants",
                 e -> {
                 	Customer customer = DataSelector.selectCustomer();
-                	if(customer == null)
-                		MenuManager.goBack();
-                	
-                	else Tables.restaurant(deliveryDataBase.getRestaurantasBuyCustomer(customer.getCode()));
+                	if(customer != null)
+                		Tables.restaurant(deliveryDataBase.getRestaurantasBuyCustomer(customer.getCode()));
                 }
         );
 
@@ -112,10 +108,8 @@ public class CustomerManagment extends UIBase {
                 "Show Ordered Premium Restaurants",
                 e -> {
                 	Customer customer = DataSelector.selectCustomer();
-                	if(customer == null)
-                		MenuManager.goBack();
-                	
-                	else Tables.restaurant(deliveryDataBase.getPremiumRestaurantsByCustomer(customer));
+                	if(customer != null)
+                		Tables.restaurant(deliveryDataBase.getPremiumRestaurantsByCustomer(customer));
                 }
 
         );
@@ -147,6 +141,7 @@ public class CustomerManagment extends UIBase {
 
     private void updateCustomer() {
     	Customer customer = DataSelector.selectCustomer();
+    	if(customer == null) return;
     	
 		if(MessageBox.inputBOOL("Do you want to change your adress?")){
 			if(MessageBox.inputBOOL("Do you want to chage the town?")) {

@@ -1,6 +1,5 @@
 package HW3.Utils;
 
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -17,22 +16,17 @@ public class DataSelector {
 	public static void setDeliveryDataBase(DeliveryDataBase deliveryDataBase) {
 		DataSelector.deliveryDataBase = deliveryDataBase;
 	}
-	
+
 	// filter input and gives explanation message
-	public static <T> T dataFilter(Supplier<T> inFunction, Predicate<T> ifPredicate, Function<T, String> message){
+	public static <T> T dataFilter(Supplier<T> inFunction, Predicate<T> ifPredicate, String message){
 		T val = inFunction.get();
 		if(val == null) return null;
 		while(!ifPredicate.test(val)) {
-			MessageBox.Info(message.apply(val));
+			MessageBox.Info(message);
 			val = inFunction.get();
 			if(val == null) return null;
 		}
 		return val;
-	}
-
-	// filter input and gives explanation message
-	public static <T> T dataFilter(Supplier<T> inFunction, Predicate<T> ifPredicate, String message){
-		return dataFilter(inFunction, ifPredicate, o -> message);
 	}
 	
 	// select Restaurant
