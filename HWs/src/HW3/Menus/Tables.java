@@ -15,6 +15,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.function.Consumer;
@@ -27,96 +28,82 @@ import HW3.Utils.UIHelper;
 
 public class Tables {
 	
-	// all functions are creating tables to show the given values
-
 	@SuppressWarnings("unchecked")
-	public static void customer(List<Customer> lst) {
-        if (lst.isEmpty()) {
+	private static <T> void makeTable(List<T> lst, TableColumn<T, ?>...columns) {
+		if (lst == null || lst.isEmpty()) {
             MessageBox.Info("No values found");
             return;
         }
-
-        ObservableList<Customer> observables = FXCollections.observableArrayList(lst);
-        TableView<Customer> tableView = new TableView<>(observables);
-
-        TableColumn<Customer, String> colFirstName = new TableColumn<>("First Name");
-        colFirstName.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-        TableColumn<Customer, String> colLastName = new TableColumn<>("Last Name");
-        colLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-
-        TableColumn<Customer, String> colPhone = new TableColumn<>("Phone");
-        colPhone.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
-
-        TableColumn<Customer, String> colEmail = new TableColumn<>("Email");
-        colEmail.setCellValueFactory(new PropertyValueFactory<>("emain"));
-
-        TableColumn<Customer, String> colTown = new TableColumn<>("Town");
-        colTown.setCellValueFactory(new PropertyValueFactory<>("town"));
-
-        TableColumn<Customer, Double> colBalance = new TableColumn<>("Balance");
-        colBalance.setCellValueFactory(new PropertyValueFactory<>("balance"));
-
-        tableView.getColumns().addAll(colFirstName, colLastName, colPhone, colEmail, colTown, colBalance);
+		
+		Arrays.asList(columns).forEach(c -> c.setSortable(false));
+		
+        TableView<T> tableView = new TableView<>(FXCollections.observableArrayList(lst));
+        
+        tableView.getColumns().addAll(columns);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-
-        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
-
+        
         VBox root = UIHelper.createVRoot();
-        root.getChildren().addAll(tableView, backButton);
+        root.getChildren().addAll(tableView, UIHelper.createBackButton());
 
-        MenuManager.goTo(new Scene(root, 700, 400));
-    }
+        MenuManager.goTo(new Scene(root, 850, 400));
+	}
+	
+	
+	// all functions are creating tables to show the given values
+	
+	@SuppressWarnings("unchecked")
+	public static void customer(List<Customer> lst) {
+
+	    TableColumn<Customer, String> colFirstName = new TableColumn<>("First Name");
+	    colFirstName.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+	    TableColumn<Customer, String> colLastName = new TableColumn<>("Last Name");
+	    colLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+
+	    TableColumn<Customer, String> colPhone = new TableColumn<>("Phone");
+	    colPhone.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+
+	    TableColumn<Customer, String> colEmail = new TableColumn<>("Email");
+	    colEmail.setCellValueFactory(new PropertyValueFactory<>("emain"));
+
+	    TableColumn<Customer, String> colTown = new TableColumn<>("Town");
+	    colTown.setCellValueFactory(new PropertyValueFactory<>("town"));
+
+	    TableColumn<Customer, Double> colBalance = new TableColumn<>("Balance");
+	    colBalance.setCellValueFactory(new PropertyValueFactory<>("balance"));
+
+	    makeTable(lst, colFirstName, colLastName, colPhone, colEmail, colTown, colBalance);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public static void order(List<Order> lst) {
-        if (lst == null || lst.isEmpty()) {
-            MessageBox.Info("No values found");
-            return;
-        }
 
-        ObservableList<Order> observables = FXCollections.observableArrayList(lst);
-        TableView<Order> tableView = new TableView<>(observables);
+	    TableColumn<Order, Integer> colClientCode = new TableColumn<>("Client Code");
+	    colClientCode.setCellValueFactory(new PropertyValueFactory<>("clientCode"));
 
-        TableColumn<Order, Integer> colClientCode = new TableColumn<>("Client Code");
-        colClientCode.setCellValueFactory(new PropertyValueFactory<>("clientCode"));
+	    TableColumn<Order, Integer> colRestCode = new TableColumn<>("Restaurant Code");
+	    colRestCode.setCellValueFactory(new PropertyValueFactory<>("restaurantCode"));
 
-        TableColumn<Order, Integer> colRestCode = new TableColumn<>("Restaurant Code");
-        colRestCode.setCellValueFactory(new PropertyValueFactory<>("restaurantCode"));
+	    TableColumn<Order, String> colRiderId = new TableColumn<>("Rider ID");
+	    colRiderId.setCellValueFactory(new PropertyValueFactory<>("riderId"));
 
-        TableColumn<Order, String> colRiderId = new TableColumn<>("Rider ID");
-        colRiderId.setCellValueFactory(new PropertyValueFactory<>("riderId"));
+	    TableColumn<Order, Date> colOrderDate = new TableColumn<>("Order Date");
+	    colOrderDate.setCellValueFactory(new PropertyValueFactory<>("orderingDate"));
 
-        TableColumn<Order, Date> colOrderDate = new TableColumn<>("Order Date");
-        colOrderDate.setCellValueFactory(new PropertyValueFactory<>("orderingDate"));
+	    TableColumn<Order, Date> colDeliveryDate = new TableColumn<>("Delivery Date");
+	    colDeliveryDate.setCellValueFactory(new PropertyValueFactory<>("deliveringDate"));
 
-        TableColumn<Order, Date> colDeliveryDate = new TableColumn<>("Delivery Date");
-        colDeliveryDate.setCellValueFactory(new PropertyValueFactory<>("deliveringDate"));
+	    TableColumn<Order, Double> colBasePrice = new TableColumn<>("Base Price");
+	    colBasePrice.setCellValueFactory(new PropertyValueFactory<>("basePrice"));
 
-        TableColumn<Order, Double> colBasePrice = new TableColumn<>("Base Price");
-        colBasePrice.setCellValueFactory(new PropertyValueFactory<>("basePrice"));
+	    TableColumn<Order, Double> colFinalPrice = new TableColumn<>("Final Price");
+	    colFinalPrice.setCellValueFactory(new PropertyValueFactory<>("finalPrice"));
 
-        TableColumn<Order, Double> colFinalPrice = new TableColumn<>("Final Price");
-        colFinalPrice.setCellValueFactory(new PropertyValueFactory<>("finalPrice"));
+	    TableColumn<Order, Order.OrderStatus> colStatus = new TableColumn<>("Status");
+	    colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        TableColumn<Order, Order.OrderStatus> colStatus = new TableColumn<>("Status");
-        colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-
-        tableView.getColumns().addAll(
-            colClientCode, colRestCode, colRiderId, 
-            colOrderDate, colDeliveryDate, 
-            colBasePrice, colFinalPrice, colStatus
-        );
-
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-
-        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
-
-        VBox root = UIHelper.createVRoot();
-        root.getChildren().addAll(tableView, backButton);
-
-        MenuManager.goTo(new Scene(root, 800, 450));
-    }
+	    makeTable(lst, colClientCode, colRestCode, colRiderId, colOrderDate, colDeliveryDate, colBasePrice, colFinalPrice, colStatus);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public static void order(List<Order> deliveredOrders, Order currentOrder) {
@@ -170,7 +157,7 @@ public class Tables {
 
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
-        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
+        Button backButton = UIHelper.createBackButton();
 
         VBox root = UIHelper.createVRoot();
         
@@ -186,82 +173,57 @@ public class Tables {
     }
 	
 	@SuppressWarnings("unchecked")
-	public static void restaurant(List<? extends Restaurant> lst) {
-        if (lst == null || lst.isEmpty()) {
-            MessageBox.Info("No values found");
-            return;
-        }
+	public static <T extends Restaurant> void restaurant(List<T> lst) {
 
-        ObservableList<Restaurant> observables = FXCollections.observableArrayList(lst);
-        TableView<Restaurant> tableView = new TableView<>(observables);
+	    TableColumn<T, String> colName = new TableColumn<>("Name");
+	    colName.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        TableColumn<Restaurant, String> colName = new TableColumn<>("Name");
-        colName.setCellValueFactory(new PropertyValueFactory<>("name"));
+	    TableColumn<T, String> colKitchen = new TableColumn<>("Kitchen Type");
+	    colKitchen.setCellValueFactory(new PropertyValueFactory<>("kitchenType"));
 
-        TableColumn<Restaurant, String> colKitchen = new TableColumn<>("Kitchen Type");
-        colKitchen.setCellValueFactory(new PropertyValueFactory<>("kitchenType"));
+	    TableColumn<T, Double> colRating = new TableColumn<>("Rating");
+	    colRating.setCellValueFactory(new PropertyValueFactory<>("rating"));
 
-        TableColumn<Restaurant, Double> colRating = new TableColumn<>("Rating");
-        colRating.setCellValueFactory(new PropertyValueFactory<>("rating"));
+	    TableColumn<T, Boolean> colIsOpen = new TableColumn<>("Open");
+	    colIsOpen.setCellValueFactory(new PropertyValueFactory<>("isOpen"));
 
-        TableColumn<Restaurant, Boolean> colIsOpen = new TableColumn<>("Open");
-        colIsOpen.setCellValueFactory(new PropertyValueFactory<>("isOpen"));
+	    TableColumn<T, Double> colBaseFee = new TableColumn<>("Base Fee");
+	    colBaseFee.setCellValueFactory(new PropertyValueFactory<>("baseDeliveryFee"));
 
-        TableColumn<Restaurant, Double> colBaseFee = new TableColumn<>("Base Fee");
-        colBaseFee.setCellValueFactory(new PropertyValueFactory<>("baseDeliveryFee"));
+	    TableColumn<T, String> colPrepTime = new TableColumn<>("Prep Time (min)");
+	    colPrepTime.setCellValueFactory(cell -> {
+	        if (cell.getValue() instanceof FastFoodRestaurant fastFood)
+	            return new SimpleStringProperty(String.valueOf(fastFood.getAveragePreparingTimeInMinutes()));
+	        return new SimpleStringProperty("-");
+	    });
 
-        TableColumn<Restaurant, String> colPrepTime = new TableColumn<>("Prep Time (min)");
-        colPrepTime.setCellValueFactory(cell -> {
-            if (cell.getValue() instanceof FastFoodRestaurant fastFood) 
-                return new SimpleStringProperty(String.valueOf(fastFood.getAveragePreparingTimeInMinutes()));
-            return new SimpleStringProperty("-");
-        });
+	    TableColumn<T, String> colExpressCost = new TableColumn<>("Express Delivery Fee");
+	    colExpressCost.setCellValueFactory(cell -> {
+	        if (cell.getValue() instanceof FastFoodRestaurant fastFood)
+	            return new SimpleStringProperty(String.valueOf(fastFood.getAdditionalCostForExpressDelivery()));
+	        return new SimpleStringProperty("-");
+	    });
 
-        TableColumn<Restaurant, String> colExpressCost = new TableColumn<>("Express Delivery Fee");
-        colExpressCost.setCellValueFactory(cell -> {
-            if (cell.getValue() instanceof FastFoodRestaurant fastFood) 
-                return new SimpleStringProperty(String.valueOf(fastFood.getAdditionalCostForExpressDelivery()));
-            return new SimpleStringProperty("-");
-        });
+	    TableColumn<T, String> colMinOrder = new TableColumn<>("Min Order");
+	    colMinOrder.setCellValueFactory(cell -> {
+	        if (cell.getValue() instanceof PremiumRestaurant premium)
+	            return new SimpleStringProperty(String.valueOf(premium.getMinimumOrderCost()));
+	        return new SimpleStringProperty("-");
+	    });
 
-        TableColumn<Restaurant, String> colMinOrder = new TableColumn<>("Min Order");
-        colMinOrder.setCellValueFactory(cell -> {
-            if (cell.getValue() instanceof PremiumRestaurant premium) 
-                return new SimpleStringProperty(String.valueOf( premium.getMinimumOrderCost()));
-            return new SimpleStringProperty("-");
-        });
+	    TableColumn<T, String> colCommission = new TableColumn<>("Commission (%)");
+	    colCommission.setCellValueFactory(cell -> {
+	        if (cell.getValue() instanceof PremiumRestaurant premium)
+	            return new SimpleStringProperty(String.valueOf(premium.getAdditionalCommissionPercentagePerOrder()));
+	        return new SimpleStringProperty("-");
+	    });
 
-        TableColumn<Restaurant, String> colCommission = new TableColumn<>("Commission (%)");
-        colCommission.setCellValueFactory(cell -> {
-            if (cell.getValue() instanceof PremiumRestaurant premium) 
-                return new SimpleStringProperty(String.valueOf( premium.getAdditionalCommissionPercentagePerOrder()));
-            return new SimpleStringProperty("-");
-        });
-
-        tableView.getColumns().addAll(
-            colName, colKitchen, colRating, colIsOpen, colBaseFee,
-            colPrepTime, colExpressCost, colMinOrder, colCommission
-        );
-
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-
-        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
-
-        VBox root = UIHelper.createVRoot();
-        root.getChildren().addAll(tableView, backButton);
-
-        MenuManager.goTo(new Scene(root, 950, 450));
-    }
+	    // cast to raw List to satisfy makeTable generic signature
+	    makeTable(lst, colName, colKitchen, colRating, colIsOpen, colBaseFee, colPrepTime, colExpressCost, colMinOrder, colCommission);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public static void rider(List<Rider> lst) {
-	    if (lst == null || lst.isEmpty()) {
-	        MessageBox.Info("No values found");
-	        return;
-	    }
-
-	    ObservableList<Rider> observables = FXCollections.observableArrayList(lst);
-	    TableView<Rider> tableView = new TableView<>(observables);
 
 	    TableColumn<Rider, String> colId = new TableColumn<>("ID");
 	    colId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -281,9 +243,8 @@ public class Tables {
 	    TableColumn<Rider, Boolean> colAvailable = new TableColumn<>("Available");
 	    colAvailable.setCellValueFactory(new PropertyValueFactory<>("isAvailable"));
 
-	    
 	    TableColumn<Rider, String> colDeliveredCount = new TableColumn<>("Orders Delivered");
-	    colDeliveredCount.setCellValueFactory(cell -> 
+	    colDeliveredCount.setCellValueFactory(cell ->
 	         new SimpleStringProperty(cell.getValue().getDeliverdOrders().size() + " orders")
 	    );
 
@@ -293,31 +254,12 @@ public class Tables {
 	        return new SimpleStringProperty(current != null ? current.toString() : "None");
 	    });
 
-	    tableView.getColumns().addAll(
-	        colId, colFirstName, colLastName, colPhone, 
-	        colVehicle, colAvailable, colDeliveredCount, colCurrentOrder
-	    );
-
-	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-
-	    Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
-
-	    VBox root = UIHelper.createVRoot();
-	    root.getChildren().addAll(tableView, backButton);
-
-	    MenuManager.goTo(new Scene(root, 900, 450));
+	    makeTable(lst, colId, colFirstName, colLastName, colPhone, colVehicle, colAvailable, colDeliveredCount, colCurrentOrder);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static void restAdmin(List<RestAdmin> lst) {
-	    if (lst == null || lst.isEmpty()) {
-	        MessageBox.Info("No values found");
-	        return;
-	    }
-
-	    ObservableList<RestAdmin> observables = FXCollections.observableArrayList(lst);
-	    TableView<RestAdmin> tableView = new TableView<>(observables);
-
+		
 	    TableColumn<RestAdmin, String> colName = new TableColumn<>("Name");
 	    colName.setCellValueFactory(new PropertyValueFactory<>("name"));
 
@@ -330,20 +272,12 @@ public class Tables {
 	    TableColumn<RestAdmin, String> colRestaurants = new TableColumn<>("Managed Restaurants");
 	    colRestaurants.setCellValueFactory(cell -> {
 	        List<Restaurant> restList = cell.getValue().getRestaurants();
-	        if (restList == null || restList.isEmpty()) 
+	        if (restList == null || restList.isEmpty())
 	            return new SimpleStringProperty("None");
-	        return new SimpleStringProperty(restList.stream().map( r -> r.getName() + "(" + r.getCode() + ")").collect(Collectors.joining(", ")));
+	        return new SimpleStringProperty(restList.stream().map(r -> r.getName() + "(" + r.getCode() + ")").collect(Collectors.joining(", ")));
 	    });
 
-	    tableView.getColumns().addAll(colName, colUsername, colPassword, colRestaurants);
-	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-
-	    Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
-
-	    VBox root = UIHelper.createVRoot();
-	    root.getChildren().addAll(tableView, backButton);
-
-	    MenuManager.goTo(new Scene(root, 750, 400));
+	    makeTable(lst, colName, colUsername, colPassword, colRestaurants);
 	}
 	
 	// select restaurants

@@ -42,7 +42,7 @@ public class RiderManagment extends UIBase {
 
 	    Button showAllButton = UIHelper.createButton("Show All Riders", 
 	    		() -> Tables.rider( deliveryDataBase.getRiders()));
-	    Button addRiderButton = UIHelper.createButton("Add New Rider",  e -> {
+	    Button addRiderButton = UIHelper.createButton("Add New Rider",  () -> {
                 	InputManager.createRider( customer -> {
                 	    if (customer != null) {
                 	    	try {
@@ -105,8 +105,6 @@ public class RiderManagment extends UIBase {
 	    	MessageBox.Info(rider.toString() + " ( count: " + rider.getDeliverdOrders().size() + ")" );
 	    });
 	    
-	    Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
-
 	    grid.add(showAllButton, 0, 0);
 	    grid.add(addRiderButton, 1, 0);
 
@@ -116,7 +114,7 @@ public class RiderManagment extends UIBase {
 	    grid.add(updateStatusButton, 0, 2);
 	    grid.add(topRiderButton, 1, 2);
 
-	    grid.add(backButton, 0, 3, 2, 1);
+	    grid.add(UIHelper.createBackButton(), 0, 3, 2, 1);
 
 	    root.setCenter(grid);
 

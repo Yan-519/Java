@@ -33,11 +33,11 @@ public class Order extends Coded<Order> {
 		this.deliveringDate = new Date();
 	}
 
-	private Order(int code, int clientCode, Restaurant restaurant, int restaurantCode, String riderId,
+	private Order(int code, int clientCode, int restaurantCode, String riderId,
 			Date orderingDate, Date deliveringDate, double basePrice, double finalPrice, OrderStatus status) {
 		super(code);
 		this.clientCode = clientCode;
-		this.restaurant = restaurant;
+		this.restaurant = null;
 		this.restaurantCode = restaurantCode;
 		this.riderId = riderId;
 		this.orderingDate = orderingDate;
@@ -189,10 +189,10 @@ public class Order extends Coded<Order> {
 		OrderStatus parsedStatus = OrderStatus.valueOf(parts[8]);
 
 		return new ConvertorHolder<>( new Order(
-			parsedCode, parsedClientCode, null, parsedRestaurantCode,
+			parsedCode, parsedClientCode, parsedRestaurantCode,
 			parsedRiderId, parsedOrderingDate, parsedDeliveringDate,
 			parsedBasePrice, parsedFinalPrice, parsedStatus
-		));
+		), restaurantCode) ;
 	}
 
 

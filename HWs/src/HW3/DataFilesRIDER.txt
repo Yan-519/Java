@@ -1,5 +1,0 @@
-123456789 John Smith 0511234567 Motorcycle none 1001
-212345678 David Brown 0521234567 Scooter none 1002
-312345678 Michael Johnson 0531234567 Car none 1003
-412345678 Daniel Wilson 0541234567 Bicycle none 1004
-512345678 James Taylor 0551234567 Motorcycle none 1005

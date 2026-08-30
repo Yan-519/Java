@@ -3,13 +3,13 @@ package HW3.DataObjects;
 import java.util.ArrayList;
 
 import HW3.DataObjects.Helpers.ConvertorHolder;
-import HW3.DataObjects.Helpers.StringConverter;
+import HW3.DataObjects.Helpers.StringConvertertable;
 import HW3.DataObjects.Order.OrderStatus;
 import HW3.Exceptions.DeliveryPersonUnavailableException;
 import HW3.Exceptions.TargetObjectAlreadyExistException;
 import HW3.Exceptions.TargetObjectDoesntExistException;
 
-public class Rider extends StringConverter<Rider> {
+public class Rider extends StringConvertertable<Rider> {
 	private final String id;
 	private String name, lastName;
 	private String phoneNumber;

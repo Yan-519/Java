@@ -3,9 +3,9 @@ package HW3.DataObjects;
 import java.util.Objects;
 
 import HW3.DataObjects.Helpers.ConvertorHolder;
-import HW3.DataObjects.Helpers.StringConverter;
+import HW3.DataObjects.Helpers.StringConvertertable;
 
-public class Date extends StringConverter<Date> implements Comparable<Date> {
+public class Date extends StringConvertertable<Date> implements Comparable<Date> {
 	private int day, month, year;
 
 	public Date(int day, int month, int year) {

@@ -56,8 +56,6 @@ public class OrderManagment extends UIBase {
 	    	MessageBox.Info(deliveryDataBase.getOrders().stream().max((o1, o2) -> Double.compare(o1.getFinalPrice(), o2.getFinalPrice())).get())
 	    );
 
-	    Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
-
 	    grid.add(showAllButton, 0, 0);
 	    grid.add(searchByCodeButton, 1, 0);
 
@@ -66,7 +64,7 @@ public class OrderManagment extends UIBase {
 
 	    grid.add(highestPriceButton, 0, 2, 2, 1);
 
-	    grid.add(backButton, 0, 3, 2, 1);
+	    grid.add(UIHelper.createBackButton(), 0, 3, 2, 1);
 
 	    root.setCenter(grid);
 

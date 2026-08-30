@@ -41,7 +41,7 @@ public class RestaurantManagment extends UIBase {
         grid.setPadding(new Insets(30));
         grid.setAlignment(Pos.CENTER);
 
-        Button showAllButton = UIHelper.createButton("Show All Restaurants", e -> {
+        Button showAllButton = UIHelper.createButton("Show All Restaurants", () -> {
         	Tables.restaurant( deliveryDataBase.getRestaurants());
         });
         Button searchByCodeButton = UIHelper.createButton("Search Restaurant by Code", 
@@ -83,8 +83,6 @@ public class RestaurantManagment extends UIBase {
         Tables.restaurant( deliveryDataBase.getRestaurants().stream().filter(r -> r.getIsOpen()).toList())
         );
 
-        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
-
         grid.add(showAllButton, 0, 0);
         grid.add(searchByCodeButton, 1, 0);
 
@@ -97,7 +95,7 @@ public class RestaurantManagment extends UIBase {
         grid.add(filterByTypeButton, 0, 3);
         grid.add(filterOpenOnlyButton, 1, 3);
 
-        grid.add(backButton, 0, 4, 2, 1);
+        grid.add(UIHelper.createBackButton(), 0, 4, 2, 1);
 
         root.setCenter(grid);
 

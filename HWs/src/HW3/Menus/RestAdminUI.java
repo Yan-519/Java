@@ -62,14 +62,12 @@ public class RestAdminUI extends UIBase  {
 			}
         });
         
-        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
-        
         root.getChildren().addAll(
                 title,
                 username,
                 password,
                 loginButton,
-                backButton
+                UIHelper.createBackButton()
         );
 
         MenuManager.goTo(new Scene(root, 400, 300));
@@ -106,8 +104,7 @@ public class RestAdminUI extends UIBase  {
 			restaurants.sort(deliveryDataBase.restComparator);
 			Tables.restaurant( restaurants);
 	    });
-	    Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
-
+	    
 	    grid.add(viewRestaurantsButton, 0, 0);
 	    grid.add(addCustomerButton, 1, 0);
 
@@ -121,7 +118,8 @@ public class RestAdminUI extends UIBase  {
 	    grid.add(toggleStatusButton, 1, 3);
 
 	    grid.add(viewReportsButton, 0, 4);
-	    grid.add(backButton, 1, 4);
+	    grid.add(UIHelper.createBackButton(), 1, 4);
+	    
 
 	    root.setCenter(grid);
 
@@ -180,6 +178,11 @@ public class RestAdminUI extends UIBase  {
 	}
 
 	private void assignRiderToOrder() {
+		if(!deliveryDataBase.getOrders().stream().anyMatch(o -> restAdmin.containsRestaurant(o.getRestaurantCode()))) {
+			MessageBox.Info("No orders found that ordered from the admin restaurant");
+			return;
+		}
+		
 	    Rider rider = DataSelector.dataFilter(DataSelector::selectRider, Rider::getIsAvailable, "Please select an available rider.");
 	    if (rider == null) return;
 
@@ -198,7 +201,7 @@ public class RestAdminUI extends UIBase  {
 
 	private void viewRestaurantOrders() {
 	    if (restAdmin.getRestaurants().isEmpty()) {
-	        MessageBox.Info("Notice", "You have no restaurants.");
+	        MessageBox.Info("You have no restaurants.");
 	        return;
 	    }
 
@@ -210,6 +213,11 @@ public class RestAdminUI extends UIBase  {
 	}
 
 	private void showOpenRestaurantsByKitchen() {
+		if (restAdmin.getRestaurants().isEmpty()) {
+	        MessageBox.Info("You have no restaurants.");
+	        return;
+	    }
+		
 	    String kitchenType = MessageBox.inputSTR(null, "Enter kitchen type", null);
 	    if (kitchenType == null) return;
 
@@ -225,6 +233,11 @@ public class RestAdminUI extends UIBase  {
 	}
 
 	private void updateRestaurantRating() {
+		if (restAdmin.getRestaurants().isEmpty()) {
+	        MessageBox.Info("You have no restaurants.");
+	        return;
+	    }
+		
 	    Restaurant restaurant = DataSelector.dataFilter(DataSelector::selectRestaurant, 
 	            r -> restAdmin.containsRestaurant(r.getCode()), 
 	            "Please select a restaurant under your management.");
@@ -242,6 +255,11 @@ public class RestAdminUI extends UIBase  {
 	}
 
 	private void toggleRestaurantStatus() {
+		if (restAdmin.getRestaurants().isEmpty()) {
+	        MessageBox.Info("You have no restaurants.");
+	        return;
+	    }
+		
 	    Restaurant restaurant = DataSelector.dataFilter(DataSelector::selectRestaurant, 
 	            r -> restAdmin.containsRestaurant(r.getCode()), 
 	            "Please select a restaurant under your management.");

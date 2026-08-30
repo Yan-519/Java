@@ -88,8 +88,6 @@ public class ReportsUI extends UIBase {
                         .mapToDouble(Double::doubleValue)
                         .sum()));
 
-        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
-
         grid.add(sortCustomersByBalanceButton, 0, 0);
         grid.add(sortCustomersByNameButton, 1, 0);
 
@@ -105,7 +103,7 @@ public class ReportsUI extends UIBase {
         grid.add(showAvailableRidersButton, 0, 4);
         grid.add(showTotalPaymentsButton, 1, 4);
 
-        grid.add(backButton, 0, 5, 2, 1);
+        grid.add(UIHelper.createBackButton(), 0, 5, 2, 1);
 
         root.setCenter(grid);
 

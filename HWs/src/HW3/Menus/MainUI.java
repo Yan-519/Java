@@ -47,7 +47,7 @@ public class MainUI extends UIBase {
 
         Button userButton = UIHelper.createButton(
                 "User Login",
-                e -> showUserTypeScreen()
+                () -> showUserTypeScreen()
         );
 
         Button exitButton = UIHelper.createButton(

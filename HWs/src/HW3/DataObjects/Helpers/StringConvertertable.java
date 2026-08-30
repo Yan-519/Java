@@ -4,7 +4,7 @@ import java.util.List;
 
 import HW3.DataObjects.Date;
 
-public abstract class StringConverter<T> {
+public abstract class StringConvertertable<T> {
 	public static final String emptyList = "none", nullObject = "null"; 
 	
 	// converting object to string and from it

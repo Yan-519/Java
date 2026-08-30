@@ -66,14 +66,13 @@ public class AdminUI extends UIBase {
             else MessageBox.error("Login Error", "Incorrect username or password.");
         });
         
-        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
         
         root.getChildren().addAll(
                 title,
                 username,
                 password,
                 loginButton,
-                backButton
+                UIHelper.createBackButton()
         );
 
         MenuManager.goTo(new Scene(root, 400, 300));
@@ -154,15 +153,20 @@ public class AdminUI extends UIBase {
     private void loadData() {
     	if(!MessageBox.inputBOOL("Load", "Are you shure you want to load", null, false))
     		return;
+    	
+    	deliveryDataBase.loadPrepare();
+    	
         try {
             deliveryDataBase.setRestaurants(new ArrayList<>(DataManager.load(Restaurant.class).stream().map(c -> c.output).toList()));
             deliveryDataBase.setCustomers(new ArrayList<>(DataManager.load(Customer.class).stream().map(c -> c.output).toList()));
+
+            // needs Restaurants
+            deliveryDataBase.loadRestAdmins(DataManager.load(RestAdmin.class)); 
             
-            // needs Customers
+            // needs Customers & Restaurants
             deliveryDataBase.setOrders(new ArrayList<>(DataManager.load(Order.class).stream().map(c -> c.output).toList()));
-            
-            deliveryDataBase.loadRestAdmins(DataManager.load(RestAdmin.class)); // needs Restaurants
-            deliveryDataBase.loadRiders(DataManager.load(Rider.class)); // needs Orders
+            // needs Orders
+            deliveryDataBase.loadRiders(DataManager.load(Rider.class)); 
             MessageBox.Info("Load Data", "Data loaded successfully.");
         } catch (Exception e) {
             MessageBox.error("Load Error", e);

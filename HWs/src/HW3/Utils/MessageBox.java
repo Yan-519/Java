@@ -36,15 +36,6 @@ public class MessageBox {
 	}
 	
 	public static void Info(String title, Object header) {
-		show(AlertType.INFORMATION, title, header.toString(), null);
-	}
-	
-	public static void Info(String header) {
-		if(header == null) return;
-		show(AlertType.INFORMATION, "Noitice", header.toString(), null);
-	}
-	
-	public static void Info(Object header) {
 		if(header == null) return;
 		
 		String str = header.toString();
@@ -68,7 +59,16 @@ public class MessageBox {
 			str = stringBuilder.toString();
 		}
 		
-		show(AlertType.INFORMATION, "Noitice", str, null);
+		show(AlertType.INFORMATION, title, str, null);
+	}
+	
+	public static void Info(String header) {
+		if(header == null) return;
+		show(AlertType.INFORMATION, "Noitice", header.toString(), null);
+	}
+	
+	public static void Info(Object header) {
+		Info("Noitice", header);
 	}
 	
 	

@@ -39,7 +39,7 @@ public class CustomerUI extends UIBase  {
         TextField code = new TextField();
         code.setPromptText("Customer Code");
 
-        Button loginButton = UIHelper.createButton("Login", e -> {
+        Button loginButton = UIHelper.createButton("Login", () -> {
         	try {
         		customer = deliveryDataBase.getCustomer(Integer.valueOf(code.getText()));
         		Main();
@@ -49,13 +49,12 @@ public class CustomerUI extends UIBase  {
 				MessageBox.error(null, "Code must be a number");
 			}
         });
-        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
 
         root.getChildren().addAll(
                 title,
                 code,
                 loginButton,
-                backButton
+                UIHelper.createBackButton()
         );
 
         MenuManager.goTo(new Scene(root, 400, 300));
@@ -111,8 +110,6 @@ public class CustomerUI extends UIBase  {
 	    Button searchRestaurantButton = UIHelper.createButton("Search Restaurant by Code", 
 	    		() -> MessageBox.Info(DataSelector.selectRestaurant()));
 
-	    Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
-
 	    grid.add(viewProfileButton, 0, 0);
 	    grid.add(newOrderButton, 1, 0);
 
@@ -128,7 +125,7 @@ public class CustomerUI extends UIBase  {
 	    grid.add(luxuryRestaurantsButton, 0, 4);
 	    grid.add(searchRestaurantButton, 1, 4);
 
-	    grid.add(backButton, 0, 5, 2, 1);
+	    grid.add(UIHelper.createBackButton(), 0, 5, 2, 1);
 
 	    root.setCenter(grid);
 

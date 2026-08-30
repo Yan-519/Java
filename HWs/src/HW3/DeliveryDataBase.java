@@ -473,6 +473,19 @@ public class DeliveryDataBase {
 	public HashMap<Integer, Double> getTotalSpentByCustomer() {
 		return totalSpentByCustomer;
 	}
+	
+	// reset the data for loading it
+	public void loadPrepare() {
+		this.restAdmins = new ArrayList<>();
+		this.restaurants = new ArrayList<>();
+		this.customers = new ArrayList<>();
+		this.riders = new ArrayList<>();
+		this.orders = new ArrayList<>();
+
+		ordersByCustomer = new HashMap<>();
+		selectedRestaurantsByCustomer = new Hashtable<>();
+		totalSpentByCustomer = new HashMap<>();
+	}
 
 	public void setSystemAdministrator(Admin systemAdministrator) {
 		this.systemAdministrator = systemAdministrator;
@@ -506,23 +519,25 @@ public class DeliveryDataBase {
 	}
 	
 	// Loads Riders from memo with their orders
-	public void loadRiders(ArrayList<ConvertorHolder<? extends  Rider>> riders)
+	public void loadRiders(ArrayList<ConvertorHolder<? extends Rider>> riders)
 			throws TargetObjectDoesntExistException, TargetObjectAlreadyExistException, CodedNotFoundException, DeliveryPersonUnavailableException {
 		for(ConvertorHolder<? extends Rider> convertorHolder : riders) {
 			Rider rider = convertorHolder.output;
 			for(Integer code : convertorHolder.codes)
 				rider.addDeliverdOrder(getOrder(code));
 			
-			if(convertorHolder.additional != null)
-				rider.setCurrentOrder(getOrder(convertorHolder.additional));
+			if(convertorHolder.single != null)
+				rider.setCurrentOrder(getOrder(convertorHolder.single));
 			
 			this.riders.add(rider);
 		}
 	}
 
-	public void setOrders(ArrayList<Order> orders) throws TargetObjectAlreadyExistException {
-		for (Order order : orders)
+	public void setOrders(ArrayList<Order> orders) throws TargetObjectAlreadyExistException, CodedNotFoundException, TargetObjectDoesntExistException {
+		for (Order order : orders) {
+			order.setRestaurant(getRestaurant(order.getRestaurantCode()));
 			addOrderToCustomer(order.getClientCode(), order);
+		}
 	}
 
 	public void setOrdersByCustomer(HashMap<Integer, ArrayList<Order>> ordersByCustomer) {

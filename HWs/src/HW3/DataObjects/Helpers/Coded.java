@@ -14,7 +14,7 @@ import HW3.Exceptions.RestAdminNotFoundException;
 import HW3.Exceptions.RestaurantNotFoundException;
 import HW3.Exceptions.TargetObjectDoesntExistException;
 
-public abstract class Coded<E extends Coded<E>> extends StringConverter<E> {
+public abstract class Coded<E extends Coded<E>> extends StringConvertertable<E> {
 	private static final Random random = new Random();
 	
 	protected final int code;

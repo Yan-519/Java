@@ -7,24 +7,30 @@ public class ConvertorHolder<T> {
 	public final T output;
 	// the codes it depends on
 	public final ArrayList<Integer> codes;
-	// for rider current order code
-	public final Integer additional;
+	// for rider current order code and order restaurant
+	public final Integer single;
 	
 	public ConvertorHolder(T outpu, ArrayList<Integer> codes) {
 		this.output = outpu;
 		this.codes = codes;
-		additional = null;
+		single = null;
 	}
 	
 	public ConvertorHolder(T outpu) {
 		this.output = outpu;
 		this.codes = new ArrayList<Integer>();
-		additional = null;
+		single = null;
 	}
 
-	public ConvertorHolder(T output, ArrayList<Integer> codes, Integer additional) {
+	public ConvertorHolder(T output, ArrayList<Integer> codes, Integer single) {
 		this.output = output;
 		this.codes = codes;
-		this.additional = additional;
+		this.single = single;
+	}
+	
+	public ConvertorHolder(T output, Integer single) {
+		this.output = output;
+		this.codes = null;
+		this.single = single;
 	}
 }

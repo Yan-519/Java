@@ -53,7 +53,7 @@ public class CustomerManagment extends UIBase {
                 () -> MessageBox.Info(DataSelector.selectCustomer())
         );
 
-        Button addCustomer = UIHelper.createButton("Add New Customer", e -> {
+        Button addCustomer = UIHelper.createButton("Add New Customer", () -> {
                 	int code;
 					try {
 						code = deliveryDataBase.generateCode(CodedType.Customer);
@@ -82,8 +82,7 @@ public class CustomerManagment extends UIBase {
         );
 
         Button showOrders = UIHelper.createButton(
-                "Show Customer Orders",
-                e -> {
+                "Show Customer Orders", () -> {
                 	Customer customer = DataSelector.selectCustomer();
                 	if(customer != null)
 	                	Tables.order(deliveryDataBase.getOrdersOfCustomer(customer));
@@ -96,8 +95,7 @@ public class CustomerManagment extends UIBase {
         );
 
         Button showRestaurants = UIHelper.createButton(
-                "Show Ordered Restaurants",
-                e -> {
+                "Show Ordered Restaurants", () -> {
                 	Customer customer = DataSelector.selectCustomer();
                 	if(customer != null)
                 		Tables.restaurant(deliveryDataBase.getRestaurantasBuyCustomer(customer.getCode()));
@@ -105,18 +103,12 @@ public class CustomerManagment extends UIBase {
         );
 
         Button showPremiumRestaurants = UIHelper.createButton(
-                "Show Ordered Premium Restaurants",
-                e -> {
+                "Show Ordered Premium Restaurants", () -> {
                 	Customer customer = DataSelector.selectCustomer();
                 	if(customer != null)
                 		Tables.restaurant(deliveryDataBase.getPremiumRestaurantsByCustomer(customer));
                 }
 
-        );
-
-        Button logout = UIHelper.createButton(
-                "Back",
-                MenuManager::goBack
         );
 
         grid.add(showCustomers, 0, 0);
@@ -131,7 +123,7 @@ public class CustomerManagment extends UIBase {
         grid.add(showRestaurants, 0, 3);
         grid.add(showPremiumRestaurants, 1, 3);
 
-        grid.add(logout, 0, 4, 2, 1);
+        grid.add(UIHelper.createBackButton(), 0, 4, 2, 1);
 
         root.setCenter(grid);
         

@@ -1,7 +1,5 @@
 package HW3.Utils;
 
-import java.util.function.Consumer;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -12,27 +10,20 @@ import javafx.scene.control.Label;
 
 public class UIHelper {
 
-    // Make standard action with dynamic sizing and CSS hooks
-    private static Button createButton(String text) {
-        Button button = new Button(text);
+	// make a button with an action
+    public static Button createButton(String text, Runnable onPress) {
+    	Button button = new Button(text);
         
         button.setMaxWidth(Double.MAX_VALUE);
         button.setMinHeight(40);
         
         button.getStyleClass().add("custom-button");
-        return button;
-    }
-
-    public static Button createButton(String text, Consumer<ActionEvent> onPress) {
-        Button button = createButton(text);
-        button.setOnAction(e -> onPress.accept(e));
-        return button;
-    }
-
-    public static Button createButton(String text, Runnable onPress) {
-        Button button = createButton(text);
         button.setOnAction(e -> onPress.run());
         return button;
+    }
+    
+    public static Button createBackButton() {
+    	return createButton("Back", MenuManager::goBack);
     }
     
     // Makes a simple VBox with increased breathing room

@@ -35,7 +35,7 @@ public class RiderUI extends UIBase  {
         TextField code = new TextField();
         code.setPromptText("Rider ID");
 
-        Button loginButton = UIHelper.createButton("Login", e -> {
+        Button loginButton = UIHelper.createButton("Login", () -> {
         	try {
 				rider = deliveryDataBase.getRider(code.getText());
 				Main();
@@ -44,13 +44,11 @@ public class RiderUI extends UIBase  {
 			}
         });
         
-        Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
-
         root.getChildren().addAll(
                 title,
                 code,
                 loginButton,
-                backButton
+                UIHelper.createBackButton()
         );
 
         MenuManager.goTo(new Scene(root, 400, 300));
@@ -88,8 +86,6 @@ public class RiderUI extends UIBase  {
 	    Button viewTotalCountButton = UIHelper.createButton("Show Total Deliveries Count", 
 	    		() -> MessageBox.Info("Total Deliveries", "You have completed " + rider.getDeliverdOrders().size() + " deliveries."));
 
-	    Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
-
 	    grid.add(viewAssignedOrdersButton, 0, 0);
 	    grid.add(viewActiveOrderButton, 1, 0);
 
@@ -99,7 +95,7 @@ public class RiderUI extends UIBase  {
 	    grid.add(viewHistoryButton, 0, 2);
 	    grid.add(viewTotalCountButton, 1, 2);
 
-	    grid.add(backButton, 0, 3, 2, 1);
+	    grid.add(UIHelper.createBackButton(), 0, 3, 2, 1);
 
 	    root.setCenter(grid);
 

@@ -48,15 +48,13 @@ public class RestAdminManagment extends UIBase {
 		);
 	    Button updateStatusButton = UIHelper.createButton("Update Admin Status", this::updateAdminStatus);
 
-	    Button backButton = UIHelper.createButton("Back", MenuManager::goBack);
-
 	    grid.add(showAllButton, 0, 0);
 	    grid.add(addAdminButton, 1, 0);
 
 	    grid.add(searchAdminButton, 0, 1);
 	    grid.add(updateStatusButton, 1, 1);
 
-	    grid.add(backButton, 0, 2, 2, 1);
+	    grid.add(UIHelper.createBackButton(), 0, 2, 2, 1);
 
 	    root.setCenter(grid);
 	    
