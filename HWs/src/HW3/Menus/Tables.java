@@ -1,5 +1,6 @@
 package HW3.Menus;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -22,12 +23,14 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import HW3.DataObjects.*;
+import HW3.DataObjects.Helpers.Coded;
 import HW3.Utils.MenuManager;
 import HW3.Utils.MessageBox;
 import HW3.Utils.UIHelper;
 
 public class Tables {
 	
+	// create a table with the given columns and src
 	@SuppressWarnings("unchecked")
 	private static <T> void makeTable(List<T> lst, TableColumn<T, ?>...columns) {
 		if (lst == null || lst.isEmpty()) {
@@ -35,11 +38,25 @@ public class Tables {
             return;
         }
 		
-		Arrays.asList(columns).forEach(c -> c.setSortable(false));
+		ArrayList<TableColumn<T,?>> cols;
+		
+		if(lst.getFirst() instanceof Coded) {
+			TableColumn<T, Integer> colCode = new TableColumn<>("Code");
+		    
+		    colCode.setCellValueFactory(cellData -> 
+		        new ReadOnlyObjectWrapper<>(((Coded<?>) cellData.getValue()).getCode())
+		    );
+		    
+		    cols = new ArrayList<>(Arrays.asList(columns));
+		    cols.addFirst(colCode);
+		}
+		else cols = new ArrayList<TableColumn<T,?>>(Arrays.asList(columns));
+		
+		cols.forEach(c -> c.setSortable(false));
 		
         TableView<T> tableView = new TableView<>(FXCollections.observableArrayList(lst));
         
-        tableView.getColumns().addAll(columns);
+        tableView.getColumns().addAll(cols);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         
         VBox root = UIHelper.createVRoot();
@@ -53,7 +70,7 @@ public class Tables {
 	
 	@SuppressWarnings("unchecked")
 	public static void customer(List<Customer> lst) {
-
+		
 	    TableColumn<Customer, String> colFirstName = new TableColumn<>("First Name");
 	    colFirstName.setCellValueFactory(new PropertyValueFactory<>("name"));
 
@@ -77,7 +94,7 @@ public class Tables {
 	
 	@SuppressWarnings("unchecked")
 	public static void order(List<Order> lst) {
-
+	    
 	    TableColumn<Order, Integer> colClientCode = new TableColumn<>("Client Code");
 	    colClientCode.setCellValueFactory(new PropertyValueFactory<>("clientCode"));
 
@@ -124,6 +141,9 @@ public class Tables {
 
         ObservableList<Order> observables = FXCollections.observableArrayList(allOrders);
         TableView<Order> tableView = new TableView<>(observables);
+        
+        TableColumn<Order, Integer> colCode = new TableColumn<>("Code");
+	    colCode.setCellValueFactory(new PropertyValueFactory<>("code"));
 
         TableColumn<Order, Integer> colClientCode = new TableColumn<>("Client Code");
         colClientCode.setCellValueFactory(new PropertyValueFactory<>("clientCode"));
@@ -149,7 +169,7 @@ public class Tables {
         TableColumn<Order, Order.OrderStatus> colStatus = new TableColumn<>("Status");
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        tableView.getColumns().addAll(
+        tableView.getColumns().addAll( colCode,
             colClientCode, colRestCode, colRiderId, 
             colOrderDate, colDeliveryDate, 
             colBasePrice, colFinalPrice, colStatus
@@ -218,7 +238,6 @@ public class Tables {
 	        return new SimpleStringProperty("-");
 	    });
 
-	    // cast to raw List to satisfy makeTable generic signature
 	    makeTable(lst, colName, colKitchen, colRating, colIsOpen, colBaseFee, colPrepTime, colExpressCost, colMinOrder, colCommission);
 	}
 	

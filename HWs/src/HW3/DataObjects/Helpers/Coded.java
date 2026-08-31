@@ -1,7 +1,6 @@
 package HW3.DataObjects.Helpers;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import HW3.DataObjects.Customer;
 import HW3.DataObjects.Order;
@@ -15,7 +14,6 @@ import HW3.Exceptions.RestaurantNotFoundException;
 import HW3.Exceptions.TargetObjectDoesntExistException;
 
 public abstract class Coded<E extends Coded<E>> extends StringConvertertable<E> {
-	private static final Random random = new Random();
 	
 	protected final int code;
 
@@ -27,10 +25,14 @@ public abstract class Coded<E extends Coded<E>> extends StringConvertertable<E> 
 		return code;
 	}
 	
-	// generate a random positive code that isn't in the given list
+	// generate a positive code that isn't in the given list
 	public static <T extends Coded<?>> int generateCode(ArrayList<T> list) {
-		int code;
-		while (isContains(list, code = random.nextInt() & Integer.MAX_VALUE));
+		if(list.isEmpty()) return 1;
+		
+		int code = list.stream().max((c1,c2) -> Integer.compare(c1.getCode(), c2.getCode())).get().getCode() + 1;
+		code = Math.max(1, code);
+		while (isContains(list, code))
+			code++;
 		return code;
 	}
 	
@@ -43,14 +45,12 @@ public abstract class Coded<E extends Coded<E>> extends StringConvertertable<E> 
 	    return false;
 	}
 	
-	// returns the Coded woth the given code from the given list
+	// returns the Coded with the given code from the given list
 	public static <T extends Coded<?>> T getCoded(ArrayList<T> codeds, int code, Class<T> name) 
 			throws CodedNotFoundException, TargetObjectDoesntExistException {
-		for (T coded : codeds) {
-	        if (coded.getCode() == code) {
+		for (T coded : codeds) 
+	        if (coded.getCode() == code) 
 	        	return coded;
-	        }
-	    }
 
 		if (name == RestAdmin.class) 
 			throw new RestAdminNotFoundException(code);
@@ -68,10 +68,7 @@ public abstract class Coded<E extends Coded<E>> extends StringConvertertable<E> 
 	
 	@Override
 	public final boolean equals(Object obj) {
-		if(obj instanceof Coded coded) {
-			return coded.getCode() == this.code;
-		}
-		return false;
+		return obj instanceof Coded coded && coded.getCode() == this.code;
 	}
 	
 	@Override
@@ -80,7 +77,5 @@ public abstract class Coded<E extends Coded<E>> extends StringConvertertable<E> 
 	}
 
 	@Override
-	public String toString() {
-		return "Coded [code=" + code + "]";
-	}
+	public abstract String toString();
 }

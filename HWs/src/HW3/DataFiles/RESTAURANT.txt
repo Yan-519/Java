@@ -8,23 +8,23 @@
 8 Paris_Cafe French 4.5 true 13.0
 9 Thai_Spice Thai 4.6 false 14.0
 10 Mediterraneo Mediterranean 4.9 true 16.0
-101 McBurger Fast_Food 4.1 true 8.0 10 5.0
-102 Quick_Pizza Pizza 4.2 true 9.0 15 4.0
-103 Hot_Chicken Chicken 4.0 true 7.0 12 3.0
-104 Burger_Max Burgers 4.3 false 8.0 11 6.0
-105 Fast_Taco Mexican 4.4 true 7.0 8 2.0
-106 Express_Sushi Japanese 4.5 true 10.0 14 7.0
-107 Wrap_Zone Wraps 4.0 true 6.0 9 3.0
-108 Fry_King Fast_Food 3.9 true 5.0 7 2.0
-109 Pizza_Box Pizza 4.6 true 9.0 16 5.0
-110 Snack_Hub Snacks 4.2 false 6.0 10 4.0
-201 Royal_Steak Steakhouse 4.9 true 20.0 100.0 15.0
-202 Golden_Sushi Japanese 4.8 true 18.0 120.0 18.0
-203 Elite_Pasta Italian 4.7 true 17.0 90.0 12.0
-204 Luxury_Grill Grill 4.9 false 22.0 150.0 20.0
-205 Ocean_Pearl Seafood 5.0 true 25.0 200.0 25.0
-206 Chef's_Table French 4.8 true 19.0 180.0 18.0
-207 Prime_Kitchen International 4.7 true 21.0 130.0 16.0
-208 Sky_Lounge Fusion 4.9 true 24.0 160.0 19.0
-209 Black_Truffle European 4.8 true 23.0 170.0 17.0
-210 Diamond_Dining Fine_Dining 5.0 true 30.0 250.0 30.0
+11 McBurger Fast_Food 4.1 true 8.0 10 5.0
+12 Quick_Pizza Pizza 4.2 true 9.0 15 4.0
+13 Hot_Chicken Chicken 4.0 true 7.0 12 3.0
+14 Burger_Max Burgers 4.3 false 8.0 11 6.0
+15 Fast_Taco Mexican 4.4 true 7.0 8 2.0
+16 Express_Sushi Japanese 4.5 true 10.0 14 7.0
+17 Wrap_Zone Wraps 4.0 true 6.0 9 3.0
+18 Fry_King Fast_Food 3.9 true 5.0 7 2.0
+19 Pizza_Box Pizza 4.6 true 9.0 16 5.0
+20 Snack_Hub Snacks 4.2 false 6.0 10 4.0
+21 Royal_Steak Steakhouse 4.9 true 20.0 100.0 15.0
+22 Golden_Sushi Japanese 4.8 true 18.0 120.0 18.0
+23 Elite_Pasta Italian 4.7 true 17.0 90.0 12.0
+24 Luxury_Grill Grill 4.9 false 22.0 150.0 20.0
+25 Ocean_Pearl Seafood 5.0 true 25.0 200.0 25.0
+26 Chef's_Table French 4.8 true 19.0 180.0 18.0
+27 Prime_Kitchen International 4.7 true 21.0 130.0 16.0
+28 Sky_Lounge Fusion 4.9 true 24.0 160.0 19.0
+29 Black_Truffle European 4.8 true 23.0 170.0 17.0
+30 Diamond_Dining Fine_Dining 5.0 true 30.0 250.0 30.0
