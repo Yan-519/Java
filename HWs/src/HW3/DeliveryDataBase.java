@@ -427,7 +427,7 @@ public class DeliveryDataBase {
 	}
 	
 	public void sortCustomersByBalance() {
-		customers = new ArrayList<Customer>(customers.stream().sorted().toList());
+		customers.sort(Customer::compareTo);
 	}
 	
 	public void sortRestaurantsByRaiting() {

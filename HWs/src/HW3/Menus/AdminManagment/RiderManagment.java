@@ -66,41 +66,12 @@ public class RiderManagment extends UIBase {
 	    		Tables.order( rider.getDeliverdOrders(), rider.getCurrentOrder());
 	    });
 
-	    Button updateStatusButton = UIHelper.createButton("Update Order Status", () ->{
-	    	Rider rider = DataSelector.selectRider();
-	    	if(rider == null) return;
-	    	if(rider.getIsAvailable())
-	    	{
-	    		MessageBox.Info("The selected rider has no active order");
+	    Button updateStatusButton = UIHelper.createButton("Update Order Status", this::updateOrderStatus);
+	    Button topRiderButton = UIHelper.createButton("Show Top Rider", () -> {
+	    	if(deliveryDataBase.getRiders().isEmpty()) {
+	    		MessageBox.Info("No riders found");
 	    		return;
 	    	}
-
-			Order order = rider.getCurrentOrder();
-			
-			boolean isUpdate = MessageBox.inputBOOL( null, 
-					"Do you want to update the status of the order (The status of the current order is " + order.getStatus(),
-					"(created->on the way->delivered)", false);
-			if(!isUpdate) return;
-			
-			
-			if(order.getStatus() == OrderStatus.OnTheWay) {
-				InputManager.createDateAfterDate( order.getOrderingDate(), d ->{
-					try {
-						deliveryDataBase.updateDeliveryStatus(rider.getId(), d);
-					} catch (RiderNotFoundException | TargetObjectDoesntExistException e) {
-						MessageBox.error(e);
-					}
-				});
-			}else {
-				try {
-					deliveryDataBase.updateDeliveryStatus(rider.getId(), null);
-				} catch (RiderNotFoundException | TargetObjectDoesntExistException e) {
-					MessageBox.error(e);
-				}
-			}
-
-	    });
-	    Button topRiderButton = UIHelper.createButton("Show Top Rider", () -> {
 	    	Rider rider = deliveryDataBase.getRiderWithMostDeliverdOrders();
 	    	MessageBox.Info(rider.toString() + " ( count: " + rider.getDeliverdOrders().size() + ")" );
 	    });
@@ -119,6 +90,42 @@ public class RiderManagment extends UIBase {
 	    root.setCenter(grid);
 
 	    MenuManager.goTo(new Scene(root, 400, 350));
+	}
+	
+	// update the status of the order of a rider
+	private void updateOrderStatus() {
+    	Rider rider = DataSelector.selectRider();
+    	if(rider == null) return;
+    	if(rider.getIsAvailable())
+    	{
+    		MessageBox.Info("The selected rider has no active order");
+    		return;
+    	}
+
+		Order order = rider.getCurrentOrder();
+		
+		boolean isUpdate = MessageBox.inputBOOL( null, 
+				"Do you want to update the status of the order (The status of the current order is " + order.getStatus(),
+				"(created->on the way->delivered)", false);
+		if(!isUpdate) return;
+		
+		
+		if(order.getStatus() == OrderStatus.OnTheWay) {
+			InputManager.createDateAfterDate( order.getOrderingDate(), d ->{
+				try {
+					deliveryDataBase.updateDeliveryStatus(rider.getId(), d);
+				} catch (RiderNotFoundException | TargetObjectDoesntExistException e) {
+					MessageBox.error(e);
+				}
+			});
+		}else {
+			try {
+				deliveryDataBase.updateDeliveryStatus(rider.getId(), null);
+			} catch (RiderNotFoundException | TargetObjectDoesntExistException e) {
+				MessageBox.error(e);
+			}
+		}
+
 	}
 
 }

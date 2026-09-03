@@ -31,6 +31,10 @@ public class DataSelector {
 	
 	// select Restaurant
 	public static Restaurant selectRestaurant() {
+		if(deliveryDataBase.getRestaurants().isEmpty()) {
+			MessageBox.Info("No restaurants available.");
+			return null;
+		}
 		Integer code;
 		while(true) {
 			code = MessageBox.inputINT(null, "Enter restaurant code", NumberSign.POSITIVE);
@@ -45,6 +49,10 @@ public class DataSelector {
 	
 	// select RestAdmin
 	public static RestAdmin selectRestAdmin() {
+		if(deliveryDataBase.getRestAdmins().isEmpty()) {
+			MessageBox.Info("No restaurant admins available.");
+			return null;
+		}
 		Integer code;
 		while(true) {
 			code = MessageBox.inputINT(null, "Enter restaurant admin code", NumberSign.POSITIVE);
@@ -62,6 +70,10 @@ public class DataSelector {
 	
 	// select Rider
 	public static Rider selectRider() {
+		if(deliveryDataBase.getRiders().isEmpty()) {
+			MessageBox.Info("No riders available.");
+			return null;
+		}
 		String ID;
 		while(true) {
 			ID = MessageBox.inputSTR(null,  "Enter rider ID", null);
@@ -78,6 +90,10 @@ public class DataSelector {
 	
 	// select Order
 	public static Order selectOrder() {
+		if(deliveryDataBase.getOrders().isEmpty()) {
+			MessageBox.Info("No orders available.");
+			return null;
+		}
 		Integer code;
 		while(true) {
 			code = MessageBox.inputINT(null, "Enter order code", NumberSign.POSITIVE);
@@ -95,6 +111,10 @@ public class DataSelector {
 	
 	// select Customer
 	public static Customer selectCustomer() {
+		if(deliveryDataBase.getCustomers().isEmpty()) {
+			MessageBox.Info("No customers available.");
+			return null;
+		}
 		Integer code;
 		while(true) {
 			code = MessageBox.inputINT(null, "Enter customer code", NumberSign.POSITIVE);

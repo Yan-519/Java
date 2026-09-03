@@ -74,6 +74,10 @@ public class RestaurantManagment extends UIBase {
         });
         
         Button filterByTypeButton = UIHelper.createButton("Show Restaurants by Type", () -> {
+        	if(deliveryDataBase.getRestaurants().isEmpty()) {
+				MessageBox.Info("No restaurants available.");
+				return;
+			}
 			String type = MessageBox.inputSTR(null, "Enter restauran kitchen type", null);
 			if(type != null)
 				Tables.restaurant(

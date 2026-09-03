@@ -33,7 +33,8 @@ public class Customer extends Coded<Customer> implements Comparable<Customer>{
 		if(price <= balance )
 			balance -= price;
 		
-		throw new InsufficientBalanceException(balance, price);
+		else
+			throw new InsufficientBalanceException(balance, price);
 	}
 	
 	// sets the balance (if not go to negative as a result)

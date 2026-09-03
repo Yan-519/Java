@@ -84,7 +84,7 @@ public class MainUI extends UIBase {
         );
 
         Button backButton = UIHelper.createButton(
-                "Back", this::Auth
+                "Back", MenuManager::goBack
         );
 
         root.getChildren().addAll(

@@ -52,9 +52,13 @@ public class OrderManagment extends UIBase {
 	    		Tables.order( deliveryDataBase.getOrdersByuRestaurant(restaurant.getCode()));
 	    });
 
-	    Button highestPriceButton = UIHelper.createButton("Show Highest Price Order", () ->
-	    	MessageBox.Info(deliveryDataBase.getOrders().stream().max((o1, o2) -> Double.compare(o1.getFinalPrice(), o2.getFinalPrice())).get())
-	    );
+	    Button highestPriceButton = UIHelper.createButton("Show Highest Price Order", () ->{
+	    	if(deliveryDataBase.getOrders().isEmpty()) {
+	    		MessageBox.Info("No orders found");
+	    		return;
+	    	}
+	    	MessageBox.Info(deliveryDataBase.getOrders().stream().max((o1, o2) -> Double.compare(o1.getFinalPrice(), o2.getFinalPrice())).get());
+	    });
 
 	    grid.add(showAllButton, 0, 0);
 	    grid.add(searchByCodeButton, 1, 0);
