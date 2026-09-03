@@ -336,10 +336,7 @@ public class InputManager {
         createDate( d ->{
         	if(d == null) callback.accept(null);
         	else if(!d.isAfter(before) && !d.equals(before))
-        	{
         		MessageBox.error("Validation Error", "The delivery date must be after the order creation date.");
-        		createDateAfterDate(before, callback);
-        	}
         	else callback.accept(d);
         } );
     }

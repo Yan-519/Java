@@ -21,8 +21,8 @@ public class MainUI extends UIBase {
 	
 
 
-	public MainUI(Stage stage) throws OrderNotFoundException {
-		super(new DeliveryDataBase());
+	public MainUI(Stage stage, DeliveryDataBase deliveryDataBase) throws OrderNotFoundException {
+		super(deliveryDataBase);
 		
 		DataSelector.setDeliveryDataBase(deliveryDataBase);
 		InputManager.setDeliveryDataBase(deliveryDataBase);

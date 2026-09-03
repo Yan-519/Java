@@ -8,7 +8,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -40,7 +39,7 @@ public class Tables {
 		
 		ArrayList<TableColumn<T,?>> cols;
 		
-		if(lst.getFirst() instanceof Coded) {
+		if(lst.getFirst() instanceof Coded<?>) {
 			TableColumn<T, Integer> colCode = new TableColumn<>("Code");
 		    
 		    colCode.setCellValueFactory(cellData -> 
@@ -122,74 +121,17 @@ public class Tables {
 	    makeTable(lst, colClientCode, colRestCode, colRiderId, colOrderDate, colDeliveryDate, colBasePrice, colFinalPrice, colStatus);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static void order(List<Order> deliveredOrders, Order currentOrder) {
         List<Order> allOrders = new ArrayList<>();
         
-        if (currentOrder != null) {
+        if (currentOrder != null) 
             allOrders.add(currentOrder);
-        }
         
-        if (deliveredOrders != null && !deliveredOrders.isEmpty()) {
+        
+        if (deliveredOrders != null && !deliveredOrders.isEmpty()) 
             allOrders.addAll(deliveredOrders);
-        }
-
-        if (allOrders.isEmpty()) {
-            MessageBox.Info("No orders found for this rider");
-            return;
-        }
-
-        ObservableList<Order> observables = FXCollections.observableArrayList(allOrders);
-        TableView<Order> tableView = new TableView<>(observables);
         
-        TableColumn<Order, Integer> colCode = new TableColumn<>("Code");
-	    colCode.setCellValueFactory(new PropertyValueFactory<>("code"));
-
-        TableColumn<Order, Integer> colClientCode = new TableColumn<>("Client Code");
-        colClientCode.setCellValueFactory(new PropertyValueFactory<>("clientCode"));
-
-        TableColumn<Order, Integer> colRestCode = new TableColumn<>("Restaurant Code");
-        colRestCode.setCellValueFactory(new PropertyValueFactory<>("restaurantCode"));
-
-        TableColumn<Order, String> colRiderId = new TableColumn<>("Rider ID");
-        colRiderId.setCellValueFactory(new PropertyValueFactory<>("riderId"));
-
-        TableColumn<Order, Date> colOrderDate = new TableColumn<>("Order Date");
-        colOrderDate.setCellValueFactory(new PropertyValueFactory<>("orderingDate"));
-
-        TableColumn<Order, Date> colDeliveryDate = new TableColumn<>("Delivery Date");
-        colDeliveryDate.setCellValueFactory(new PropertyValueFactory<>("deliveringDate"));
-
-        TableColumn<Order, Double> colBasePrice = new TableColumn<>("Base Price");
-        colBasePrice.setCellValueFactory(new PropertyValueFactory<>("basePrice"));
-
-        TableColumn<Order, Double> colFinalPrice = new TableColumn<>("Final Price");
-        colFinalPrice.setCellValueFactory(new PropertyValueFactory<>("finalPrice"));
-
-        TableColumn<Order, Order.OrderStatus> colStatus = new TableColumn<>("Status");
-        colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-
-        tableView.getColumns().addAll( colCode,
-            colClientCode, colRestCode, colRiderId, 
-            colOrderDate, colDeliveryDate, 
-            colBasePrice, colFinalPrice, colStatus
-        );
-
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-
-        Button backButton = UIHelper.createBackButton();
-
-        VBox root = UIHelper.createVRoot();
-        
-        // Optional status header label if there is an active order
-        if (currentOrder != null) {
-            Label activeLabel = new Label("Active Order highlighted at top");
-            root.getChildren().addAll(activeLabel, tableView, backButton);
-        } else {
-            root.getChildren().addAll(tableView, backButton);
-        }
-
-        MenuManager.goTo(new Scene(root, 850, 450));
+        order(allOrders);
     }
 	
 	@SuppressWarnings("unchecked")

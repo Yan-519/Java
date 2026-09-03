@@ -12,16 +12,13 @@ public class Main extends Application {
 	@Override
     public void start(@SuppressWarnings("exports") Stage stage) {
 		MenuManager.setStage(stage);
-		
-        MainUI menuManager;
 		try {
-			menuManager = new MainUI(stage);
+			MainUI menuManager = new MainUI(stage, new DeliveryDataBase());
+	        menuManager.Auth();
+	        stage.show();
 		} catch (OrderNotFoundException e) {
 			MessageBox.error(e);
-			return;
 		}
-        menuManager.Auth();
-        stage.show();
     }
 
 	public static void main(String[] args) {

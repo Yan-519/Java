@@ -13,7 +13,7 @@ import HW3.Exceptions.RestAdminNotFoundException;
 import HW3.Exceptions.RestaurantNotFoundException;
 import HW3.Exceptions.TargetObjectDoesntExistException;
 
-public abstract class Coded<E extends Coded<E>> extends StringConvertertable<E> {
+public abstract class Coded<E> extends StringConvertertable<E> {
 	
 	protected final int code;
 
