@@ -1,24 +1,21 @@
 package HW3.Menus;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TableCell;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import HW3.DataObjects.*;
@@ -33,35 +30,83 @@ public class Tables {
 	@SuppressWarnings("unchecked")
 	private static <T> void makeTable(List<T> lst, TableColumn<T, ?>...columns) {
 		if (lst == null || lst.isEmpty()) {
-            MessageBox.Info("No values found");
-            return;
-        }
-		
-		ArrayList<TableColumn<T,?>> cols;
-		
-		if(lst.getFirst() instanceof Coded<?>) {
-			TableColumn<T, Integer> colCode = new TableColumn<>("Code");
-		    
-		    colCode.setCellValueFactory(cellData -> 
-		        new ReadOnlyObjectWrapper<>(((Coded<?>) cellData.getValue()).getCode())
-		    );
-		    
-		    cols = new ArrayList<>(Arrays.asList(columns));
-		    cols.addFirst(colCode);
-		}
-		else cols = new ArrayList<TableColumn<T,?>>(Arrays.asList(columns));
-		
-		cols.forEach(c -> c.setSortable(false));
-		
-        TableView<T> tableView = new TableView<>(FXCollections.observableArrayList(lst));
-        
-        tableView.getColumns().addAll(cols);
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-        
-        VBox root = UIHelper.createVRoot();
-        root.getChildren().addAll(tableView, UIHelper.createBackButton());
+	        MessageBox.Info("No values found");
+	        return;
+	    }
 
-        MenuManager.goTo(new Scene(root, 850, 400));
+	    ArrayList<TableColumn<T, ?>> cols;
+
+	    if (lst.getFirst() instanceof Coded<?>) {
+	        TableColumn<T, Integer> colCode = new TableColumn<>("Code");
+
+	        colCode.setCellValueFactory(cellData ->
+	            new ReadOnlyObjectWrapper<>(
+	                ((Coded<?>) cellData.getValue()).getCode()
+	            )
+	        );
+
+	        cols = new ArrayList<>(Arrays.asList(columns));
+	        cols.addFirst(colCode);
+	    } else 
+	        cols = new ArrayList<>(Arrays.asList(columns));
+	    
+
+	    cols.forEach(c -> {
+	        c.setSortable(false);
+	        c.setReorderable(false);
+	    });
+
+	    TableView<T> tableView =
+	        new TableView<>(FXCollections.observableArrayList(lst));
+
+	    tableView.getColumns().addAll(cols);
+
+	    tableView.setColumnResizePolicy(
+	        TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN
+	    );
+
+	    tableView.setPlaceholder(
+	        new Label("No data available")
+	    );
+
+	    tableView.setFixedCellSize(42);
+
+	    tableView.setRowFactory(tv -> {
+	        TableRow<T> row = new TableRow<>();
+
+	        row.setOnMouseEntered(e -> {
+	            if (!row.isEmpty())
+	                row.setStyle("-fx-background-color: #f3f4f6;");
+	        });
+
+	        row.setOnMouseExited(e -> {
+	            if (!row.isEmpty())
+	                row.setStyle("");
+	        });
+
+	        return row;
+	    });
+
+	    for (TableColumn<T, ?> column : cols) {
+	        column.setStyle(
+	            "-fx-font-size: 14px;" +
+	            "-fx-font-weight: bold;"
+	        );
+	    }
+
+	    VBox root = UIHelper.createVRoot();
+
+	    root.setSpacing(15);
+	    root.setPadding(new Insets(20));
+
+	    VBox.setVgrow(tableView, Priority.ALWAYS);
+
+	    root.getChildren().addAll(
+	        tableView,
+	        UIHelper.createBackButton()
+	    );
+
+	    MenuManager.goTo(new Scene(root, 850, 500));
 	}
 	
 	
@@ -239,108 +284,5 @@ public class Tables {
 	    });
 
 	    makeTable(lst, colName, colUsername, colPassword, colRestaurants);
-	}
-	
-	// select restaurants
-	@SuppressWarnings("unchecked")
-	public static void createCodedSelectionView(List<? extends Restaurant> items, Consumer<HashSet<Integer>> onFinish) {
-	    if (items == null || items.isEmpty()) {
-	        MessageBox.Info("No values found");
-	        return;
-	    }
-
-	    HashSet<Integer> selected = new HashSet<>();
-	    ObservableList<Restaurant> observables = FXCollections.observableArrayList(items);
-	    TableView<Restaurant> tableView = new TableView<>(observables);
-
-	    TableColumn<Restaurant, Boolean> colSelect = new TableColumn<>("Select");
-	    colSelect.setCellValueFactory(cell -> new SimpleBooleanProperty(selected.contains(cell.getValue().getCode())));
-	    colSelect.setCellFactory(col -> new TableCell<>() {
-	        private final CheckBox checkBox = new CheckBox();
-
-	        {
-	            checkBox.setOnAction(e -> {
-	                Restaurant currentItem = getTableView().getItems().get(getIndex());
-	                if (currentItem != null) {
-	                    if (checkBox.isSelected()) {
-	                        selected.add(currentItem.getCode());
-	                    } else {
-	                        selected.remove(currentItem.getCode());
-	                    }
-	                }
-	            });
-	        }
-
-	        @Override
-	        protected void updateItem(Boolean item, boolean empty) {
-	            super.updateItem(item, empty);
-	            if (empty || getTableRow() == null || getTableRow().getItem() == null) {
-	                setGraphic(null);
-	            } else {
-	                Restaurant currentItem = getTableView().getItems().get(getIndex());
-	                checkBox.setSelected(selected.contains(currentItem.getCode()));
-	                setGraphic(checkBox);
-	            }
-	        }
-	    });
-
-	    TableColumn<Restaurant, String> colName = new TableColumn<>("Name");
-	    colName.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-	    TableColumn<Restaurant, String> colKitchen = new TableColumn<>("Kitchen Type");
-	    colKitchen.setCellValueFactory(new PropertyValueFactory<>("kitchenType"));
-
-	    TableColumn<Restaurant, Double> colRating = new TableColumn<>("Rating");
-	    colRating.setCellValueFactory(new PropertyValueFactory<>("rating"));
-
-	    TableColumn<Restaurant, Boolean> colIsOpen = new TableColumn<>("Open");
-	    colIsOpen.setCellValueFactory(new PropertyValueFactory<>("isOpen"));
-
-	    TableColumn<Restaurant, Double> colBaseFee = new TableColumn<>("Base Fee");
-	    colBaseFee.setCellValueFactory(new PropertyValueFactory<>("baseDeliveryFee"));
-
-	    TableColumn<Restaurant, String> colPrepTime = new TableColumn<>("Prep Time (min)");
-	    colPrepTime.setCellValueFactory(cell -> {
-	        if (cell.getValue() instanceof FastFoodRestaurant fastFood) 
-	            return new SimpleStringProperty(String.valueOf(fastFood.getAveragePreparingTimeInMinutes()));
-	        return new SimpleStringProperty("-");
-	    });
-
-	    TableColumn<Restaurant, String> colExpressCost = new TableColumn<>("Express Delivery Fee");
-	    colExpressCost.setCellValueFactory(cell -> {
-	        if (cell.getValue() instanceof FastFoodRestaurant fastFood) 
-	            return new SimpleStringProperty(String.valueOf(fastFood.getAdditionalCostForExpressDelivery()));
-	        return new SimpleStringProperty("-");
-	    });
-
-	    TableColumn<Restaurant, String> colMinOrder = new TableColumn<>("Min Order");
-	    colMinOrder.setCellValueFactory(cell -> {
-	        if (cell.getValue() instanceof PremiumRestaurant premium) 
-	            return new SimpleStringProperty(String.valueOf(premium.getMinimumOrderCost()));
-	        return new SimpleStringProperty("-");
-	    });
-
-	    TableColumn<Restaurant, String> colCommission = new TableColumn<>("Commission (%)");
-	    colCommission.setCellValueFactory(cell -> {
-	        if (cell.getValue() instanceof PremiumRestaurant premium) 
-	            return new SimpleStringProperty(String.valueOf(premium.getAdditionalCommissionPercentagePerOrder()));
-	        return new SimpleStringProperty("-");
-	    });
-
-	    tableView.getColumns().addAll(
-	        colSelect, colName, colKitchen, colRating, colIsOpen, colBaseFee,
-	        colPrepTime, colExpressCost, colMinOrder, colCommission
-	    );
-
-	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-
-	    Button finishButton = UIHelper.createButton("Finish", () -> onFinish.accept(selected));
-
-	    VBox root = UIHelper.createVRoot();
-	    root.getChildren().addAll(tableView, finishButton);
-	    
-	    MenuManager.goTo(new Scene(root, 900, 450));
-	}
-
-	
+	}	
 }

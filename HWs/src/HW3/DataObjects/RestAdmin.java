@@ -1,7 +1,6 @@
 package HW3.DataObjects;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 import HW3.DataObjects.Helpers.Coded;
 import HW3.DataObjects.Helpers.ConvertorHolder;
@@ -21,8 +20,6 @@ public class RestAdmin extends Coded<RestAdmin> {
 		this.password = password;
 		this.restaurants = new ArrayList<>();
 	}
-	
-	
 
 	private RestAdmin(int code, String name, String userName, String password, ArrayList<Restaurant> restaurants) {
 		super(code);
@@ -41,14 +38,15 @@ public class RestAdmin extends Coded<RestAdmin> {
 			this.restaurants.add(restaurant);
 	}
 	
+	// remove restaurant
+	public void removeRestaurant(Restaurant restaurant) {
+		if(restaurant != null && restaurants.contains(restaurant))
+			this.restaurants.remove(restaurant);
+	}
+	
 	// is contains the restaurant code
 	public boolean containsRestaurant(int code) {
 		return Coded.isContains(restaurants, code);
-	}
-	
-	// remove restaurant from list
-	public void removeRestaurants(Set<Integer> codes) {
-		restaurants = new ArrayList<Restaurant>(restaurants.stream().filter(r -> !codes.contains(r.getCode())).toList());
 	}
 	
 	public ArrayList<Restaurant> getRestaurants() {

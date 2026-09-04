@@ -289,6 +289,34 @@ public class InputManager {
 
         MenuManager.goTo(new Scene(root, 400, 400));
     }
+    
+    public static void createRestAdmin(int code, Consumer<RestAdmin> callback) {
+    	
+		GridPane grid = UIHelper.createGrid();
+
+		TextField nameField = new TextField();
+		TextField userNameField = new TextField();
+		PasswordField passwordField = new PasswordField();
+
+		grid.add(new Label("Name:"), 0, 0); grid.add(nameField, 1, 0);
+		grid.add(new Label("Username:"), 0, 1); grid.add(userNameField, 1, 1);
+		grid.add(new Label("Password:"), 0, 2); grid.add(passwordField, 1, 2);
+
+		VBox root = UIHelper.createBaseFormLayout("Create Restaurant Admin", grid, () -> {
+			String name = nameField.getText().trim();
+			String userName = userNameField.getText().trim();
+			String password = passwordField.getText().trim();
+
+			if (name.isEmpty() || userName.isEmpty() || password.isEmpty()) {
+				MessageBox.error("Validation Error", "All fields are required.");
+				return;
+			}
+
+			callback.accept(new RestAdmin(code, name, userName, password));
+		}, () -> callback.accept(null));
+
+		MenuManager.goTo(new Scene(root, 400, 300));
+	}
 
     // Creates a new Date
     public static void createDate(Consumer<Date> callback) {

@@ -13,13 +13,6 @@ import HW3.DataObjects.Order.OrderStatus;
 import HW3.Exceptions.*;
 
 public class DeliveryDataBase {
-	
-	public enum CodedType {
-		RestAdmin,
-		Restaurant,
-		Customer,
-		Order
-	}
 
 	private Admin systemAdministrator;
 
@@ -273,6 +266,17 @@ public class DeliveryDataBase {
 
 	    customers.add(customer);
 	}
+	
+	// adds a RestAdmin (if exists -> throws exception)
+	public void add(RestAdmin restAdmin) throws TargetObjectAlreadyExistException {
+	    if (restAdmin == null)
+	    	throw new NullPointerException("Added object cant be null");
+
+	    if (restAdmins.contains(restAdmin))
+	        throw new TargetObjectAlreadyExistException(restAdmin.toString());
+
+	    restAdmins.add(restAdmin);
+	}
 
 
 	// adds a Restaurant (if exists -> throws exception)
@@ -303,7 +307,7 @@ public class DeliveryDataBase {
 		Customer customer = Coded.getCoded(customers, customerCode, Customer.class);
 		Restaurant restaurant = Coded.getCoded(restaurants, restaurantCode, Restaurant.class);
 
-		int code = generateCode(CodedType.Order);
+		int code = getNextOrderCode();
 		Order order = new Order(code, customerCode, restaurant, date, basePrice);
 		
 		
@@ -318,6 +322,16 @@ public class DeliveryDataBase {
 		Restaurant restaurant = Coded.getCoded(restaurants, restCode, Restaurant.class);
 
 		restAdmin.addRestaurant(restaurant);
+	}
+	
+	public void removeRestFromAdmin(int adminCode, int restCode) throws CodedNotFoundException, TargetObjectDoesntExistException {
+		RestAdmin restAdmin = Coded.getCoded(restAdmins, adminCode, RestAdmin.class);
+		Restaurant restaurant = Coded.getCoded(restaurants, restCode, Restaurant.class);
+
+		if (!restAdmin.containsRestaurant(restCode))
+			throw new TargetObjectDoesntExistException("Restaurant (" + restCode + ")", "in control of RestAdmin (" + adminCode + ")");
+		
+		restAdmin.removeRestaurant(restaurant);
 	}
 
 	// adds an Order to a Rider (RestAdmin)
@@ -353,23 +367,24 @@ public class DeliveryDataBase {
 		return riders.stream().anyMatch(r -> r.getId().equalsIgnoreCase(id));
 	}
 	
-	// returns a unique code (not negative) for the given type
-	public int generateCode(CodedType type) throws TargetObjectDoesntExistException {
-		switch (type) {
-			case RestAdmin:
-				return Coded.generateCode(restAdmins);
+	// returns a unique code (not negative) for RestAdmin
+	public int getNextRestAdminCode() {
+		return Coded.generateCode(restAdmins);
+	}
 
-			case Restaurant:
-				return Coded.generateCode(restaurants);
+	// returns a unique code (not negative) for Restaurant
+	public int getNextRestaurantCode() {
+		return Coded.generateCode(restaurants);
+	}
 
-			case Customer:
-				return Coded.generateCode(customers);
+	// returns a unique code (not negative) for Customer
+	public int getNextCustomerCode() {
+		return Coded.generateCode(customers);
+	}
 
-			case Order:
-				return Coded.generateCode(orders);
-				
-			default: throw new TargetObjectDoesntExistException("CodedType " + type);
-		}
+	// returns a unique code (not negative) for Order
+	public int getNextOrderCode() {
+		return Coded.generateCode(orders);
 	}
 	
 	// updating the balance of a customer by his code

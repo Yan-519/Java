@@ -65,6 +65,7 @@ public class MainUI extends UIBase {
         MenuManager.goTo(new Scene(root, 400, 300));
 	}
     
+	// Show the user type selection screen
     private void showUserTypeScreen() {
 
         VBox root = UIHelper.createVRoot();

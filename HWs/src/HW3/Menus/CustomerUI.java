@@ -132,7 +132,7 @@ public class CustomerUI extends UIBase  {
         MenuManager.goTo(new Scene(root, 500, 500));
 	}
 
-
+	// create new order for the customer
 	private void placeNewOrder() {
 		if (deliveryDataBase.getOpenRestaurants().isEmpty()) {
 			MessageBox.Info("No open restaurants found");
@@ -158,6 +158,7 @@ public class CustomerUI extends UIBase  {
 
 	}
 
+	// update the profile info of the customer
 	private void updateProfileInfo() {
 		if(MessageBox.inputBOOL("Do you want to change your adress?")){
 			if(MessageBox.inputBOOL("Do you want to chage the town?")) {

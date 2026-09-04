@@ -1,7 +1,6 @@
 package HW3.Menus.AdminManagment;
 
 import HW3.DeliveryDataBase;
-import HW3.DeliveryDataBase.CodedType;
 import HW3.DataObjects.Restaurant;
 import HW3.Exceptions.CodedNotFoundException;
 import HW3.Exceptions.TargetObjectAlreadyExistException;
@@ -106,15 +105,10 @@ public class RestaurantManagment extends UIBase {
         MenuManager.goTo(new Scene(root, 500, 400));
     }
 
+	// add a new restaurant
     private void addNewRestaurant() {
     	
-    	int code;
-		try {
-			code = deliveryDataBase.generateCode(CodedType.Restaurant);
-		} catch (TargetObjectDoesntExistException e) {
-			MessageBox.error(e);
-			return;
-		}
+    	int code = deliveryDataBase.getNextRestaurantCode();
 		
 		String type = MessageBox.inputSelect("Regular", "Fast food", "Primium");
 		if(type == null) return;

@@ -102,6 +102,7 @@ public class RiderUI extends UIBase  {
         MenuManager.goTo(new Scene(root, 500, 400));
 	}
 
+	// Update the status of the current order to "On the Way"
 	private void updateStatusToOnWay() {
 	    if (rider.getCurrentOrder() == null) {
 	        MessageBox.Info("Notice", "No active order to update.");
@@ -121,6 +122,7 @@ public class RiderUI extends UIBase  {
 	    }
 	}
 
+	// Update the status of the current order to "Delivered"
 	private void updateStatusToDelivered() {
 	    if (rider.getCurrentOrder() == null) {
 	        MessageBox.Info("Notice", "No active order to update.");

@@ -30,9 +30,6 @@ public class AdminUI extends UIBase {
 	
 	private ReportsUI reportsUI;
 	
-	
-	
-
 	public AdminUI(DeliveryDataBase deliveryDataBase) {
 		super(deliveryDataBase);
 		

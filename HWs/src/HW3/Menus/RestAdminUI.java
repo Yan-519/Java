@@ -18,9 +18,7 @@ import HW3.DataObjects.Order;
 import HW3.DataObjects.Order.OrderStatus;
 import HW3.DataObjects.Restaurant;
 import HW3.DataObjects.Rider;
-import HW3.DeliveryDataBase.CodedType;
 import HW3.Exceptions.TargetObjectAlreadyExistException;
-import HW3.Exceptions.TargetObjectDoesntExistException;
 import HW3.Utils.DataSelector;
 import HW3.Utils.InputManager;
 import HW3.Utils.MenuManager;
@@ -126,14 +124,9 @@ public class RestAdminUI extends UIBase  {
 	    MenuManager.goTo(new Scene(root, 500, 400));
 	}
 
+	// create new customer and add to database
 	private void addNewCustomer() {
-	    int code;
-		try {
-			code = deliveryDataBase.generateCode(CodedType.Customer);
-		} catch (TargetObjectDoesntExistException e) {
-			MessageBox.error(e);
-			return;
-		}
+	    int code = deliveryDataBase.getNextCustomerCode();
 	    InputManager.createCustomer( code, customer -> {
 	        if (customer != null) {
 	            try {
@@ -147,6 +140,7 @@ public class RestAdminUI extends UIBase  {
 	    });
 	}
 
+	// create new order and add to database
 	private void addNewOrder() {
 	    if (restAdmin.getOpenRestaurants().isEmpty()) {
 	        MessageBox.Info("Notice", "You have no open restaurants to take orders.");
@@ -177,6 +171,7 @@ public class RestAdminUI extends UIBase  {
 	    });
 	}
 
+	// assign a rider to an order from the admin's restaurants
 	private void assignRiderToOrder() {
 		if(!deliveryDataBase.getOrders().stream().anyMatch(o -> restAdmin.containsRestaurant(o.getRestaurantCode()))) {
 			MessageBox.Info("No orders found that ordered from the admin restaurant");
@@ -198,7 +193,8 @@ public class RestAdminUI extends UIBase  {
 	        MessageBox.error(e);
 	    }
 	}
-
+	
+	// view all orders for a restaurant under the admin's management
 	private void viewRestaurantOrders() {
 	    if (restAdmin.getRestaurants().isEmpty()) {
 	        MessageBox.Info("You have no restaurants.");
@@ -212,6 +208,7 @@ public class RestAdminUI extends UIBase  {
 	    	Tables.order( deliveryDataBase.getOrdersByuRestaurant(rest.getCode()));
 	}
 
+	// show all open restaurants of a specific kitchen type under the admin's management
 	private void showOpenRestaurantsByKitchen() {
 		if (restAdmin.getRestaurants().isEmpty()) {
 	        MessageBox.Info("You have no restaurants.");
@@ -232,6 +229,7 @@ public class RestAdminUI extends UIBase  {
 	    }
 	}
 
+	// update the rating of a restaurant under the admin's management
 	private void updateRestaurantRating() {
 		if (restAdmin.getRestaurants().isEmpty()) {
 	        MessageBox.Info("You have no restaurants.");
@@ -254,6 +252,7 @@ public class RestAdminUI extends UIBase  {
 	    }
 	}
 
+	// toggle the open/closed status of a restaurant under the admin's management
 	private void toggleRestaurantStatus() {
 		if (restAdmin.getRestaurants().isEmpty()) {
 	        MessageBox.Info("You have no restaurants.");

@@ -4,10 +4,12 @@ import HW3.DeliveryDataBase;
 import HW3.DataObjects.RestAdmin;
 import HW3.DataObjects.Restaurant;
 import HW3.Exceptions.CodedNotFoundException;
+import HW3.Exceptions.TargetObjectAlreadyExistException;
 import HW3.Exceptions.TargetObjectDoesntExistException;
 import HW3.Menus.Tables;
 import HW3.Menus.UIBase;
 import HW3.Utils.DataSelector;
+import HW3.Utils.InputManager;
 import HW3.Utils.MenuManager;
 import HW3.Utils.MessageBox;
 import HW3.Utils.UIHelper;
@@ -41,7 +43,7 @@ public class RestAdminManagment extends UIBase {
 
 	    Button showAllButton = UIHelper.createButton("Show All Restaurant Admins", 
 	    		() -> Tables.restAdmin( deliveryDataBase.getRestAdmins()));
-	    Button addAdminButton = UIHelper.createButton("Add Restaurant Admin to a restaurant", this::addRestaurantAdmin);
+	    Button addAdminButton = UIHelper.createButton("Add Restaurant Admin & connect to a restaurant", this::addRestaurantAdmin);
 
 	    Button searchAdminButton = UIHelper.createButton("Search Restaurant Admin", 
 	    		() -> MessageBox.Info(DataSelector.selectRestAdmin())
@@ -61,34 +63,75 @@ public class RestAdminManagment extends UIBase {
 	    MenuManager.goTo(new Scene(root, 500, 300));
 	}
 
+	// add a new restaurant admin and connect it to a restaurant
 	private void addRestaurantAdmin() {
-		RestAdmin restAdmin = DataSelector.selectRestAdmin();
-		if(restAdmin == null) return;
+		int code = deliveryDataBase.getNextRestAdminCode();
 		
-		Restaurant restaurant = DataSelector.dataFilter(DataSelector::selectRestaurant, 
-				r -> !restAdmin.containsRestaurant(r.getCode()),
-				"The selected restaurant is already under the selected manager control");
-		if(restaurant == null) return;
-		
-		try {
-			deliveryDataBase.addRestToAdmin(restAdmin.getCode(), restaurant.getCode());
-		} catch (CodedNotFoundException | TargetObjectDoesntExistException e) {
-			MessageBox.error(e);
-		}
+		InputManager.createRestAdmin(code, restAdmin -> {
+			if(restAdmin != null) {
+				try {
+					deliveryDataBase.add(restAdmin);
+					
+					boolean connectToRestaurant = MessageBox.inputBOOL("Do you want to connect the new admin to a restaurant?");
+					
+					if(connectToRestaurant) {
+						Restaurant restaurant = DataSelector.selectRestaurant();
+						if(restaurant != null) {
+							try {
+								deliveryDataBase.addRestToAdmin(restAdmin.getCode(), restaurant.getCode());
+								MessageBox.Info("Restaurant Admin has been added and connected to the restaurant");
+							} catch (CodedNotFoundException | TargetObjectDoesntExistException e) {
+								MessageBox.error(e);
+							}
+						}
+					}
+					
+				} catch (TargetObjectAlreadyExistException e) {
+					MessageBox.error(e);
+				}
+			}
+			MenuManager.goBack();
+		});
 	}
 
+	// update the status of the admin by adding a restaurant to his control
 	private void updateAdminStatus() {
 		RestAdmin restAdmin = DataSelector.selectRestAdmin();
 		if(restAdmin == null) return;
 		
-		if(restAdmin.getRestaurants().isEmpty())
-			MessageBox.Info("The selected manager has no restaurants");
+		String remove = "Remove a restaurant from the admin control";
+		String add = "Add a restaurant to the admin control";
 		
-		else Tables.createCodedSelectionView(restAdmin.getRestaurants(),
-				s -> {
-					restAdmin.removeRestaurants(s);
-					MenuManager.goBack();
-				});
+		String choice = MessageBox.inputSelect(add, remove);
+		if(choice == null) return;
+
+		
+		if(choice.equals(remove)) {
+			Restaurant restaurant = DataSelector.dataFilter(DataSelector::selectRestaurant, 
+					r -> restAdmin.containsRestaurant(r.getCode()),
+					"The selected restaurant is not under the selected manager control");
+			
+			if(restaurant == null) return;
+			
+			try {
+				deliveryDataBase.removeRestFromAdmin(restAdmin.getCode(), restaurant.getCode());
+			} catch (CodedNotFoundException | TargetObjectDoesntExistException e) {
+				MessageBox.error(e);
+			}
+		}
+		else if(choice.equals(add)) {
+			
+			Restaurant restaurant = DataSelector.dataFilter(DataSelector::selectRestaurant, 
+					r -> !restAdmin.containsRestaurant(r.getCode()),
+					"The selected restaurant is already under the selected manager control");
+			if(restaurant == null) return;
+			
+			try {
+				deliveryDataBase.addRestToAdmin(restAdmin.getCode(), restaurant.getCode());
+			} catch (CodedNotFoundException | TargetObjectDoesntExistException e) {
+				MessageBox.error(e);
+			}
+		}
 	}
 
 	

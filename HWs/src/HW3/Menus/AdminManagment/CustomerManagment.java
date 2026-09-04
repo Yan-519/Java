@@ -4,9 +4,7 @@ import HW3.DeliveryDataBase;
 import HW3.DataObjects.Customer;
 import HW3.DataObjects.Order;
 import HW3.DataObjects.Order.OrderStatus;
-import HW3.DeliveryDataBase.CodedType;
 import HW3.Exceptions.TargetObjectAlreadyExistException;
-import HW3.Exceptions.TargetObjectDoesntExistException;
 import HW3.Menus.Tables;
 import HW3.Menus.UIBase;
 import HW3.Utils.DataChecker;
@@ -54,13 +52,7 @@ public class CustomerManagment extends UIBase {
         );
 
         Button addCustomer = UIHelper.createButton("Add New Customer", () -> {
-                	int code;
-					try {
-						code = deliveryDataBase.generateCode(CodedType.Customer);
-					} catch (TargetObjectDoesntExistException e1) {
-						MessageBox.error(e1);
-						return;
-					}
+                	int code = deliveryDataBase.getNextCustomerCode();
 
                 	InputManager.createCustomer(code, customer -> {
                 	    if (customer != null) {
@@ -130,7 +122,7 @@ public class CustomerManagment extends UIBase {
         MenuManager.goTo(new Scene(root, 500, 400));
     }
 
-
+	// update the customer information
     private void updateCustomer() {
     	Customer customer = DataSelector.selectCustomer();
     	if(customer == null) return;
@@ -162,6 +154,7 @@ public class CustomerManagment extends UIBase {
 
     }
 
+    // cancel an order that hasn't been delivered yet
     private void cancelOrder() {
     	if(!deliveryDataBase.getOrders().stream().anyMatch(o -> o.getStatus() != OrderStatus.Delivered)) {
     		MessageBox.Info(null, "No cancelable orders found");
